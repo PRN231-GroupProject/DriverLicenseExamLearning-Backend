@@ -1,4 +1,6 @@
-﻿using DriverLicenseExamLearning_Data.Repository;
+﻿using DriverLicenseExamLearning_Data.Entity;
+using DriverLicenseExamLearning_Data.Repository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,24 +11,46 @@ namespace DriverLicenseExamLearning_Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
+        private readonly DriverLicenseExamLearningContext _driverLicenseExamLearningContext;
+        public UnitOfWork(DriverLicenseExamLearningContext driverLicenseExamLearningContext)
+        {
+            _driverLicenseExamLearningContext = driverLicenseExamLearningContext;
+        }
+        private readonly Dictionary<Type, object> repositories = new Dictionary<Type, object>();
         public int Commit()
         {
-            throw new NotImplementedException();
+            return _driverLicenseExamLearningContext.SaveChanges();
         }
+        public Task<int> CommitAsync() => _driverLicenseExamLearningContext.SaveChangesAsync();
 
-        public Task<int> CommitAsync()
+        private bool disposed = false;
+        protected virtual void Dispose(bool disposing)
         {
-            throw new NotImplementedException();
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _driverLicenseExamLearningContext.Dispose();
+                }
+            }
+            this.disposed = true;
         }
-
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public IGenericRepository<T> Repository<T>() where T : class
         {
-            throw new NotImplementedException();
+            Type type = typeof(T);
+            if (!repositories.TryGetValue(type, out object value))
+            {
+                var genericRepos = new GenericRepository<T>(_driverLicenseExamLearningContext);
+                repositories.Add(type, genericRepos);
+                return genericRepos;
+            }
+            return value as GenericRepository<T>;
         }
     }
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DriverLicenseExamLearning_Service.DTOs.Request
+namespace DriverLicenseExamLearning_Service.DTOs.Response
 {
-    public class UserRequest
+    public class UserLoginResponse
     {
     }
 }

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace DriverLicenseExamLearning_API.Controllers
 {
     [Route("api/user")]
-    public class UsersController
+    [ApiController]
+    public class UsersController : ControllerBase
     {
+
     }
 }

@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace DriverLicenseExamLearning_Service.Services
 {
-    public class UserService
+    public interface IUserService
+    {
+
+    }
+    public class UserService : IUserService
     {
     }
 }
