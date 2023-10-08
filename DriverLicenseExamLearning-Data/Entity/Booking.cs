@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DriverLicenseExamLearning_Data.Entity
 {
     public partial class Booking
     {
+        [Key]
         public int BookingId { get; set; }
         public int? MemberId { get; set; }
         public int? MentorId { get; set; }

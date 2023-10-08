@@ -4,7 +4,10 @@ using DriverLicenseExamLearning_Data.Entity;
 using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.OData;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OData.ModelBuilder;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Text;
@@ -12,12 +15,36 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+var modelBuilder = new ODataConventionModelBuilder();
+modelBuilder.EntitySet<Booking>("Bookings");
+modelBuilder.EntitySet<Exam>("Exams");
+modelBuilder.EntitySet<ExamQuestion>("ExamQuestions");
+modelBuilder.EntitySet<LicenseApplication>("LicenseApplications");
+modelBuilder.EntitySet<LicenseType>("LicenseTypes");
+modelBuilder.EntitySet<MemberAttribute>("MemberAttributes");
+modelBuilder.EntitySet<MentorAttribute>("MentorAttributes");
+modelBuilder.EntitySet<MentorAvailability>("MentorAvailabilitys");
+modelBuilder.EntitySet<Package>("Packages");
+modelBuilder.EntitySet<Purchase>("Purchases");
+modelBuilder.EntitySet<Question>("Questions");
+modelBuilder.EntitySet<Role>("Roles");
+modelBuilder.EntitySet<User>("Users");
+
+builder.Services.AddControllers()
+                .AddOData(options => options.Select()
+                                .Filter()
+                                .OrderBy()
+                                .Expand()
+                                .Count()
+                                .SetMaxTop(null)
+                                .AddRouteComponents("odata", modelBuilder.GetEdmModel()));
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(typeof(Mapping));
 builder.Services.AddScoped<DriverLicenseExamLearningContext>();
 // Add authentication and configure JWT
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

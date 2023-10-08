@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DriverLicenseExamLearning_Data.Entity
 {
@@ -9,7 +10,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         {
             Purchases = new HashSet<Purchase>();
         }
-
+        [Key]
         public int PackageId { get; set; }
         public string? Name { get; set; }
         public int? Km { get; set; }

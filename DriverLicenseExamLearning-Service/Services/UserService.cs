@@ -6,6 +6,7 @@ using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.Helpers;
 using DriverLicenseExamLearning_Service.Ultilities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace DriverLicenseExamLearning_Service.Services
     {
         Task<PagedResult<UserResponse>> GetCustomers(UserRequest request, PagingRequest paging);
         bool CheckRegexEmail(string email);
+        Task<IEnumerable<User>> GetAllAsync();
     }
     public class UserService : IUserService
     {
@@ -35,6 +37,11 @@ namespace DriverLicenseExamLearning_Service.Services
         public bool CheckRegexEmail(string email)
         {
             throw new NotImplementedException();
+        }
+        public async Task<IEnumerable<User>> GetAllAsync()
+        {
+            var users = await _unitOfWork.Repository<User>().GetAllAsync();
+            return users;
         }
 
         public Task<PagedResult<UserResponse>> GetCustomers(UserRequest request, PagingRequest paging)

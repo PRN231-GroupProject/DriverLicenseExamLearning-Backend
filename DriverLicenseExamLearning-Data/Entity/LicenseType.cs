@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DriverLicenseExamLearning_Data.Entity
 {
@@ -13,7 +14,7 @@ namespace DriverLicenseExamLearning_Data.Entity
             MentorAvailabilities = new HashSet<MentorAvailability>();
             Questions = new HashSet<Question>();
         }
-
+        [Key]
         public int LicenseTypeId { get; set; }
         public string? Name { get; set; }
         public string? Status { get; set; }

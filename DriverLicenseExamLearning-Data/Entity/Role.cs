@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DriverLicenseExamLearning_Data.Entity
 {
@@ -9,7 +10,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         {
             Users = new HashSet<User>();
         }
-
+        [Key]
         public int RoleId { get; set; }
         public string? RoleName { get; set; }
 

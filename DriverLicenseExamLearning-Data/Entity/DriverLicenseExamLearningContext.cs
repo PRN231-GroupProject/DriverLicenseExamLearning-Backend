@@ -94,7 +94,9 @@ namespace DriverLicenseExamLearning_Data.Entity
             {
                 entity.HasNoKey();
 
-                entity.Property(e => e.ExamId).ValueGeneratedOnAdd();
+                entity.Property(e => e.ExamQuestionId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.ExamId).HasMaxLength(1000);
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(100)
