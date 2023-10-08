@@ -1,4 +1,8 @@
 using DriverLicenseExamLearning_API;
+using DriverLicenseExamLearning_API.Mapper;
+using DriverLicenseExamLearning_Data.Entity;
+using DriverLicenseExamLearning_Data.UnitOfWork;
+using DriverLicenseExamLearning_Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -8,7 +12,11 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddControllers();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddAutoMapper(typeof(Mapping));
+builder.Services.AddScoped<DriverLicenseExamLearningContext>();
 // Add authentication and configure JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
