@@ -31,6 +31,12 @@ namespace DriverLicenseExamLearning_API.Controllers
             var result = await _userService.GetCustomers(customerRequest, pagingRequest);
             return result != null ? Ok(result) : NotFound();
         }
+        [HttpPost("login")]
+        public async Task<ActionResult<UserResponse>> LoginAsync([FromBody] UserLoginRequest loginRequest)
+        {
+            var rs = await _userService.LoginAsync(loginRequest);
+            return rs != null ? Ok(rs) : NotFound();
+        }
 
     }
 }
