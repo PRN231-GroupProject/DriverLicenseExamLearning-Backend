@@ -25,6 +25,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             return list != null ? Ok(list) : NotFound();
         }
 
+        
         [HttpGet("NormalGetWithFilter")]
         public async Task<ActionResult<List<UserResponse>>> GetCustomer([FromQuery] PagingRequest pagingRequest, [FromQuery] UserRequest customerRequest)
         {
@@ -37,6 +38,20 @@ namespace DriverLicenseExamLearning_API.Controllers
             var rs = await _userService.LoginAsync(loginRequest);
             return rs != null ? Ok(rs) : NotFound();
         }
+
+
+ /*       [HttpPut]
+        public async Task<IActionResult> Update(int  userId,UserLoginRequest user)
+        {
+
+        }
+
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int userId)
+        {
+
+        }*/
 
     }
 }

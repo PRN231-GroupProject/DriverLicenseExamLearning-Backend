@@ -17,6 +17,20 @@ namespace DriverLicenseExamLearning_API.Mapper
             CreateMap<UserRequest, UserResponse>().ReverseMap();
 
             CreateMap<Role, RoleResponse>().ReverseMap();
+
+
+
+            //Quiz Mapping
+            CreateMap<AddQuestionRequest, Question>()
+                .ForMember(dex => dex.LicenseTypeId, opt => opt.MapFrom(src => src.LicenseTypeId))
+                .ForMember(dex => dex.Text, opt => opt.MapFrom(src => src.Text))
+                .ForMember(dex => dex.Options1, opt => opt.MapFrom(src => src.Options1))
+                .ForMember(dex => dex.Options2, opt => opt.MapFrom(src => src.Options2))
+                .ForMember(dex => dex.Options3, opt => opt.MapFrom(src => src.Options3))
+                .ForMember(dex => dex.Options4, opt => opt.MapFrom(src => src.Options4))
+                .ForMember(dex => dex.Answer, opt => opt.MapFrom(src => src.Answer))
+                .ReverseMap();
+
         }
     }
 }

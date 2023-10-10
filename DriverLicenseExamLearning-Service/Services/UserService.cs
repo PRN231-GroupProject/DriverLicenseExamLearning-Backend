@@ -26,6 +26,9 @@ namespace DriverLicenseExamLearning_Service.Services
         bool CheckRegexEmail(string email);
         Task<IEnumerable<User>> GetAllAsync();
         Task<UserLoginResponse> LoginAsync(UserLoginRequest request);
+        Task<bool> DeleteUser(int userID);
+        
+        Task<bool> UpdateUser(int userID, UserLoginRequest user);   
     }
     public class UserService : IUserService
     {
@@ -114,6 +117,16 @@ namespace DriverLicenseExamLearning_Service.Services
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
             };
+        }
+
+        public Task<bool> DeleteUser(int userID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateUser(int userID, UserLoginRequest user)
+        {
+            throw new NotImplementedException();
         }
     }
 }
