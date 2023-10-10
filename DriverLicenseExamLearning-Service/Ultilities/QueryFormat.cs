@@ -43,5 +43,40 @@ namespace DriverLicenseExamLearning_Service.Ultilities
             return result;
         
         }
+
+
+
+        public static async Task<IQueryable<ExamQueryGeneralResponse>> QueryExamFollowLisenceType()
+        {
+            IQueryable<ExamQueryGeneralResponse> result = (from LicenseType in _context.LicenseTypes
+                                                           join exam in _context.Exams on LicenseType.LicenseTypeId equals exam.LicenseTypeId
+                                                           select new ExamQueryGeneralResponse { LicenseTypeId = LicenseType.LicenseTypeId, Name = LicenseType.Name
+                                                           , examQueries = (from li in _context.LicenseTypes
+                                                                            join ex in _context.Exams on li.LicenseTypeId equals ex.LicenseTypeId
+                                                                            select new ExamQueryResponse
+                                                                            {
+                                                                                Date = (DateTime)ex.ExamDate,
+                                                                                ExamId = ex.ExamId,
+                                                                                examDetails = (from eq in _context.ExamQuestions
+                                                                                               join q in _context.Questions on eq.QuestionId equals q.QuestionId
+                                                                                               where eq.ExamId == ex.ExamId
+                                                                                                select new ExamDetailResponse
+                                                                                                {
+                                                                                                    Answer = q.Answer,
+                                                                                                    Options1 = q.Options1,
+                                                                                                    Options2 =q.Options2,
+                                                                                                    Options3 = q.Options3,
+                                                                                                    Options4 = q.Options4,
+                                                                                                    Text = q.Text
+                                                                                                }
+                                                                                               ).ToList()
+
+                                                                            }).ToList()
+                                                           }).AsQueryable();
+        
+                
+            return result;
+        }
+
     }
 }
