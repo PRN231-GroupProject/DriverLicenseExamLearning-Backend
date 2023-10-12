@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DriverLicenseExamLearning_Service.Ultilities
+namespace DriverLicenseExamLearning_Service.Support.Ultilities
 {
     
     public class QueryFormat

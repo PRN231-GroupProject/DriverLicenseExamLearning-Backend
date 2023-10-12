@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DriverLicenseExamLearning_Service.Helpers
+namespace DriverLicenseExamLearning_Service.Support.Helpers
 {
     public enum SortOrder
     {

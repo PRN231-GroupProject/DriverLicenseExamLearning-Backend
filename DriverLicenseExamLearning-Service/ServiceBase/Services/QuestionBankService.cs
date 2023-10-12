@@ -3,7 +3,8 @@ using DriverLicenseExamLearning_Data.Entity;
 using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
-using DriverLicenseExamLearning_Service.Ultilities;
+using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.Support.Ultilities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,18 +13,10 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DriverLicenseExamLearning_Service.Services
+namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 {
-    
-    public interface IQuestionBankService
-    {
-        Task<bool> AddQuizRequests(List<AddQuestionRequest> requests);
 
 
-        Task<bool> UpdateQuizRequests(int quizID, AddQuestionRequest request);
-
-        Task<IQueryable<QuestionBankResponse>> QuestionBank();
-    }
     public class QuestionBankService : IQuestionBankService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -58,27 +51,27 @@ namespace DriverLicenseExamLearning_Service.Services
             }
             #endregion
 
-            if(checkErrorQuiz > 0)
+            if (checkErrorQuiz > 0)
             {
-                throw  new CrudException<List<string>>(HttpStatusCode.BadRequest, "Have problem when add new questions to bank", errors);
+                throw new CrudException<List<string>>(HttpStatusCode.BadRequest, "Have problem when add new questions to bank", errors);
             }
 
 
             return true;
-            
+
         }
 
         public async Task<IQueryable<QuestionBankResponse>> QuestionBank() => await QueryFormat.QueryQuestionFollowLisenceType();
-     
 
-     
+
+
 
         public async Task<bool> UpdateQuizRequests(int quizID, AddQuestionRequest request)
         {
-           var questionObject = _mapper.Map<Question>(request);
+            var questionObject = _mapper.Map<Question>(request);
 
-             await _unitOfWork.Repository<Question>().Update(questionObject,quizID);
-             _unitOfWork.Commit();
+            await _unitOfWork.Repository<Question>().Update(questionObject, quizID);
+            _unitOfWork.Commit();
             return true;
         }
 

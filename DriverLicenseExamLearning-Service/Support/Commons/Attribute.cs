@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DriverLicenseExamLearning_Service.Commons
+namespace DriverLicenseExamLearning_Service.Support.Commons
 {
     public class Attribute
     {

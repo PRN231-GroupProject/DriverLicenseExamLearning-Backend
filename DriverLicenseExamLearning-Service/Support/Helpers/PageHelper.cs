@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DriverLicenseExamLearning_Service.Helpers
+namespace DriverLicenseExamLearning_Service.Support.Helpers
 {
     public static class PageHelper<T> where T : class
     {

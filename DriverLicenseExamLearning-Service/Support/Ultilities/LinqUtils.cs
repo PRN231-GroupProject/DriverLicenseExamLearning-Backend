@@ -5,9 +5,9 @@ using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using static DriverLicenseExamLearning_Service.Commons.Attribute;
+using static DriverLicenseExamLearning_Service.Support.Commons.Attribute;
 
-namespace DriverLicenseExamLearning_Service.Ultilities
+namespace DriverLicenseExamLearning_Service.Support.Ultilities
 {
     public static class LinqUtils
     {
@@ -18,30 +18,30 @@ namespace DriverLicenseExamLearning_Service.Ultilities
                 if (!(entity.GetType().GetProperty(property.Name) == null))
                 {
                     object data = entity.GetType().GetProperty(property.Name)
-                        ?.GetValue((object)entity, (object[])null);
+                        ?.GetValue(entity, (object[])null);
                     if (data != null &&
                         !property.CustomAttributes.Any(
-                            (Func<CustomAttributeData, bool>)(a => a.AttributeType == typeof(SkipAttribute))))
+                            a => a.AttributeType == typeof(SkipAttribute)))
                     {
                         if (property.CustomAttributes.Any(
-                                (Func<CustomAttributeData, bool>)(a => a.AttributeType == typeof(StringAttribute))))
+                                a => a.AttributeType == typeof(StringAttribute)))
                         {
-                            source = source.Where<TEntity>(property.Name + ".ToLower().Contains(@0)",
-                                (object)data.ToString().ToLower());
+                            source = source.Where(property.Name + ".ToLower().Contains(@0)",
+                                data.ToString().ToLower());
                         }
                         else if (property.CustomAttributes.Any(
-                                (Func<CustomAttributeData, bool>)(a => a.AttributeType == typeof(IntAttribute))))
+                                a => a.AttributeType == typeof(IntAttribute)))
                         {
-                            source = source.Where<TEntity>(property.Name + " == @0",
-                                (object)data);
+                            source = source.Where(property.Name + " == @0",
+                                data);
                         }
                         else if (property.CustomAttributes.Any(a => a.AttributeType == typeof(BooleanAttribute)))
                         {
-                            source = source.Where<TEntity>(property.Name + "== @0", (object)data);
+                            source = source.Where(property.Name + "== @0", data);
                         }
                         else if (property.CustomAttributes.Any(
-                                     (Func<CustomAttributeData, bool>)(a =>
-                                        a.AttributeType == typeof(ChildAttribute))))
+                                     a =>
+                                        a.AttributeType == typeof(ChildAttribute)))
                         {
                             foreach (PropertyInfo propertyChild in property.PropertyType.GetProperties())
                             {
@@ -49,14 +49,14 @@ namespace DriverLicenseExamLearning_Service.Ultilities
                                     ?.GetValue(data, (object[])null);
                                 if (dataChild != null)
                                 {
-                                    source = source.Where<TEntity>(string.Format("{0}.{1}=\"{2}\"", property.Name,
+                                    source = source.Where(string.Format("{0}.{1}=\"{2}\"", property.Name,
                                         propertyChild.Name, dataChild));
                                 }
                             }
                         }
                         else if (property.CustomAttributes.Any(
-                                     (Func<CustomAttributeData, bool>)(a =>
-                                        a.AttributeType == typeof(DateRangeAttribute))))
+                                     a =>
+                                        a.AttributeType == typeof(DateRangeAttribute)))
                         {
                             // string operate1 = data.ToString().Substring(1);
                             // string operare2 = data.ToString().Substring(data.ToString().Length);
@@ -65,15 +65,15 @@ namespace DriverLicenseExamLearning_Service.Ultilities
                             string predicate = property.Name + " >= @0 && " + property.Name + " < @1";
                             object[] dateRange = new object[2]
                             {
-                                (object) date.Date,
+                                 date.Date,
                                 null
                             };
                             date = date.Date;
                             dateRange[1] = date.AddDays(1.0);
-                            source = source2.Where<TEntity>(predicate, dateRange);
+                            source = source2.Where(predicate, dateRange);
                         }
                         else if (property.CustomAttributes.Any(
-                                     (Func<CustomAttributeData, bool>)(a => a.AttributeType == typeof(SortAttribute))))
+                                     a => a.AttributeType == typeof(SortAttribute)))
                         {
                             string[] sort = data.ToString().Split(", ");
                             if (sort.Length == 2)

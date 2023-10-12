@@ -4,8 +4,9 @@ using DriverLicenseExamLearning_Data.Entity;
 using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
-using DriverLicenseExamLearning_Service.Helpers;
-using DriverLicenseExamLearning_Service.Ultilities;
+using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.Support.Helpers;
+using DriverLicenseExamLearning_Service.Support.Ultilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,18 +19,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DriverLicenseExamLearning_Service.Services
+namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 {
-    public interface IUserService
-    {
-        Task<PagedResult<UserResponse>> GetCustomers(UserRequest request, PagingRequest paging);
-        bool CheckRegexEmail(string email);
-        Task<IEnumerable<User>> GetAllAsync();
-        Task<UserLoginResponse> LoginAsync(UserLoginRequest request);
-        Task<bool> DeleteUser(int userID);
-        
-        Task<bool> UpdateUser(int userID, UserLoginRequest user);   
-    }
+
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -47,7 +39,7 @@ namespace DriverLicenseExamLearning_Service.Services
             throw new NotImplementedException();
         }
         public async Task<IEnumerable<User>> GetAllAsync() => await _unitOfWork.Repository<User>().GetAllAsync();
-  
+
         public Task<PagedResult<UserResponse>> GetCustomers(UserRequest request, PagingRequest paging)
         {
             var filter = _mapper.Map<UserResponse>(request);
@@ -65,9 +57,9 @@ namespace DriverLicenseExamLearning_Service.Services
         {
             var user = await _unitOfWork.Repository<User>().Where(u => u.Email == request.Email && u.Password == request.Password).FirstOrDefaultAsync();
             string secretKeyConfig = _config["JWTSecretKey:SecretKey"];
-            
+
             DateTime secretKeyDate = DateTime.UtcNow;
-            
+
             string refreshToken = RefreshTokenString.GetRefreshToken();
             user.RefreshToken = refreshToken;
 

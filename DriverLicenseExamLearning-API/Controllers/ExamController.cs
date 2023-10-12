@@ -6,7 +6,7 @@ namespace DriverLicenseExamLearning_API.Controllers
     public class ExamController : ODataController
     {
 
-
+ 
         
 
     }
