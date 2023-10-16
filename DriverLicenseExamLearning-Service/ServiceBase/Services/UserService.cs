@@ -149,5 +149,22 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
             return await _unitOfWork.Repository<User>().FindAsync(x => x.Email == email);
         }
+
+        public async Task<UserResponse> RegisterAsync(RegisterRequest request)
+        {
+            var newUser = new User
+            {
+                UserName = request.UserName,
+                Password = request.Password,
+                Name = request.Name,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                Address = request.Address
+            };
+            await _unitOfWork.Repository<User>().CreateAsync(newUser);
+            await _unitOfWork.CommitAsync();
+
+            return _mapper.Map<UserResponse>(newUser);
+        }
     }
 }
