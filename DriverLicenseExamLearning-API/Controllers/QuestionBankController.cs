@@ -1,5 +1,7 @@
 ﻿using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using FirebaseAdmin.Messaging;
+
 //using DriverLicenseExamLearning_Service.ServiceBase.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -27,7 +29,9 @@ namespace DriverLicenseExamLearning_API.Controllers
 
             if (!checkFalse)
             {
-                return BadRequest("Something Wrong");
+                return BadRequest (new {
+                    msg = "Have Error"
+                });
             }
 
             return Ok("Add Question To Bank Sucessfully");
