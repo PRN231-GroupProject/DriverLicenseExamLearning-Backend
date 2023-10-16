@@ -47,23 +47,34 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             var newExam = _mapper.Map<Exam>(create);
             newExam.ExamDate = DateTime.Now;
             _unitOfWork.Repository<Exam>().CreateAsync(newExam);
-            int ExamId = _unitOfWork.Repository<Exam>().Where(x => x.ExamDate == newExam.ExamDate).FirstOrDefault().ExamId;
+            Exam  exam = _unitOfWork.Repository<Exam>().Where(x => x.ExamDate == newExam.ExamDate).FirstOrDefault();
+            int examID = exam.ExamId;
+            int licenseID = (int)exam.LicenseId;
             foreach (var item in create.QuestionID)
             {
-                Question  question = new Question
-                {
-                    ExamId = ExamId,
 
+                if( _unitOfWork.Repository<Question>().Where(x => x.QuestionId == item).FirstOrDefault().)
+                {
                     
                 }
+                ExamQuestion exam = new ExamQuestion()
+                {
+                    ExamId = ExamId,
+                    QuestionId = item
+                   ,Status = "Active"
+                };
+
+                _unitOfWork.Repository<ExamQuestion>().CreateAsync(exam);
+                _unitOfWork.Commit();
             }
 
         }
 
-        public Task<int> ExamResult(AnswerByMemberRequest answer)
+        public Task<int> DoingQuiz(AnswerByMemberRequest answer)
         {
             throw new NotImplementedException();
         }
+
 
         public Task<IQueryable<ExamGetByMemberResponse>> GetExamListByCustomer()
         {

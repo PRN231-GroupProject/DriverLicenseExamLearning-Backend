@@ -25,7 +25,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         Task<IQueryable<ExamGetByMemberResponse>> GetExamListByCustomer();
 
         //Doing quiz
-        Task<int> ExamResult(AnswerByMemberRequest answer); 
+        Task<int> DoingQuiz(AnswerByMemberRequest answer); 
 
 
        
