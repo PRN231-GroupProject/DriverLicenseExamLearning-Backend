@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace DriverLicenseExamLearning_API.Controllers
 {
-    public class CarController  : ODataController
+    public class CarController : ODataController
     {
         private readonly ICarService _carService;
 
@@ -20,39 +20,55 @@ namespace DriverLicenseExamLearning_API.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
-            var car  = await _carService.GetCar();
+            var car = await _carService.GetCar();
             return Ok(car);
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int CarID)
+        public async Task<ActionResult> Delete(int CarID)
         {
             bool checkTrue = await _carService.DeleteCar(CarID);
             if (checkTrue)
             {
-                return BadRequest("Delete Unsecessfully") ;
+                return BadRequest(new
+                {
+                    message = "Delete Unsecessfully"
+                }
+                );
             }
 
-            return Ok("Delete Sucessfully");
+            return Ok(new
+            {
+                message = "Delete Sucessfully"
+            });
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateCarRequest car,int carID)
+        public async Task<IActionResult> Update(UpdateCarRequest car, int carID)
         {
-           bool check = await _carService.UpdateCar(car, carID);
+            bool check = await _carService.UpdateCar(car, carID);
             if (!check)
             {
-                return BadRequest("");
+                return BadRequest(new
+                {
+                    message = "Update Unsecessfully"
+                });
             }
 
-            return Ok("");
+            return Ok(new
+            {
+                message = "Update Sucessfully"
+            });
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(UpdateCarRequest carRequest)
         {
-           await _carService.CreateCar(carRequest);
-            return Ok("Create Sucessfully");
+            await _carService.CreateCar(carRequest);
+            return Ok(new
+            {
+                message = "Create Sucessfully"
+            });
         }
     }
 }
