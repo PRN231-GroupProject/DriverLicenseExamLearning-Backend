@@ -7,11 +7,11 @@ namespace DriverLicenseExamLearning_Data.Entity
     {
         public Question()
         {
+            ExamQuestions = new HashSet<ExamQuestion>();
             ExamResultDetails = new HashSet<ExamResultDetail>();
         }
 
         public int QuestionId { get; set; }
-        public int? ExamId { get; set; }
         public string? Question1 { get; set; }
         public string? Image { get; set; }
         public string? Option1 { get; set; }
@@ -21,7 +21,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         public string? Answer { get; set; }
         public string? Status { get; set; }
 
-        public virtual Exam? Exam { get; set; }
+        public virtual ICollection<ExamQuestion> ExamQuestions { get; set; }
         public virtual ICollection<ExamResultDetail> ExamResultDetails { get; set; }
     }
 }

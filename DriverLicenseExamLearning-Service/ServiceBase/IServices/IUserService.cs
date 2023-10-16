@@ -15,6 +15,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         bool CheckRegexEmail(string email);
         Task<IEnumerable<User>> GetAllAsync();
         Task<UserLoginResponse> LoginAsync(UserLoginRequest request);
+        Task<UserResponse> RegisterAsync(RegisterRequest request);
         Task<User> GetCustomerByEmail(string email);
         Task<bool> DeleteUser(int userID);
         bool IsUniqueUser(string email);
