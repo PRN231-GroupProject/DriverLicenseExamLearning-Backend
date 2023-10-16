@@ -17,7 +17,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
+        [HttpGet()]
         [EnableQuery]
         //https://localhost:7018/api/user?$select=userId,firstname,lastname,email&$filter=status%20eq%20%27Active%27
         public async Task<IActionResult> GetAllOdata()
@@ -33,6 +33,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             var result = await _userService.GetCustomers(customerRequest, pagingRequest);
             return result != null ? Ok(result) : NotFound();
         }
+
         [HttpPost("login")]
         public async Task<ActionResult<UserResponse>> LoginAsync([FromBody] UserLoginRequest loginRequest)
         {

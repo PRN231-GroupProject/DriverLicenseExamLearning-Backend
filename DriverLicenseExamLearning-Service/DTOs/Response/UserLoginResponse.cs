@@ -10,12 +10,11 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
     public class UserLoginResponse
     {
         public int UserId { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        public string? Name { get; set; }
         public string? Email { get; set; }
         public virtual RoleResponse? Role { get; set; }
-        public string? AccessToken { get; internal set; }
-        public string? RefreshToken { get; internal set; }
+        public string? AccessToken { get; set; }
+        public string? RefreshToken { get; set; }
 
     }
 }

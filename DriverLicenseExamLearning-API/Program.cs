@@ -3,7 +3,7 @@ using DriverLicenseExamLearning_API.Mapper;
 using DriverLicenseExamLearning_Data.Entity;
 using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
-//using DriverLicenseExamLearning_Service.ServiceBase.Services;
+using DriverLicenseExamLearning_Service.ServiceBase.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +40,7 @@ builder.Services.AddControllers()
                                 .SetMaxTop(null)
                                 .AddRouteComponents("odata", modelBuilder.GetEdmModel()));
 
-//builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(typeof(Mapping));
 builder.Services.AddScoped<PRN231_DriverLicenseExamLearningContext>();
