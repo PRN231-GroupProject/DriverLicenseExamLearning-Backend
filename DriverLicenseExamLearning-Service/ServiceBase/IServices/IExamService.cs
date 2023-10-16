@@ -21,17 +21,14 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         //Get All Exam Query by Staff
         Task<IQueryable<ExamQueryGeneralResponse>> GetExamQuery();
 
-
-      
-
         //Get Quiz by Customer
         Task<IQueryable<ExamGetByMemberResponse>> GetExamListByCustomer();
 
-        //Dong quiz
+        //Doing quiz
         Task<int> ExamResult(AnswerByMemberRequest answer); 
 
 
-        Task<>
+       
 
 
 

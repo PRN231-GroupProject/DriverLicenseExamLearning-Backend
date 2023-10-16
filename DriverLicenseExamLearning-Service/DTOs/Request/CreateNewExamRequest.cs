@@ -9,7 +9,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
     public  class CreateNewExamRequest
     {
         public string? Status { get; set; }
-
+        public string? ExamName { get; set; }
 
         public int? LicenseTypeId { get; set; }
 
