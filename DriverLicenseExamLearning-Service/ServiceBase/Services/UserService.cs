@@ -15,8 +15,10 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Numerics;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DriverLicenseExamLearning_Service.ServiceBase.Services
@@ -36,7 +38,14 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public bool CheckRegexEmail(string email)
         {
-            throw new NotImplementedException();
+            string regex = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+            Regex re = new Regex(regex);
+            if (re.IsMatch(email))
+            {
+                return true;
+            }
+            else
+                return false;
         }
         public async Task<IEnumerable<User>> GetAllAsync() => await _unitOfWork.Repository<User>().GetAllAsync();
 
@@ -44,7 +53,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
             var filter = _mapper.Map<UserResponse>(request);
             var customer = _unitOfWork.Repository<User>()
-                                      .GetAll().Where(x => x.RoleId != 1)
+                                      .GetAll().Where(x => x.RoleId != 1) //avoid admin
                                       .ProjectTo<UserResponse>(_mapper.ConfigurationProvider)
                                       .DynamicFilter(filter)
                                       .ToList();
@@ -120,6 +129,25 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         public Task<bool> UpdateUser(int userID, UserLoginRequest user)
         {
             throw new NotImplementedException();
+        }
+
+        public bool IsUniqueUser(string email)
+        {
+            var user = _unitOfWork.Repository<User>().Find(x => x.Email == email);
+            if (user == null)
+            {
+                return true;
+            } return false;
+        }
+
+        public bool CheckPassword(User user, string password)
+        {
+            return user != null && user.Password == password;
+        }
+
+        public async Task<User> GetCustomerByEmail(string email)
+        {
+            return await _unitOfWork.Repository<User>().FindAsync(x => x.Email == email);
         }
     }
 }
