@@ -1,22 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace DriverLicenseExamLearning_Data.Entity
 {
     public partial class Booking
     {
-        [Key]
+        public Booking()
+        {
+            MemberDayRegisters = new HashSet<MemberDayRegister>();
+            Transactions = new HashSet<Transaction>();
+        }
+
         public int BookingId { get; set; }
         public int? MemberId { get; set; }
+        public int? PackageId { get; set; }
         public int? MentorId { get; set; }
-        public int? AvailabilityId { get; set; }
-        public DateTime? BookingDate { get; set; }
-        public decimal? FeePaid { get; set; }
+        public int? CarId { get; set; }
+        public int? TrackingId { get; set; }
+        public DateTime? CreateDate { get; set; }
         public string? Status { get; set; }
 
-        public virtual MentorAvailability? Availability { get; set; }
-        public virtual MemberAttribute? Member { get; set; }
-        public virtual MentorAttribute? Mentor { get; set; }
+        public virtual Car? Car { get; set; }
+        public virtual User? Member { get; set; }
+        public virtual User? Mentor { get; set; }
+        public virtual Package? Package { get; set; }
+        public virtual Tracking? Tracking { get; set; }
+        public virtual ICollection<MemberDayRegister> MemberDayRegisters { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

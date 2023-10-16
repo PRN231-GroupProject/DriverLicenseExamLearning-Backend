@@ -11,8 +11,8 @@ namespace DriverLicenseExamLearning_Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DriverLicenseExamLearningContext _driverLicenseExamLearningContext;
-        public UnitOfWork(DriverLicenseExamLearningContext driverLicenseExamLearningContext)
+        private readonly PRN231_DriverLicenseExamLearningContext _driverLicenseExamLearningContext;
+        public UnitOfWork(PRN231_DriverLicenseExamLearningContext driverLicenseExamLearningContext)
         {
             _driverLicenseExamLearningContext = driverLicenseExamLearningContext;
         }

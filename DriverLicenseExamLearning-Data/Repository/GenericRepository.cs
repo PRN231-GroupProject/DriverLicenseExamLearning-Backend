@@ -12,9 +12,9 @@ namespace DriverLicenseExamLearning_Data.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private static DriverLicenseExamLearningContext Context;
+        private static PRN231_DriverLicenseExamLearningContext Context;
         private static DbSet<T> Table { get; set; }
-        public GenericRepository(DriverLicenseExamLearningContext context)
+        public GenericRepository(PRN231_DriverLicenseExamLearningContext context)
         {
             Context = context;
             Table = Context.Set<T>();
