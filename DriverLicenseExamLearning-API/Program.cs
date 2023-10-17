@@ -45,6 +45,8 @@ builder.Services.AddControllers()
 builder.Services.AddScoped<IQuestionBankService, QuestionBankService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPackagesService, PackageService>();
+builder.Services.AddScoped<IClaimsService, ClaimsService>();
+builder.Services.AddScoped<IExamService, ExamService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(typeof(Mapping));
 builder.Services.AddScoped<PRN231_DriverLicenseExamLearningContext>();
