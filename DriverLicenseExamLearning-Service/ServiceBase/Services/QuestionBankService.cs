@@ -4,6 +4,7 @@ using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.State;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,6 +32,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         }
         public async Task<bool> AddQuizRequests(List<AddQuestionRequest> requests)
         {
+
+            // Check role
+            if (!_claimsService.GetCurrentUserRole.Equals(RoleInSystem.Staff.ToString())){
+                throw new CrudException<string>(HttpStatusCode.BadRequest,"You are not allowed to this function","");
+            }
             int checkErrorQuiz = 0;
             List<string> errors = new List<string>();
             #region "Add New Quiz And Check"
