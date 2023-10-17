@@ -65,7 +65,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public async Task<UserLoginResponse> LoginAsync(UserLoginRequest request)
         {
-            var user = await _unitOfWork.Repository<User>().Include(u => u.Role).Where(u => u.Email == request.Email && u.Password == request.Password).FirstOrDefaultAsync();
+            var user =  _unitOfWork.Repository<User>().Include(u => u.Role).Where(u => u.Email == request.Email && u.Password == request.Password).FirstOrDefault();
             string secretKeyConfig = _config["JWTSecretKey:SecretKey"];
 
             DateTime secretKeyDate = DateTime.UtcNow;
@@ -152,8 +152,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public async Task<UserResponse> RegisterAsync(RegisterRequest request)
         {
+            var roleFind =  _unitOfWork.Repository<Role>().Where(x => x.RoleName == "Member").FirstOrDefault().RoleId;
             var newUser = new User
             {
+                Status = "Active",
+                RoleId = roleFind,
                 UserName = request.UserName,
                 Password = request.Password,
                 Name = request.Name,

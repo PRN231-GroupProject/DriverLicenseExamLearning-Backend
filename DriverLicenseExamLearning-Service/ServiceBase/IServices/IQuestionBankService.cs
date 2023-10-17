@@ -12,7 +12,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
     {
         Task<bool> AddQuizRequests(List<AddQuestionRequest> requests);
 
-
         Task<bool> UpdateQuizRequests(int quizID, AddQuestionRequest request);
 
         Task<IQueryable<QuestionBankResponse>> QuestionBank();

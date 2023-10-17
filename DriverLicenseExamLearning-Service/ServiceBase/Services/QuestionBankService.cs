@@ -20,11 +20,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
     public class QuestionBankService : IQuestionBankService
     {
-        private readonly IClaimsService _claimsService;
+         private readonly IClaimsService _claimsService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public QuestionBankService(IUnitOfWork unitOfWork, IMapper mapper, IClaimsService claimsService)
+        public QuestionBankService(IUnitOfWork unitOfWork, IMapper mapper,IClaimsService claimsService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -34,8 +34,9 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
 
             // Check role
-            if (!_claimsService.GetCurrentUserRole.Equals(RoleInSystem.Staff.ToString())){
-                throw new CrudException<string>(HttpStatusCode.BadRequest,"You are not allowed to this function","");
+            if (!_claimsService.GetCurrentUserRole.Equals(RoleInSystem.Staff.ToString()))
+            {
+                throw new CrudException<string>(HttpStatusCode.BadRequest, "You are not allowed to this function", "");
             }
             int checkErrorQuiz = 0;
             List<string> errors = new List<string>();
