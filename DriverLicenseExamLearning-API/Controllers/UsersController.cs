@@ -110,18 +110,17 @@ namespace DriverLicenseExamLearning_API.Controllers
                 msg = "Refresh Token Error!"
             });
         }
-        /*       [HttpPut]
-               public async Task<IActionResult> Update(int  userId,UserLoginRequest user)
-               {
-
-               }
-
-
-               [HttpDelete]
-               public async Task<IActionResult> Delete(int userId)
-               {
-
-               }*/
-
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int userId, UserRequest user)
+        {
+            var rs = await _userService.UpdateAsync(userId, user);
+            return rs != null ? Ok(new
+            {
+                msg = "The profile has been updated!"
+            }) : BadRequest(new
+            {
+                msg = "Update profile error!"
+            });
+        }
     }
 }

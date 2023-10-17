@@ -11,7 +11,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
     public interface IExamService
     {
         // Create New Exam by Staff
-        Task<bool> CreateNewExam(CreateNewExamRequest create);
+        //Task<bool> CreateNewExam(CreateNewExamRequest create);
        //Modify Exam by Staff
         Task<bool> ModifiedExam(ModifyQuizRequest modify);
 

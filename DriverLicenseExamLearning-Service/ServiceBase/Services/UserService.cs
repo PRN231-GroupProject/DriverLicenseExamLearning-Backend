@@ -123,15 +123,13 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             };
         }
 
-        public Task<bool> DeleteUser(int userID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UpdateUser(int userID, UserLoginRequest user)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<bool> DeleteUser(int userID)
+        //{
+        //    var user = await _unitOfWork.Repository<User>().GetAsync(u => u.UserId == userID);
+        //    _unitOfWork.Repository<User>().Delete(user);
+        //    await _unitOfWork.CommitAsync();
+        //    return _mapper.Map<User, UserResponse>(user);
+        //}
 
         public bool IsUniqueUser(string email)
         {
@@ -188,6 +186,15 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken
             };
+        }
+
+        public async Task<UserResponse> UpdateAsync(int id, UserRequest request)
+        {
+            User user = _unitOfWork.Repository<User>().Find(u => u.UserId == id);
+            _mapper.Map<UserRequest, User>(request, user);
+            await _unitOfWork.Repository<User>().Update(user, id);
+            await _unitOfWork.CommitAsync();
+            return _mapper.Map<User, UserResponse>(user);
         }
     }
 }

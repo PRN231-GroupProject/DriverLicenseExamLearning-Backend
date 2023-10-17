@@ -42,33 +42,35 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             return true;
         }
 
-        public Task<bool> CreateNewExam(CreateNewExamRequest create)
-        {
-            var newExam = _mapper.Map<Exam>(create);
-            newExam.ExamDate = DateTime.Now;
-            _unitOfWork.Repository<Exam>().CreateAsync(newExam);
-            Exam  exam = _unitOfWork.Repository<Exam>().Where(x => x.ExamDate == newExam.ExamDate).FirstOrDefault();
-            int examID = exam.ExamId;
-            int licenseID = (int)exam.LicenseId;
-            foreach (var item in create.QuestionID)
-            {
+        //public Task<bool> CreateNewExam(CreateNewExamRequest create)
+        //{
+        //    var newExam = _mapper.Map<Exam>(create);
+        //    newExam.ExamDate = DateTime.Now;
+        //    _unitOfWork.Repository<Exam>().CreateAsync(newExam);
+        //    Exam exam = _unitOfWork.Repository<Exam>().Where(x => x.ExamDate == newExam.ExamDate).FirstOrDefault();
+        //    int examID = exam.ExamId;
+        //    int licenseID = (int)exam.LicenseId;
+        //    foreach (var item in create.QuestionID)
+        //    {
 
-                if( _unitOfWork.Repository<Question>().Where(x => x.QuestionId == item).FirstOrDefault().)
-                {
-                    
-                }
-                ExamQuestion exam = new ExamQuestion()
-                {
-                    ExamId = ExamId,
-                    QuestionId = item
-                   ,Status = "Active"
-                };
+        //        if (_unitOfWork.Repository<Question>().Where(x => x.QuestionId == item).FirstOrDefault().)
+        //        {
 
-                _unitOfWork.Repository<ExamQuestion>().CreateAsync(exam);
-                _unitOfWork.Commit();
-            }
+        //        }
+        //        ExamQuestion exam = new ExamQuestion()
+        //        {
+        //            ExamId = ExamId,
+        //            QuestionId = item
+        //           ,
+        //            Status = "Active"
+        //        };
 
-        }
+        //        _unitOfWork.Repository<ExamQuestion>().CreateAsync(exam);
+        //        _unitOfWork.Commit();
+        //    }
+        //    return true;
+
+        //}
 
         public Task<int> DoingQuiz(AnswerByMemberRequest answer)
         {
