@@ -9,6 +9,7 @@ namespace DriverLicenseExamLearning_API.Mapper
     {
         public Mapping()
         {
+            #region User & Role
             CreateMap<User, UserRequest>().ReverseMap();
             CreateMap<User, UserLoginRequest>().ReverseMap();
             CreateMap<User, UserResponse>().ReverseMap();
@@ -17,7 +18,7 @@ namespace DriverLicenseExamLearning_API.Mapper
             CreateMap<UserRequest, UserResponse>().ReverseMap();
 
             CreateMap<Role, RoleResponse>().ReverseMap();
-
+            #endregion
 
             CreateMap<CreateNewExamRequest , Exam>()
                 .ForMember(x => x.ExamName, opt => opt.MapFrom(x => x.ExamName))
@@ -41,6 +42,12 @@ namespace DriverLicenseExamLearning_API.Mapper
                 .ForMember(x => x.CarName, opt => opt.MapFrom(x => x.CarName))
                 .ForMember(x => x.Status, opt => opt.MapFrom(x => x.Status))
                 .ReverseMap();
+            #region Package
+            CreateMap<Package, PackageRequest>().ReverseMap();
+            CreateMap<Package, PackageResponse>().ReverseMap();
+            CreateMap<PackageRequest, PackageResponse>().ReverseMap();
+            CreateMap<PackageRequest, PackageResponse>().ReverseMap();
+            #endregion
         }
     }
 }
