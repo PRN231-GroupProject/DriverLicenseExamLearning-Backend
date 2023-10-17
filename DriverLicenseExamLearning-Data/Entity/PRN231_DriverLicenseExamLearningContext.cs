@@ -33,6 +33,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         public virtual DbSet<Tracking> Trackings { get; set; } = null!;
         public virtual DbSet<Transaction> Transactions { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -224,11 +225,16 @@ namespace DriverLicenseExamLearning_Data.Entity
 
                 entity.Property(e => e.CreateDate).HasColumnType("date");
 
+                entity.Property(e => e.LicenseTypeId).HasColumnName("LicenseTypeID");
+
                 entity.Property(e => e.PackageName).HasMaxLength(100);
 
-                entity.Property(e => e.Price).HasColumnType("int");
-
                 entity.Property(e => e.Status).HasMaxLength(20);
+
+                entity.HasOne(d => d.LicenseType)
+                    .WithMany(p => p.Packages)
+                    .HasForeignKey(d => d.LicenseTypeId)
+                    .HasConstraintName("FK_Package_LicenseType");
             });
 
             modelBuilder.Entity<Question>(entity =>
@@ -298,7 +304,7 @@ namespace DriverLicenseExamLearning_Data.Entity
             {
                 entity.ToTable("User");
 
-                entity.Property(e => e.AccessToken).HasMaxLength(255);
+                entity.Property(e => e.AccessToken).HasMaxLength(4000);
 
                 entity.Property(e => e.Email).HasMaxLength(100);
 

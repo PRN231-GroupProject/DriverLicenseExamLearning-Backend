@@ -16,7 +16,8 @@ namespace DriverLicenseExamLearning_Data.Entity
         public string? Description { get; set; }
         public DateTime? CreateDate { get; set; }
         public string? Status { get; set; }
-
+        public int? LicenseTypeId { get; set; }
+        public virtual LicenseType? LicenseType { get; set; }
         public virtual ICollection<Booking> Bookings { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DriverLicenseExamLearning_Data.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,6 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
         public DateTime? CreateDate { get; set; } = DateTime.Now;
         [JsonIgnore]
         public string? Status { get; set; } = "Active";
+        public ICollection<LicenseTypeResponse>? LicenseType { get; set; } = new List<LicenseTypeResponse>();
     }
 }
