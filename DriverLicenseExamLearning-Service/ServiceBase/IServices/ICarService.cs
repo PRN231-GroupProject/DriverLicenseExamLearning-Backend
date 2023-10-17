@@ -11,11 +11,8 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
     public  interface ICarService
     {
         public Task<IQueryable<Car>> GetCar();
-
         public Task<bool> UpdateCar(UpdateCarRequest  car,int carID);
-
         public Task<bool> DeleteCar(int carID);
-
         public Task<bool> CreateCar(UpdateCarRequest newCar);
     }
 }

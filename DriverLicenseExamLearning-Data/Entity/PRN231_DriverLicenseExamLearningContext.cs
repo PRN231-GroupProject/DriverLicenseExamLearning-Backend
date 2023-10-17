@@ -304,7 +304,7 @@ namespace DriverLicenseExamLearning_Data.Entity
             {
                 entity.ToTable("User");
 
-                entity.Property(e => e.AccessToken).HasMaxLength(255);
+                entity.Property(e => e.AccessToken).HasMaxLength(4000);
 
                 entity.Property(e => e.Email).HasMaxLength(100);
 
