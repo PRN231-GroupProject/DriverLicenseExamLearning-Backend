@@ -1,6 +1,7 @@
 ﻿using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.Support.Ultilities;
 //using DriverLicenseExamLearning_Service.ServiceBase.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -25,14 +26,12 @@ namespace DriverLicenseExamLearning_API.Controllers
             var list = await _userService.GetAllAsync();
             return list != null ? Ok(list) : NotFound();
         }
-        
         [HttpGet("NormalGetWithFilter")]
         public async Task<ActionResult<List<UserResponse>>> GetCustomer([FromQuery] PagingRequest pagingRequest, [FromQuery] UserRequest customerRequest)
         {
             var result = await _userService.GetCustomers(customerRequest, pagingRequest);
             return result != null ? Ok(result) : NotFound();
         }
-
         [HttpPost("login")]
         public async Task<ActionResult<UserResponse>> LoginAsync([FromBody] UserLoginRequest loginRequest)
         {
@@ -45,15 +44,6 @@ namespace DriverLicenseExamLearning_API.Controllers
                     msg = "The email is not formatted!"
                 });
             }
-
-            //var checkUniqueUser = _userService.IsUniqueUser(loginRequest.Email);
-            //if (!checkUniqueUser)
-            //{
-            //    return BadRequest(new
-            //    {
-            //        msg = "This email has been registered!"
-            //    });
-            //}
 
             var user = await _userService.GetCustomerByEmail(loginRequest.Email);
             if (user == null)
@@ -75,20 +65,63 @@ namespace DriverLicenseExamLearning_API.Controllers
             var rs = await _userService.LoginAsync(loginRequest);
             return rs != null ? Ok(rs) : NotFound();
         }
-
-
- /*       [HttpPut]
-        public async Task<IActionResult> Update(int  userId,UserLoginRequest user)
+        [HttpPost("register")]
+        public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterRequest model)
         {
-
+            #region Validate
+            var checkPhoneFormat = _userService.CheckRegexEmail(model.Email);
+            if (checkPhoneFormat == false)
+            {
+                return BadRequest(new
+                {
+                    message = "Wrong Format Email"
+                });
+            }
+            var checkIsUniquePhone = _userService.IsUniqueUser(model.Email);
+            if (checkIsUniquePhone == false)
+            {
+                return BadRequest(new
+                {
+                    message = "This email has been registered!"
+                });
+            }
+            #endregion
+            var rs = await _userService.RegisterAsync(model);
+            return rs != null ? Ok(rs) : BadRequest(new
+            {
+                msg = "Register Error"
+            });
         }
-
-
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int userId)
+        [HttpPost("RefreshToken")]
+        public async Task<ActionResult<RefreshTokenResponse>> RefreshToken(string refreshToken)
         {
+            #region Validate
+            if (string.IsNullOrWhiteSpace(refreshToken))
+            {
+                return BadRequest(new
+                {
+                    msg = "Refresh Token cannot white space or empty!"
+                });
+            }
+            #endregion
+            var refreshTokenResponse = await _userService.RefreshTokenAsync(refreshToken);
+            return refreshTokenResponse != null ? Ok(refreshTokenResponse) : BadRequest(new
+            {
+                msg = "Refresh Token Error!"
+            });
+        }
+        /*       [HttpPut]
+               public async Task<IActionResult> Update(int  userId,UserLoginRequest user)
+               {
 
-        }*/
+               }
+
+
+               [HttpDelete]
+               public async Task<IActionResult> Delete(int userId)
+               {
+
+               }*/
 
     }
 }

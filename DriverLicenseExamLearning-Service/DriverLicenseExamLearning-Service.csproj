@@ -31,7 +31,4 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\DriverLicenseExamLearning-Data\DriverLicenseExamLearning-Data.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="ServiceBase\IServices\" />
-	</ItemGroup>
 </Project>

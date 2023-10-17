@@ -20,6 +20,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         Task<bool> DeleteUser(int userID);
         bool IsUniqueUser(string email);
         bool CheckPassword(User user, string password);
+        Task<RefreshTokenResponse> RefreshTokenAsync(string refreshToken);
         Task<bool> UpdateUser(int userID, UserLoginRequest user);
     }
 }

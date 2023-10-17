@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Numerics;
 using System.Security.Claims;
 using System.Text;
@@ -107,7 +108,8 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }   
+        }
+
         private UserLoginResponse CreateLoginResponse(int userId, string name, string email, RoleResponse role, string accessToken, string refreshToken)
         {
             return new UserLoginResponse
@@ -165,6 +167,27 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             await _unitOfWork.CommitAsync();
 
             return _mapper.Map<UserResponse>(newUser);
+        }
+
+        public async Task<RefreshTokenResponse> RefreshTokenAsync(string refreshToken)
+        {
+            var user = await _unitOfWork.Repository<User>()
+                .Where(u => u.RefreshToken == refreshToken)
+                .FirstOrDefaultAsync();
+
+            string newRefreshToken = RefreshTokenString.GetRefreshToken();
+            string secretKeyConfig = _config["JWTSecretKey:SecretKey"];
+            DateTime secretKeyDateTime = DateTime.UtcNow;
+            string newAccessToken = GenerateJWT(user, secretKeyConfig, secretKeyDateTime);
+
+            user.RefreshToken = newRefreshToken;
+            //await UpdateUserWithRefreshToken(user);
+
+            return new RefreshTokenResponse
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken
+            };
         }
     }
 }
