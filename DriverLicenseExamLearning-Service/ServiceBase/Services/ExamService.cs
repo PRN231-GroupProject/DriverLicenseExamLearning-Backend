@@ -17,14 +17,16 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
     public class ExamService : IExamService
     {
+        private readonly IClaimsService _claimService;
         private readonly IMapper _mapper; 
         private readonly IUnitOfWork _unitOfWork;
 
 
-        public ExamService(IUnitOfWork unitOfWork,IMapper mapper)
+        public ExamService(IUnitOfWork unitOfWork,IMapper mapper, IClaimsService claimService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _claimService = claimService;
         }
 
         public async Task<bool> ChangeStatusExam(int examID, string status)
@@ -77,8 +79,12 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             throw new NotImplementedException();
         }
 
+        public Task<IQueryable<ResultExamByCustomerResponse>> GetExamHistory(int licenseTypeID)
+        {
+            throw new NotImplementedException();
+        }
 
-        public Task<IQueryable<ExamGetByMemberResponse>> GetExamListByCustomer()
+        public Task<IQueryable<ExamGetByMemberResponse>> GetExamListByCustomer(int licenseTypeID)
         {
             throw new NotImplementedException();
         }

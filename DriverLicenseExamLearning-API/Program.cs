@@ -38,8 +38,11 @@ builder.Services.AddControllers()
                                 .Expand()
                                 .Count()
                                 .SetMaxTop(null)
-                                .AddRouteComponents("odata", modelBuilder.GetEdmModel()));
 
+
+                                .AddRouteComponents("odata", modelBuilder.GetEdmModel()));
+// Add Dependency Injection
+builder.Services.AddScoped<IQuestionBankService, QuestionBankService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPackagesService, PackageService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -47,6 +50,7 @@ builder.Services.AddAutoMapper(typeof(Mapping));
 builder.Services.AddScoped<PRN231_DriverLicenseExamLearningContext>();
 // Add authentication and configure JWT
 
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

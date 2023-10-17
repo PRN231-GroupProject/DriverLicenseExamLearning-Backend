@@ -22,10 +22,15 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         Task<IQueryable<ExamQueryGeneralResponse>> GetExamQuery();
 
         //Get Quiz by Customer
-        Task<IQueryable<ExamGetByMemberResponse>> GetExamListByCustomer();
+        Task<IQueryable<ExamGetByMemberResponse>> GetExamListByCustomer(int licenseTypeID);
 
         //Doing quiz
         Task<int> DoingQuiz(AnswerByMemberRequest answer); 
+
+
+        //View Exam History Doing follow licenseType
+        Task<IQueryable<ResultExamByCustomerResponse>> GetExamHistory(int licenseTypeID);
+
 
 
        
