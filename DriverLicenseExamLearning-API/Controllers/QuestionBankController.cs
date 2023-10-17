@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace DriverLicenseExamLearning_API.Controllers
 {
+    [Route("api/questionbank")]
     public class QuestionBankController : ODataController
     {
 
@@ -17,6 +18,12 @@ namespace DriverLicenseExamLearning_API.Controllers
         {
             _service = service;
         }
+
+        /// <summary>
+        /// Add List Question to Bank Question
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> AddMultipleQuestion(List<AddQuestionRequest> quizRequests)
         {
