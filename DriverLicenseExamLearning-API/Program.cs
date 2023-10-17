@@ -43,6 +43,8 @@ builder.Services.AddControllers()
                                 .AddRouteComponents("odata", modelBuilder.GetEdmModel()));
 // Add Dependency Injection
 builder.Services.AddScoped<IQuestionBankService, QuestionBankService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPackagesService, PackageService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(typeof(Mapping));
 builder.Services.AddScoped<PRN231_DriverLicenseExamLearningContext>();

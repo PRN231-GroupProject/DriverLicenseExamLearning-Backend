@@ -1,4 +1,7 @@
-﻿using DriverLicenseExamLearning_Service.DTOs.Request;
+﻿using AutoMapper;
+using DriverLicenseExamLearning_Data.Entity;
+using DriverLicenseExamLearning_Data.UnitOfWork;
+using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using System;
@@ -11,29 +14,42 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 {
     public class PackageService : IPackagesService
     {
-        public Task<PackageResponse> CreatePackage(PackageRequest request)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        public PackageService(IMapper mapper, IUnitOfWork unitOfWork)
+        {
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+        }
+        public async Task<PackageResponse> CreatePackage(PackageRequest request)
+        {
+            var p = _mapper.Map<Package>(request);
+            await _unitOfWork.Repository<Package>().CreateAsync(p);
+            await _unitOfWork.CommitAsync();
+            return _mapper.Map<Package, PackageResponse>(p);
+        }
+
+        public Task<PackageResponse> DeletePackage(int id) //Soft remove
         {
             throw new NotImplementedException();
         }
 
-        public Task<PackageResponse> DeletePackage(int id)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<PackageResponse> GetAllAsync(PackageRequest request)
+        //{
+        //    var p = _mapper.Map<Package>(request);
+        //    await _unitOfWork.Repository<Package>().GetAllAsync();
+        //    await _unitOfWork.CommitAsync();
+        //    return _mapper.Map<Package, PackageResponse>(p);
+        //}
+        public async Task<IEnumerable<Package>> GetAllAsync() => await _unitOfWork.Repository<Package>().GetAllAsync();
 
-        public Task<PackageResponse> GetPackage(PackageRequest request)
+        public async Task<PackageResponse> UpdatePackage(int id, PackageRequest request)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<PackageResponse> GetPackageById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PackageResponse> UpdatePackage(int id, PackageRequest request)
-        {
-            throw new NotImplementedException();
+            Package package = _unitOfWork.Repository<Package>().Find(u => u.PackageId == id);
+            _mapper.Map<PackageRequest, Package>(request, package);
+            await _unitOfWork.Repository<Package>().Update(package, id);
+            await _unitOfWork.CommitAsync();
+            return _mapper.Map<Package, PackageResponse>(package);
         }
     }
 }

@@ -226,7 +226,7 @@ namespace DriverLicenseExamLearning_Data.Entity
 
                 entity.Property(e => e.PackageName).HasMaxLength(100);
 
-                entity.Property(e => e.Price).HasMaxLength(20);
+                entity.Property(e => e.Price).HasColumnType("int");
 
                 entity.Property(e => e.Status).HasMaxLength(20);
             });
