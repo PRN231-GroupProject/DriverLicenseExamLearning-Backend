@@ -9,6 +9,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         {
             Exams = new HashSet<Exam>();
             LicenseApplications = new HashSet<LicenseApplication>();
+            Questions = new HashSet<Question>();
         }
 
         public int LicenseTypeId { get; set; }
@@ -17,5 +18,6 @@ namespace DriverLicenseExamLearning_Data.Entity
 
         public virtual ICollection<Exam> Exams { get; set; }
         public virtual ICollection<LicenseApplication> LicenseApplications { get; set; }
+        public virtual ICollection<Question> Questions { get; set; }
     }
 }

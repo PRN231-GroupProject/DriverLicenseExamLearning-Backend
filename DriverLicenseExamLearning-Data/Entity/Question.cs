@@ -12,6 +12,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         }
 
         public int QuestionId { get; set; }
+        public int? LicenseType { get; set; }
         public string? Question1 { get; set; }
         public string? Image { get; set; }
         public string? Option1 { get; set; }
@@ -21,6 +22,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         public string? Answer { get; set; }
         public string? Status { get; set; }
 
+        public virtual LicenseType? LicenseTypeNavigation { get; set; }
         public virtual ICollection<ExamQuestion> ExamQuestions { get; set; }
         public virtual ICollection<ExamResultDetail> ExamResultDetails { get; set; }
     }

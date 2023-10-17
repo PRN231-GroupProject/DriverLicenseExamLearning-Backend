@@ -18,7 +18,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
         public IQueryable<QuestionGetByMemberResponse> questions { get; set; }
 
     }
-}
+
 
 
 public class QuestionGetByMemberResponse
@@ -41,4 +41,6 @@ public class QuestionGetByMemberResponse
 
 
 }
+
+
 }
