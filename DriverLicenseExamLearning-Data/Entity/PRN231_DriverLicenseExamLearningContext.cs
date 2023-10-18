@@ -28,6 +28,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         public virtual DbSet<MemberDayRegister> MemberDayRegisters { get; set; } = null!;
         public virtual DbSet<MentorAttribute> MentorAttributes { get; set; } = null!;
         public virtual DbSet<Package> Packages { get; set; } = null!;
+        public virtual DbSet<PackageType> PackageTypes { get; set; } = null!;
         public virtual DbSet<Question> Questions { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Tracking> Trackings { get; set; } = null!;
@@ -124,7 +125,7 @@ namespace DriverLicenseExamLearning_Data.Entity
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.ExamQuestions)
                     .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("FK__ExamQuest__Quest__5165187F");
+                    .HasConstraintName("FK_ExamQuestions_Question");
             });
 
             modelBuilder.Entity<ExamResult>(entity =>
@@ -232,6 +233,18 @@ namespace DriverLicenseExamLearning_Data.Entity
                     .WithMany(p => p.Packages)
                     .HasForeignKey(d => d.LicenseTypeId)
                     .HasConstraintName("FK_Package_LicenseType");
+            });
+
+            modelBuilder.Entity<PackageType>(entity =>
+            {
+                entity.ToTable("PackageType");
+
+                entity.Property(e => e.Status).HasMaxLength(20);
+
+                entity.HasOne(d => d.Package)
+                    .WithMany(p => p.PackageTypes)
+                    .HasForeignKey(d => d.PackageId)
+                    .HasConstraintName("FK__PackageTy__Packa__74AE54BC");
             });
 
             modelBuilder.Entity<Question>(entity =>

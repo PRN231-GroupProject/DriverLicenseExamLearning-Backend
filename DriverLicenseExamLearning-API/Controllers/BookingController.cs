@@ -17,7 +17,10 @@ namespace DriverLicenseExamLearning_API.Controllers
         public async Task<ActionResult> CreateBooking([FromBody] BookingRequest req)
         {
             var rs = await _bookingService.CreateBooking(req);
-            return rs != null ? Ok(rs) : BadRequest(new
+            return rs != null ? Ok(new
+            {
+                msg = "Create Booking Successfully!"
+            }) : BadRequest(new
             {
                 msg = "Create Booking Fail!"
             });

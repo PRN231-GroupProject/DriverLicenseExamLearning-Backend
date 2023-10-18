@@ -43,7 +43,8 @@ builder.Services.AddControllers()
 
 
 
-//builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IClaimsService, ClaimsService>();
 builder.Services.AddScoped<IPackagesService, PackageService>();
 builder.Services.AddScoped<IExamService, ExamService>();

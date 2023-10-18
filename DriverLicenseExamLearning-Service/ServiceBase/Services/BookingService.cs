@@ -26,6 +26,16 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
             var newBooking = _mapper.Map<Booking>(req);
             await _unitOfWork.Repository<Booking>().CreateAsync(newBooking);
+            if (newBooking.Package.LicenseType.LicenseTypeId == 1)
+            {
+
+            }
+            var tracking = new TrackingRequest
+            {
+                BookingId = newBooking.BookingId,
+                Note = "",
+                Processing = "0/800 km"
+            };
             await _unitOfWork.CommitAsync();
             return true;
         }
