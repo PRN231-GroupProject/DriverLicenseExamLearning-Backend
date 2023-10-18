@@ -133,7 +133,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         public async Task<IQueryable<ResultExamByCustomerResponse>> GetExamHistory(int licenseTypeID)
         {
             int userID = _claimService.GetCurrentUserId;
-            IQueryable<ResultExamByCustomerResponse> results = await QueryFormat.GetHistoryExam(licenseTypeID,userID);
+            IQueryable<ResultExamByCustomerResponse> results = await QueryFormat.GetHistoryExam(licenseTypeID, userID);
             return results;
         }
 
@@ -149,12 +149,50 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             return examQuery;
         }
 
-   
 
-        public Task<bool> ModifiedExam(uint quizID, ModifyQuizRequest modify)
+
+        public async Task<bool> ModifiedExam(uint quizID, ModifyQuizRequest modify)
         {
-           /* var checkExam = _unitOfWork.Repository<Exam>().Where(x => x.)*/
-           throw new Exception();
+            var checkExam = _unitOfWork.Repository<Exam>().Where(x => x.ExamId == quizID).FirstOrDefault();
+            if (checkExam is null)
+            {
+                return false;
+            }
+            if (modify.RemoveFromQuiz is not null)
+            {
+                foreach (var item in modify.RemoveFromQuiz)
+                {
+                    ExamQuestion examQuestion = _unitOfWork.Repository<ExamQuestion>().Where(x => x.ExamId == quizID && x.QuestionId == item).FirstOrDefault();
+                    if (examQuestion is not null)
+                    {
+                        examQuestion.Status = "Delete";
+                    }
+
+                }
+
+            }
+            if (modify.AddToQuiz is not null)
+            {
+                foreach (var item in modify.AddToQuiz)
+                {
+                    ExamQuestion create = new ExamQuestion()
+                    {
+                        ExamId = (int?)quizID,
+                        Status = "Active",
+                        QuestionId = item
+                    };
+                    await _unitOfWork.Repository<ExamQuestion>().CreateAsync(create);
+                    _unitOfWork.Commit();
+
+
+                }
+
+            }
+
+            return true;
+
+
+
         }
 
         private async Task<int> RightNumberAnswer(List<AnswerDetailMemberRequest> requests, int examResultID)

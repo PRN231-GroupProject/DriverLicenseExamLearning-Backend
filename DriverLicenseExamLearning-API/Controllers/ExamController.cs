@@ -23,6 +23,10 @@ namespace DriverLicenseExamLearning_API.Controllers
         public async Task<ActionResult<IQueryable<ExamQueryGeneralResponse>>> GetQuiz()
         {
            var  quiz = await _examService.GetExamQuery();
+            if(quiz is null)
+            {
+                return NotFound();
+            }
             return Ok(quiz);
         }
 
@@ -31,6 +35,10 @@ namespace DriverLicenseExamLearning_API.Controllers
         public async Task<ActionResult<IQueryable<ExamGetByMemberResponse>>> GetQuiz(int licenseTypeID)
         {
             var quiz = await _examService.GetExamListByCustomer(licenseTypeID);
+            if(quiz is null)
+            {
+                return NotFound();
+            }
             return Ok(quiz);
 
         }
@@ -39,6 +47,10 @@ namespace DriverLicenseExamLearning_API.Controllers
         public async Task<ActionResult> DoingQuiz([FromBody]AnswerByMemberRequest answer)
         {
             string result = await _examService.DoingQuiz(answer);   
+            if(result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);  
         }
 
@@ -48,6 +60,10 @@ namespace DriverLicenseExamLearning_API.Controllers
         public async Task<ActionResult<IQueryable>> GetQuizHistory(int licenseTypeID)
         {
             var quizHistory =await _examService.GetExamHistory(licenseTypeID);
+            if(quizHistory is null)
+            {
+                return NotFound();
+            }
             return Ok(quizHistory);
         }
 
