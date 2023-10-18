@@ -159,7 +159,7 @@ namespace DriverLicenseExamLearning_Service.Support.Ultilities
                                                                                        join question in _context.Questions on examDetailResult.QuestionId equals question.QuestionId
                                                                                        select new ResultExamDetailByCustomerResponse
                                                                                        {
-                                                                                           Option1 =  question.Option1,
+                                                                                           Option1 = question.Option1,
                                                                                            QuestionId = question.QuestionId,
                                                                                            Option2 = question.Option2,
                                                                                            Image = question.Image,
@@ -171,11 +171,60 @@ namespace DriverLicenseExamLearning_Service.Support.Ultilities
                                                                                        .GroupBy(result => result.QuestionId)
                                                                                        .Select(x => x.First())
                                                                                        .ToHashSet()
-                                                                                       
+
 
                                                               }).AsQueryable();
 
             return exams;
+        }
+
+
+        public static async Task<IQueryable<LicenseApplicationResponse>> GetLicenseApplicationByStaff()
+        {
+            var result = (from licenseapplication in _context.LicenseApplications
+                          join user in _context.Users on licenseapplication.UserId equals user.UserId
+                          select new LicenseApplicationResponse
+                          {
+                              userId = user.UserId,
+                              loader = ((IReadOnlyCollection<LicenseApplicationDetailResponse>)(from LicenseApplication in _context.LicenseApplications
+                                                                                                where LicenseApplication.LicenseApplicationId == licenseapplication.LicenseApplicationId
+                                                                                                select new LicenseApplicationDetailResponse
+                                                                                                {
+                                                                                                    CitizenIdentificationCard = LicenseApplication.CitizenIdentificationCard,
+                                                                                                    CurriculumVitae = LicenseApplication.CurriculumVitae,
+                                                                                                    HealthCertification = LicenseApplication.HealthCertification,
+                                                                                                    UserImage = licenseapplication.UserImage,
+                                                                                                    LicenseTypeID = licenseapplication.LicenseTypeId,
+                                                                                                    Status = licenseapplication.Status
+                                                                                                    
+                                                                                                })).ToList()
+
+
+                          }).AsQueryable();
+
+
+            return result;
+        }
+
+
+
+        public static async Task<IQueryable<LicenseApplicationDetailResponse>> GetLicenseApplicationByCustomer(uint customerId)
+        {
+            var result = (from licenseapplication in _context.LicenseApplications
+                          join user in _context.Users on licenseapplication.UserId equals user.UserId
+                          where user.UserId == customerId
+                          select new LicenseApplicationDetailResponse
+                          {
+                              CitizenIdentificationCard = licenseapplication.CitizenIdentificationCard,
+                              CurriculumVitae = licenseapplication.CurriculumVitae,
+                              HealthCertification = licenseapplication.HealthCertification,
+                              LicenseTypeID = licenseapplication.LicenseTypeId,
+                              UserImage = licenseapplication.UserImage,
+                              Status = licenseapplication.Status
+                          }).AsQueryable();
+
+
+            return result;
         }
     }
 }
