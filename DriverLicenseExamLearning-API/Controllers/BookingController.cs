@@ -1,4 +1,5 @@
 ﻿using DriverLicenseExamLearning_Service.DTOs.Request;
+using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -23,6 +24,24 @@ namespace DriverLicenseExamLearning_API.Controllers
             }) : BadRequest(new
             {
                 msg = "Create Booking Fail!"
+            });
+        }
+        [HttpGet]
+        public async Task<ActionResult<BookingResponse>> GetAllAsync()
+        {
+            var rs = await _bookingService.GetAllBooking();
+            return rs != null ? Ok(rs) : NotFound();
+        }
+        [HttpPut("{bookingId:int}")]
+        public async Task<ActionResult<BookingResponse>> UpdateBooking(int bookingId, [FromBody] BookingRequest req)
+        {
+            var rs = await _bookingService.UpdateBooking(bookingId, req);
+            return rs != null ? Ok(new
+            {
+                msg = "Update Successfully!"
+            }) : BadRequest(new
+            {
+                msg = "Update fail!"
             });
         }
     }

@@ -10,6 +10,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
 {
     public class PackageResponse
     {
+        public int? PackageTypeId { get; set; }
         public string? PackageName { get; set; }
         public int? Price { get; set; }
         public string? Description { get; set; }
@@ -18,5 +19,6 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
         [JsonIgnore]
         public string? Status { get; set; } = "Active";
         public ICollection<LicenseTypeResponse>? LicenseType { get; set; } = new List<LicenseTypeResponse>();
+        public ICollection<PackageTypeResponse>? PackageTypes { get; set; } = new List<PackageTypeResponse>();
     }
 }

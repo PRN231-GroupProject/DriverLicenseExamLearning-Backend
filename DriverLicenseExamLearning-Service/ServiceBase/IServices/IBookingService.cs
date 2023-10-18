@@ -11,7 +11,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
     public interface IBookingService
     {
         Task<bool> CreateBooking(BookingRequest req);
-        Task<bool> UpdateBooking(BookingRequest req);
-        Task<IQueryable<BookingResponse>> GetAllBooking();
+        Task<BookingResponse> UpdateBooking(int bookingId, BookingRequest req);
+        Task<IEnumerable<BookingResponse>> GetAllBooking();
     }
 }
