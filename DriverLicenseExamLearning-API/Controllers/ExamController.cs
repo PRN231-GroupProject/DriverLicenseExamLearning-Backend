@@ -27,7 +27,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         }
 
         [EnableQuery]
-        [HttpGet("GetQuizByCustomer")]
+        [HttpGet("GetQuizByMember")]
         public async Task<ActionResult<IQueryable<ExamGetByMemberResponse>>> GetQuiz(int licenseTypeID)
         {
             var quiz = await _examService.GetExamListByCustomer(licenseTypeID);
@@ -53,9 +53,9 @@ namespace DriverLicenseExamLearning_API.Controllers
 
 
         [HttpPut("Update")]
-        public async Task<ActionResult> Update(ModifyQuizRequest request)
+        public async Task<ActionResult> Update(uint quizID,[FromBody]ModifyQuizRequest request)
         {
-              await _examService.ModifiedExam(request);
+              await _examService.ModifiedExam(quizID, request);
             return Ok(new
             {
                 message = "Update Quiz Sucessfully"

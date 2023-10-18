@@ -13,7 +13,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         // Create New Exam by Staff
         //Task<bool> CreateNewExam(CreateNewExamRequest create);
        //Modify Exam by Staff
-        Task<bool> ModifiedExam(ModifyQuizRequest modify);
+        Task<bool> ModifiedExam(uint quizID,ModifyQuizRequest modify);
 
         // Update Status Exam by Staff
         Task<bool> ChangeStatusExam(int examID, string status);

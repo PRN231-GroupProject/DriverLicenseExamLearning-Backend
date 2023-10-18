@@ -149,9 +149,12 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             return examQuery;
         }
 
-        public Task<bool> ModifiedExam(ModifyQuizRequest modify)
+   
+
+        public Task<bool> ModifiedExam(uint quizID, ModifyQuizRequest modify)
         {
-            throw new NotImplementedException();
+           /* var checkExam = _unitOfWork.Repository<Exam>().Where(x => x.)*/
+           throw new Exception();
         }
 
         private async Task<int> RightNumberAnswer(List<AnswerDetailMemberRequest> requests, int examResultID)
