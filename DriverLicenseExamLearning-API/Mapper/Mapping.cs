@@ -49,6 +49,11 @@ namespace DriverLicenseExamLearning_API.Mapper
             CreateMap<PackageRequest, PackageResponse>().ReverseMap();
             #endregion
             CreateMap<LicenseType, LicenseTypeResponse>().ReverseMap();
+
+            CreateMap<Booking, BookingRequest>().ReverseMap();
+            CreateMap<Booking, BookingResponse>().ReverseMap();
+            CreateMap<BookingRequest, BookingResponse>().ReverseMap();
+            //CreateMap<BookingRequest, BookingResponse>().ReverseMap();
         }
     }
 }
