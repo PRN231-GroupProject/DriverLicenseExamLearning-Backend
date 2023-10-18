@@ -11,6 +11,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         public string? Note { get; set; }
         public string? Processing { get; set; }
         public string? Status { get; set; }
+        public string? Total { get; set; }
 
         public virtual Booking? Booking { get; set; }
     }

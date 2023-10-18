@@ -43,8 +43,14 @@ builder.Services.AddControllers()
 
 
 
+<<<<<<< HEAD
 //builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILicenseApplicationService, LicenseApplicationService>();
+=======
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IMemberDayRegisterService, MemberDayRegisterService>();
+>>>>>>> 6795da0e1ef0e3176bbc6a5e1e6991883888d8fb
 builder.Services.AddScoped<IClaimsService, ClaimsService>();
 builder.Services.AddScoped<IPackagesService, PackageService>();
 builder.Services.AddScoped<IExamService, ExamService>();

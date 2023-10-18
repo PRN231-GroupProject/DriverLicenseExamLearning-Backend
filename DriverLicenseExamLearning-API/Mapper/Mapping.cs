@@ -53,7 +53,16 @@ namespace DriverLicenseExamLearning_API.Mapper
             CreateMap<Booking, BookingRequest>().ReverseMap();
             CreateMap<Booking, BookingResponse>().ReverseMap();
             CreateMap<BookingRequest, BookingResponse>().ReverseMap();
-            //CreateMap<BookingRequest, BookingResponse>().ReverseMap();
+
+            CreateMap<LicenseType, LicenseTypeResponse>().ReverseMap();
+            CreateMap<PackageType, PackageTypeResponse>().ReverseMap();
+
+            CreateMap<Car, CarResponse>().ReverseMap();
+            CreateMap<Tracking, TrackingRequest>().ReverseMap();
+
+            CreateMap<MemberDayRegister, MemberDayRegisterRequest>().ForMember(x => x.Dates, opt => opt.MapFrom(x => x.Datetime)).ReverseMap();
+            CreateMap<MemberDayRegister, MemberDayRegisterResponse>().ForMember(x => x.Dates, opt => opt.MapFrom(x => x.Datetime)).ReverseMap();
+            CreateMap<MemberDayRegisterRequest, MemberDayRegisterResponse>().ForMember(x => x.Dates, opt => opt.MapFrom(x => x.Dates)).ReverseMap();
         }
     }
 }

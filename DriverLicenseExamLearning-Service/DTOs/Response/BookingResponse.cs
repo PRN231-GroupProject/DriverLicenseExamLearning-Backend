@@ -10,10 +10,10 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
     public class BookingResponse
     {
         public int BookingId { get; set; }
-        public List<Car>? Car { get; set; } = new List<Car>();
-        public List<User>? Member { get; set; } = new List<User>();
-        public List<User>? Mentor { get; set; } = new List<User>();
-        public List<Package>? Package { get; set; } = new List<Package>();
+        public ICollection<CarResponse>? Car { get; set; } = new List<CarResponse>();
+        public ICollection<UserResponse>? Member { get; set; } = new List<UserResponse>();
+        public ICollection<UserResponse>? Mentor { get; set; } = new List<UserResponse>();
+        public ICollection<PackageResponse>? Package { get; set; } = new List<PackageResponse>();
         public DateTime? CreateDate { get; set; }
         public string? Status { get; set; }
     }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace DriverLicenseExamLearning_API.Controllers
 {
+    [Route("api/car")]
     public class CarController : ODataController
     {
         private readonly ICarService _carService;

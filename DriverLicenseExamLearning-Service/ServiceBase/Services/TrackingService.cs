@@ -1,4 +1,6 @@
-﻿using DriverLicenseExamLearning_Data.Entity;
+﻿using AutoMapper;
+using DriverLicenseExamLearning_Data.Entity;
+using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using System;
@@ -11,22 +13,25 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 {
     public class TrackingService : ITrackingService
     {
-        public Task<bool> CreateTransaction(TrackingRequest request)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        public TrackingService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
-
-        public Task<bool> DeleteTransaction(int id)
+    
+        public async Task<bool> CreateTransactionByBookingId(int bookingId, TrackingRequest request)
         {
-            throw new NotImplementedException();
+            var check = _unitOfWork.Repository<Booking>().GetById(bookingId);
+            request.BookingId = check.Id;
+            var booking = _mapper.Map<Tracking>(request);
+            await _unitOfWork.Repository<Tracking>().CreateAsync(booking);
+            await _unitOfWork.CommitAsync();
+            return true;
         }
 
         public Task<IEnumerable<Tracking>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UpdateTransaction(int id, TrackingRequest request)
         {
             throw new NotImplementedException();
         }

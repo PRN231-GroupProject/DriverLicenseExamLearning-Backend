@@ -11,8 +11,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
     public interface ITrackingService
     {
         Task<IEnumerable<Tracking>> GetAllAsync();
-        Task<bool> DeleteTransaction(int id);
-        Task<bool> CreateTransaction(TrackingRequest request);
-        Task<bool> UpdateTransaction(int id, TrackingRequest request);
+        Task<bool> CreateTransactionByBookingId(int bookingId, TrackingRequest request);
     }
 }

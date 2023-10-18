@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
 {
-    public interface IBookingService
+    public interface IMemberDayRegisterService
     {
-        Task<bool> CreateBooking(BookingRequest req);
-        Task<BookingResponse> UpdateBooking(int bookingId, BookingRequest req);
-        Task<IEnumerable<BookingResponse>> GetAllBooking();
+        Task<IEnumerable<MemberDayRegisterResponse>> CreateMemberDayRegisterByBookingId(int booking, MemberDayRegisterRequest req);
+        Task<MemberDayRegisterResponse> GetMemberDayRegisterByBookId(int bookId);
     }
 }
