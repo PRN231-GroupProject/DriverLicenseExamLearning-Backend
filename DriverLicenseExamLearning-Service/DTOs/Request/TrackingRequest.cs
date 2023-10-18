@@ -9,6 +9,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
 {
     public class TrackingRequest
     {
+        [JsonIgnore]
         public int? BookingId { get; set; }
         [JsonIgnore]
         public DateTime? TrackingDate { get; set; } = DateTime.Now;
@@ -16,5 +17,6 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
         public string? Processing { get; set; }
         [JsonIgnore]
         public string? Status { get; set; } = "Active";
+        public string? Total { get; set; }
     }
 }

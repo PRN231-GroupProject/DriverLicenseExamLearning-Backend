@@ -288,6 +288,8 @@ namespace DriverLicenseExamLearning_Data.Entity
 
                 entity.Property(e => e.Status).HasMaxLength(20);
 
+                entity.Property(e => e.Total).HasMaxLength(4000);
+
                 entity.Property(e => e.TrackingDate).HasColumnType("date");
 
                 entity.HasOne(d => d.Booking)

@@ -36,30 +36,32 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             if (book != null && book.Package != null)
             {
                 var packageTypeId = book.Package.FirstOrDefault(row => true)?.PackageTypeId;
-                string processing = "";
+                string processing = "0";
+                string total = "";
 
                 if (packageTypeId == 1)
                 {
-                    processing = "0/800 km";
+                    total = "800km";
                 }
                 if (packageTypeId == 2)
                 {
-                    processing = "0/15 days";
+                    total = "15 days";
                 }
                 if (packageTypeId == 3)
                 {
-                    processing = "0/30 days";
+                    total = "30 days";
                 }
                 if (packageTypeId == 4)
                 {
-                    processing = "0/1600 km";
+                    total = "1600km";
                 }
 
                 var tracking = new TrackingRequest
                 {
                     BookingId = newBooking.BookingId,
                     Note = "",
-                    Processing = processing
+                    Processing = processing,
+                    Total = total
                 };
 
                 var newTracking = _mapper.Map<Tracking>(tracking);

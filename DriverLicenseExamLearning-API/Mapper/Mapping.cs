@@ -60,6 +60,9 @@ namespace DriverLicenseExamLearning_API.Mapper
             CreateMap<Car, CarResponse>().ReverseMap();
             CreateMap<Tracking, TrackingRequest>().ReverseMap();
 
+            CreateMap<MemberDayRegister, MemberDayRegisterRequest>().ForMember(x => x.Dates, opt => opt.MapFrom(x => x.Datetime)).ReverseMap();
+            CreateMap<MemberDayRegister, MemberDayRegisterResponse>().ForMember(x => x.Dates, opt => opt.MapFrom(x => x.Datetime)).ReverseMap();
+            CreateMap<MemberDayRegisterRequest, MemberDayRegisterResponse>().ForMember(x => x.Dates, opt => opt.MapFrom(x => x.Dates)).ReverseMap();
         }
     }
 }
