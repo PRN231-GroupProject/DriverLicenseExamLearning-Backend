@@ -64,27 +64,22 @@ namespace DriverLicenseExamLearning_Data.Entity
                 entity.HasOne(d => d.Car)
                     .WithMany(p => p.Bookings)
                     .HasForeignKey(d => d.CarId)
-                    .HasConstraintName("FK__Booking__CarId__5AEE82B9");
+                    .HasConstraintName("FK__Booking__CarId__59063A47");
 
                 entity.HasOne(d => d.Member)
                     .WithMany(p => p.BookingMembers)
                     .HasForeignKey(d => d.MemberId)
-                    .HasConstraintName("FK__Booking__MemberI__5812160E");
+                    .HasConstraintName("FK__Booking__MemberI__5629CD9C");
 
                 entity.HasOne(d => d.Mentor)
                     .WithMany(p => p.BookingMentors)
                     .HasForeignKey(d => d.MentorId)
-                    .HasConstraintName("FK__Booking__MentorI__59FA5E80");
+                    .HasConstraintName("FK__Booking__MentorI__5812160E");
 
                 entity.HasOne(d => d.Package)
                     .WithMany(p => p.Bookings)
                     .HasForeignKey(d => d.PackageId)
-                    .HasConstraintName("FK__Booking__Package__59063A47");
-
-                entity.HasOne(d => d.Tracking)
-                    .WithMany(p => p.Bookings)
-                    .HasForeignKey(d => d.TrackingId)
-                    .HasConstraintName("FK__Booking__Trackin__5BE2A6F2");
+                    .HasConstraintName("FK__Booking__Package__571DF1D5");
             });
 
             modelBuilder.Entity<Car>(entity =>
@@ -111,25 +106,25 @@ namespace DriverLicenseExamLearning_Data.Entity
                 entity.HasOne(d => d.License)
                     .WithMany(p => p.Exams)
                     .HasForeignKey(d => d.LicenseId)
-                    .HasConstraintName("FK__Exam__LicenseId__44FF419A");
+                    .HasConstraintName("FK__Exam__LicenseId__4316F928");
             });
 
             modelBuilder.Entity<ExamQuestion>(entity =>
             {
                 entity.HasKey(e => e.ExamQuestions)
-                    .HasName("PK__ExamQues__F79CD65423990AEF");
+                    .HasName("PK__ExamQues__F79CD654EFD1A724");
 
                 entity.Property(e => e.Status).HasMaxLength(20);
 
                 entity.HasOne(d => d.Exam)
                     .WithMany(p => p.ExamQuestions)
                     .HasForeignKey(d => d.ExamId)
-                    .HasConstraintName("FK__ExamQuest__ExamI__52593CB8");
+                    .HasConstraintName("FK__ExamQuest__ExamI__5070F446");
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.ExamQuestions)
                     .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("FK__ExamQuest__Quest__534D60F1");
+                    .HasConstraintName("FK__ExamQuest__Quest__5165187F");
             });
 
             modelBuilder.Entity<ExamResult>(entity =>
@@ -143,30 +138,30 @@ namespace DriverLicenseExamLearning_Data.Entity
                 entity.HasOne(d => d.Exam)
                     .WithMany(p => p.ExamResults)
                     .HasForeignKey(d => d.ExamId)
-                    .HasConstraintName("FK__ExamResul__ExamI__47DBAE45");
+                    .HasConstraintName("FK__ExamResul__ExamI__45F365D3");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.ExamResults)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__ExamResul__UserI__48CFD27E");
+                    .HasConstraintName("FK__ExamResul__UserI__46E78A0C");
             });
 
             modelBuilder.Entity<ExamResultDetail>(entity =>
             {
                 entity.HasKey(e => e.ExamResultDetailsId)
-                    .HasName("PK__ExamResu__9F70203FE04B3120");
+                    .HasName("PK__ExamResu__9F70203F435CFE74");
 
                 entity.Property(e => e.WrongAnswer).HasMaxLength(20);
 
                 entity.HasOne(d => d.ExamResult)
                     .WithMany(p => p.ExamResultDetails)
                     .HasForeignKey(d => d.ExamResultId)
-                    .HasConstraintName("FK__ExamResul__ExamR__4E88ABD4");
+                    .HasConstraintName("FK__ExamResul__ExamR__4CA06362");
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.ExamResultDetails)
                     .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("FK__ExamResul__Quest__4F7CD00D");
+                    .HasConstraintName("FK__ExamResul__Quest__4D94879B");
             });
 
             modelBuilder.Entity<LicenseApplication>(entity =>
@@ -216,7 +211,7 @@ namespace DriverLicenseExamLearning_Data.Entity
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MentorAttributes)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MentorAtt__UserI__403A8C7D");
+                    .HasConstraintName("FK__MentorAtt__UserI__3E52440B");
             });
 
             modelBuilder.Entity<Package>(entity =>
@@ -228,6 +223,8 @@ namespace DriverLicenseExamLearning_Data.Entity
                 entity.Property(e => e.LicenseTypeId).HasColumnName("LicenseTypeID");
 
                 entity.Property(e => e.PackageName).HasMaxLength(100);
+
+                entity.Property(e => e.Price).HasMaxLength(20);
 
                 entity.Property(e => e.Status).HasMaxLength(20);
 
@@ -258,7 +255,7 @@ namespace DriverLicenseExamLearning_Data.Entity
                 entity.HasOne(d => d.LicenseTypeNavigation)
                     .WithMany(p => p.Questions)
                     .HasForeignKey(d => d.LicenseType)
-                    .HasConstraintName("FK__Question__Licens__4BAC3F29");
+                    .HasConstraintName("FK__Question__Licens__49C3F6B7");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -279,6 +276,11 @@ namespace DriverLicenseExamLearning_Data.Entity
                 entity.Property(e => e.Status).HasMaxLength(20);
 
                 entity.Property(e => e.TrackingDate).HasColumnType("date");
+
+                entity.HasOne(d => d.Booking)
+                    .WithMany(p => p.Trackings)
+                    .HasForeignKey(d => d.BookingId)
+                    .HasConstraintName("FK__Tracking__Bookin__5BE2A6F2");
             });
 
             modelBuilder.Entity<Transaction>(entity =>
@@ -304,8 +306,6 @@ namespace DriverLicenseExamLearning_Data.Entity
             {
                 entity.ToTable("User");
 
-                entity.Property(e => e.AccessToken).HasMaxLength(4000);
-
                 entity.Property(e => e.Email).HasMaxLength(100);
 
                 entity.Property(e => e.Name).HasMaxLength(100);
@@ -323,7 +323,7 @@ namespace DriverLicenseExamLearning_Data.Entity
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK__User__RoleId__3D5E1FD2");
+                    .HasConstraintName("FK__User__RoleId__3B75D760");
             });
 
             OnModelCreatingPartial(modelBuilder);

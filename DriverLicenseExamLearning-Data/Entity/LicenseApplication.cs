@@ -12,6 +12,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         public string? HealthCertification { get; set; }
         public string? UserImage { get; set; }
         public string? CurriculumVitae { get; set; }
+        public string? Message { get; set; }
         public string? Status { get; set; }
 
         public virtual LicenseType? LicenseType { get; set; }

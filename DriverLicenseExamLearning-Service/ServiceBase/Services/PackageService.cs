@@ -30,7 +30,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             return _mapper.Map<Package, PackageResponse>(p);
         }
 
-        public Task<PackageResponse> DeletePackage(int id) //Soft remove
+        public Task<PackageResponse> DeletePackage(int id)
         {
             throw new NotImplementedException();
         }
