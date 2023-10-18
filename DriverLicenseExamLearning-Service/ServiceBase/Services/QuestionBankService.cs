@@ -77,9 +77,32 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public async Task<bool> UpdateQuizRequests(int quizID, AddQuestionRequest request)
         {
-            var questionObject = _mapper.Map<Question>(request);
-
-            await _unitOfWork.Repository<Question>().Update(questionObject, quizID);
+            Question questionFind = _unitOfWork.Repository<Question>().Where(x => x.QuestionId == quizID).FirstOrDefault();
+           if(request.Options4  != null && !request.Options4.Equals("string"))
+            {
+                questionFind.Option4 = request.Options4;
+            }
+            if (request.Options3 != null && !request.Options3.Equals("string"))
+            {
+                questionFind.Option3 = request.Options3;
+            }
+            if (request.Options1 != null && !request.Options1.Equals("string"))
+            {
+                questionFind.Option1 = request.Options1;
+            }
+            if (request.Options2 != null && !request.Options2.Equals("string"))
+            {
+                questionFind.Option2 = request.Options2;
+            }
+            if (request.Text != null && !request.Text.Equals("string"))
+            {
+                questionFind.Question1 = request.Text;
+            }
+            if(request.Image != null && !request.Image.Equals("string"))
+            {
+                questionFind.Image = request.Image;
+            }
+            await _unitOfWork.Repository<Question>().Update(questionFind, quizID);
             _unitOfWork.Commit();
             return true;
         }

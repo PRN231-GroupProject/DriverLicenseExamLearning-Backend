@@ -46,7 +46,6 @@ builder.Services.AddControllers()
 //builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IClaimsService, ClaimsService>();
 builder.Services.AddScoped<IPackagesService, PackageService>();
-builder.Services.AddScoped<IClaimsService, ClaimsService>();
 builder.Services.AddScoped<IExamService, ExamService>();
 builder.Services.AddScoped<ILicenseTypeService, LicenseTypeService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

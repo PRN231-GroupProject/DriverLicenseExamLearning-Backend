@@ -152,11 +152,9 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public async Task<UserResponse> RegisterAsync(RegisterRequest request)
         {
-            var roleFind =  _unitOfWork.Repository<Role>().Where(x => x.RoleName == "Member").FirstOrDefault().RoleId;
+            
             var newUser = new User
             {
-                Status = "Active",
-                RoleId = roleFind,
                 UserName = request.UserName,
                 Password = request.Password,
                 Name = request.Name,

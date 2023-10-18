@@ -26,15 +26,15 @@ namespace DriverLicenseExamLearning_API.Mapper
                 .ForMember(x => x.LicenseId, opt => opt.MapFrom(x => x.LicenseTypeId))
                 .ReverseMap();
             //Quiz Mapping
-            //CreateMap<AddQuestionRequest, Question>()
-            //    .ForMember(dex => dex.LicenseTypeId, opt => opt.MapFrom(src => src.LicenseTypeId))
-            //    .ForMember(dex => dex.Text, opt => opt.MapFrom(src => src.Text))
-            //    .ForMember(dex => dex.Options1, opt => opt.MapFrom(src => src.Options1))
-            //    .ForMember(dex => dex.Options2, opt => opt.MapFrom(src => src.Options2))
-            //    .ForMember(dex => dex.Options3, opt => opt.MapFrom(src => src.Options3))
-            //    .ForMember(dex => dex.Options4, opt => opt.MapFrom(src => src.Options4))
-            //    .ForMember(dex => dex.Answer, opt => opt.MapFrom(src => src.Answer))
-            //    .ReverseMap();
+            CreateMap<AddQuestionRequest, Question>()
+                .ForMember(dex => dex.LicenseType, opt => opt.MapFrom(src => src.LicenseTypeId))
+                .ForMember(dex => dex.Question1, opt => opt.MapFrom(src => src.Text))
+                .ForMember(dex => dex.Option1, opt => opt.MapFrom(src => src.Options1))
+                .ForMember(dex => dex.Option2, opt => opt.MapFrom(src => src.Options2))
+                .ForMember(dex => dex.Option3, opt => opt.MapFrom(src => src.Options3))
+                .ForMember(dex => dex.Option4, opt => opt.MapFrom(src => src.Options4))
+                .ForMember(dex => dex.Answer, opt => opt.MapFrom(src => src.Answer))
+                .ReverseMap();
 
             CreateMap<UpdateCarRequest, Car>()
                 .ForMember(x => x.CarType, opt => opt.MapFrom(x => x.CarType))

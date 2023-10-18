@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace DriverLicenseExamLearning_API.Controllers
 {
-    
+    [Route("api/exam")]
     public class ExamController : ODataController
     {
 
@@ -19,7 +19,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         }
 
         [EnableQuery]
-        [HttpGet]
+        [HttpGet("GetQuizByStaff")]
         public async Task<ActionResult<IQueryable<ExamQueryGeneralResponse>>> GetQuiz()
         {
            var  quiz = await _examService.GetExamQuery();
@@ -27,32 +27,32 @@ namespace DriverLicenseExamLearning_API.Controllers
         }
 
         [EnableQuery]
-        [HttpGet]
-        public async Task<ActionResult<IQueryable<ExamGetByMemberResponse>>> GetQuiz(int quizID)
+        [HttpGet("GetQuizByCustomer")]
+        public async Task<ActionResult<IQueryable<ExamGetByMemberResponse>>> GetQuiz(int licenseTypeID)
         {
-            var quiz = await _examService.GetExamListByCustomer(quizID);
+            var quiz = await _examService.GetExamListByCustomer(licenseTypeID);
             return Ok(quiz);
 
         }
 
-        [HttpPost]
-        public async Task<ActionResult> DoingQuiz(AnswerByMemberRequest answer)
+        [HttpPost("DoingQuiz")]
+        public async Task<ActionResult> DoingQuiz([FromBody]AnswerByMemberRequest answer)
         {
-            int result = await _examService.DoingQuiz(answer);   
+            string result = await _examService.DoingQuiz(answer);   
             return Ok(result);  
         }
 
 
-        [HttpGet]
+        [HttpGet("GetQuizHistoryByCustomer")]
         [EnableQuery]
         public async Task<ActionResult<IQueryable>> GetQuizHistory(int licenseTypeID)
         {
-            var quizHistory = _examService.GetExamHistory(licenseTypeID);
+            var quizHistory =await _examService.GetExamHistory(licenseTypeID);
             return Ok(quizHistory);
         }
 
 
-        [HttpPost]
+        [HttpPut("Update")]
         public async Task<ActionResult> Update(ModifyQuizRequest request)
         {
               await _examService.ModifiedExam(request);
@@ -60,6 +60,17 @@ namespace DriverLicenseExamLearning_API.Controllers
             {
                 message = "Update Quiz Sucessfully"
             });
+        }
+
+        [HttpPost("Create")]
+        public async Task<ActionResult> Create([FromBody]CreateNewExamRequest create)
+        {
+            await _examService.CreateExam(create);
+            return Ok(
+                new
+                {
+                    message = "Create Exam Sucessfully"
+                });
         }
 
 

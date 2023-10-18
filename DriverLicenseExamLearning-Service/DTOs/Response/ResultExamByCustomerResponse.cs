@@ -10,8 +10,8 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
     {
         public int QuizID { get; set; }
         public string? QuizName { get; set; }
-        public int Mark { get; set; }
-        public IQueryable<ResultExamDetailByCustomerResponse>? resultExamDetails { get; set; }
+        public string? Mark { get; set; }
+        public HashSet<ResultExamDetailByCustomerResponse>? resultExamDetails { get; set; }
 
 
     }

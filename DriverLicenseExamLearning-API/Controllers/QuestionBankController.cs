@@ -25,7 +25,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         /// <param name=""></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> AddMultipleQuestion(List<AddQuestionRequest> quizRequests)
+        public async Task<IActionResult> AddMultipleQuestion([FromBody]List<AddQuestionRequest> quizRequests)
         {
             if (!ModelState.IsValid)
             {

@@ -10,7 +10,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
     {
         public int QuizID { get; set; }
 
-        public  IQueryable<AnswerDetailMemberRequest> answerDetails { get; set; }
+        public  List<AnswerDetailMemberRequest> answerDetails { get; set; }
     }
 
 

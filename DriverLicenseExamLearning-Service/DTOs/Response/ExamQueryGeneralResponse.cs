@@ -20,6 +20,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
 
     public struct ExamQueryResponse
     {
+        public string ExamName { get; set; }
         public int ExamId { get; set; }
 
         public DateTime Date  { get; set; }  

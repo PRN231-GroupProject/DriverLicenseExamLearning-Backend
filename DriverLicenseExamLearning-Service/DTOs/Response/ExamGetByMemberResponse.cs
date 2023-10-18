@@ -15,7 +15,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
 
         public DateTime ExamDate { get; set; }
 
-        public IQueryable<QuestionGetByMemberResponse> questions { get; set; }
+        public List<QuestionGetByMemberResponse> questions { get; set; }
 
     }
 
