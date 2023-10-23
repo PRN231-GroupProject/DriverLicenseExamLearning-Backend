@@ -4,6 +4,7 @@ using DriverLicenseExamLearning_Data.Entity;
 using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using DriverLicenseExamLearning_Service.ServiceBase.Services;
+using DriverLicenseExamLearning_Service.Support.HandleError;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
@@ -42,15 +43,11 @@ builder.Services.AddControllers()
 // Add Dependency Injection
 
 
-
-<<<<<<< HEAD
-//builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILicenseApplicationService, LicenseApplicationService>();
-=======
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IMemberDayRegisterService, MemberDayRegisterService>();
->>>>>>> 6795da0e1ef0e3176bbc6a5e1e6991883888d8fb
+
 builder.Services.AddScoped<IClaimsService, ClaimsService>();
 builder.Services.AddScoped<IPackagesService, PackageService>();
 builder.Services.AddScoped<IExamService, ExamService>();
@@ -145,7 +142,7 @@ app.Use((context, next) =>
 app.UseCors();
 
 app.UseRouting();
-
+app.UseMiddleware<CustomExceptionMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

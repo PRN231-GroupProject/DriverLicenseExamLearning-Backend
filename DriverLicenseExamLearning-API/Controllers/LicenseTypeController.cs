@@ -21,5 +21,8 @@ namespace DriverLicenseExamLearning_API.Controllers
             var rs = await _licenseTypeService.GetAllAsync();
             return rs != null ? Ok(rs) : NotFound();
         }
+
+
+
     }
 }

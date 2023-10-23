@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace DriverLicenseExamLearning_Service.DTOs.State
 {
-    public class RoleNames
+    public static class RoleNames
     {
+        public const string Staff = "Staff";
+        public const string Mentor = "Mentor";
+        public const string Member = "Member";
+        public const string Adminastor = "Admin";
     }
 }
