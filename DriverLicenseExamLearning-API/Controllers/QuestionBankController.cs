@@ -44,7 +44,7 @@ namespace DriverLicenseExamLearning_API.Controllers
 
             return Ok("Add Question To Bank Sucessfully");
         }
-
+        
         [HttpGet]
         [EnableQuery]
         public async Task<IActionResult> Get()
@@ -57,6 +57,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = RoleNames.Staff)]
         [HttpPut]
         public async Task<IActionResult> Update(int questionID, [FromBody] AddQuestionRequest request)
         {

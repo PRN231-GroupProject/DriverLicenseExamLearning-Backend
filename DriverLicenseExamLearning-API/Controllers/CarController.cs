@@ -1,9 +1,12 @@
 ﻿using DriverLicenseExamLearning_Service.DTOs.Request;
+using DriverLicenseExamLearning_Service.DTOs.State;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using FirebaseAdmin.Messaging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DriverLicenseExamLearning_API.Controllers
 {
@@ -17,6 +20,8 @@ namespace DriverLicenseExamLearning_API.Controllers
             _carService = carService;
         }
 
+        [Authorize]
+        [SwaggerOperation(Summary = $"[Role : All-Role][Description:Get All Car]")]
         [EnableQuery]
         [HttpGet]
         public async Task<ActionResult> Get()
@@ -26,6 +31,8 @@ namespace DriverLicenseExamLearning_API.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = RoleNames.Staff)]
+        [SwaggerOperation(Summary = $"[Role :{RoleNames.Staff}][Description:Delete  Car]")]
         public async Task<ActionResult> Delete(int CarID)
         {
             bool checkTrue = await _carService.DeleteCar(CarID);
@@ -44,6 +51,8 @@ namespace DriverLicenseExamLearning_API.Controllers
             });
         }
 
+        [Authorize(Roles = RoleNames.Staff)]
+        [SwaggerOperation(Summary = $"[Role : {RoleNames.Staff}][Description:Update  Car]")]
         [HttpPut]
         public async Task<IActionResult> Update(UpdateCarRequest car, int carID)
         {
@@ -63,6 +72,8 @@ namespace DriverLicenseExamLearning_API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleNames.Staff)]
+        [SwaggerOperation(Summary = $"[Role : {RoleNames.Staff}][Description:Add new  Car]")]
         public async Task<IActionResult> Add(UpdateCarRequest carRequest)
         {
             await _carService.CreateCar(carRequest);

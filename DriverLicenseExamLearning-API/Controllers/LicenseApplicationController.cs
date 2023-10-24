@@ -1,9 +1,12 @@
 ﻿using DriverLicenseExamLearning_Service.DTOs.Request;
+using DriverLicenseExamLearning_Service.DTOs.State;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Text.RegularExpressions;
 
 namespace DriverLicenseExamLearning_API.Controllers
@@ -19,6 +22,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         }
 
 
+        [Authorize(Roles = RoleNames.Member)]
         [HttpPost("Submit")]
         public async Task<ActionResult> Submit(SubmitLicenseApplicationRequest file)
         {
@@ -26,7 +30,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             return Ok();
         }
 
-
+        [Authorize(Roles = RoleNames.Staff)]
         [HttpGet("ByStaff")]
         [EnableQuery]
         public async Task<ActionResult> GetByStaff()
@@ -39,7 +43,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             return Ok(data);
         }
 
-
+        [Authorize(Roles = RoleNames.Member)]
         [HttpGet("ByCustomer")]
         [EnableQuery]
         public async Task<ActionResult> GetByCustomer()
@@ -52,7 +56,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             return Ok(data);
         }
 
-
+        [Authorize(Roles = RoleNames.Staff)]
         [HttpPost("Check")]
         public async Task<ActionResult> Update(int licenseApplication,[FromBody]string status)
         {
@@ -77,6 +81,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             });
         }
 
+        [Authorize(Roles = RoleNames.Member)]
         [HttpPost("Update")]
         public async Task<ActionResult> UpdateByCustomer(int licenseApplication, SubmitLicenseApplicationRequest request)
         {

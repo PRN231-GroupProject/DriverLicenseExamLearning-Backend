@@ -1,9 +1,12 @@
 ﻿using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
+using DriverLicenseExamLearning_Service.DTOs.State;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DriverLicenseExamLearning_API.Controllers
 {
@@ -18,7 +21,8 @@ namespace DriverLicenseExamLearning_API.Controllers
             _examService = examService;
         }
 
-        
+        [Authorize(Roles = RoleNames.Staff)]
+        [SwaggerOperation(Summary = $"[Role : {RoleNames.Staff}][Description:Get All Quiz]")]
         [EnableQuery]
         [HttpGet("GetQuizByStaff")]
         public async Task<ActionResult<IQueryable<ExamQueryGeneralResponse>>> GetQuiz()
@@ -30,7 +34,8 @@ namespace DriverLicenseExamLearning_API.Controllers
             }
             return Ok(quiz);
         }
-
+        [Authorize(Roles = RoleNames.Member)]
+        [SwaggerOperation(Summary = $"[Role : {RoleNames.Member}][Description:Get Quiz without answer]")]
         [EnableQuery]
         [HttpGet("GetQuizByMember")]
         public async Task<ActionResult<IQueryable<ExamGetByMemberResponse>>> GetQuiz(int licenseTypeID)
@@ -44,6 +49,8 @@ namespace DriverLicenseExamLearning_API.Controllers
 
         }
 
+        [Authorize(Roles = RoleNames.Member)]
+        [SwaggerOperation(Summary = $"[Role : {RoleNames.Member}][Description:Doing Quiz and Show the Result]")]
         [HttpPost("DoingQuiz")]
         public async Task<ActionResult> DoingQuiz([FromBody]AnswerByMemberRequest answer)
         {
@@ -56,6 +63,9 @@ namespace DriverLicenseExamLearning_API.Controllers
         }
 
 
+
+        [Authorize(Roles = RoleNames.Member)]
+        [SwaggerOperation(Summary = $"[Role : {RoleNames.Member}][Description: View Quiz Customer have been done before]")]
         [HttpGet("GetQuizHistoryByCustomer")]
         [EnableQuery]
         public async Task<ActionResult<IQueryable>> GetQuizHistory(int licenseTypeID)
@@ -68,7 +78,8 @@ namespace DriverLicenseExamLearning_API.Controllers
             return Ok(quizHistory);
         }
 
-
+        [Authorize(Roles = RoleNames.Staff)]
+        [SwaggerOperation(Summary = $"[Role : {RoleNames.Staff}][Description:Modify Quiz with different question]")]
         [HttpPut("Update")]
         public async Task<ActionResult> Update(uint quizID,[FromBody]ModifyQuizRequest request)
         {
@@ -79,6 +90,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             });
         }
 
+        [Authorize(Roles = RoleNames.Staff)]
         [HttpPost("Create")]
         public async Task<ActionResult> Create([FromBody]CreateNewExamRequest create)
         {

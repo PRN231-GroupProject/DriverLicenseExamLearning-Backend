@@ -1,7 +1,9 @@
 ﻿using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
+using DriverLicenseExamLearning_Service.DTOs.State;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
+using Microsoft.AspNetCore.Authorization;
 //using DriverLicenseExamLearning_Service.ServiceBase.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -18,6 +20,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             _userService = userService;
         }
 
+        [Authorize(Roles = RoleNames.Staff)]
         [HttpGet()]
         [EnableQuery]
         //https://localhost:7018/api/user?$select=userId,firstname,lastname,email&$filter=status%20eq%20%27Active%27
@@ -26,6 +29,8 @@ namespace DriverLicenseExamLearning_API.Controllers
             var list = await _userService.GetAllAsync();
             return list != null ? Ok(list) : NotFound();
         }
+
+
         [HttpGet("NormalGetWithFilter")]
         public async Task<ActionResult<List<UserResponse>>> GetCustomer([FromQuery] PagingRequest pagingRequest, [FromQuery] UserRequest customerRequest)
         {

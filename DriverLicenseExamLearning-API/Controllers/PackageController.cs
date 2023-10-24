@@ -1,6 +1,8 @@
 ﻿using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
+using DriverLicenseExamLearning_Service.DTOs.State;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -15,6 +17,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         {
             _packagesService = packagesService;
         }
+        
         [HttpGet]
         [EnableQuery]
         public async Task<ActionResult<PackageResponse>> GetAllAsync()
@@ -22,6 +25,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             var rs = await _packagesService.GetAllAsync();
             return rs != null ? Ok(rs) : NotFound();
         }
+        [Authorize(Roles = RoleNames.Staff)]
         [HttpPost]
         public async Task<ActionResult<PackageResponse>> CreatePackage([FromBody] PackageRequest req)
         {
@@ -34,6 +38,7 @@ namespace DriverLicenseExamLearning_API.Controllers
                 msg = "Create fail!"
             });
         }
+        [Authorize(Roles = RoleNames.Staff)]
         [HttpPut("{packageId:int}")]
         public async Task<ActionResult<PackageResponse>> UpdatePackage(int packageId, [FromBody] PackageRequest req)
         {

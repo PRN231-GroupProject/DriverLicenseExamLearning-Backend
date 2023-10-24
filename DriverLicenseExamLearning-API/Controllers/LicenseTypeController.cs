@@ -14,6 +14,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         {
             _licenseTypeService = licenseTypeService;
         }
+        
         [HttpGet]
         [EnableQuery]
         public async Task<ActionResult<LicenseTypeResponse>> GetAllAsync()

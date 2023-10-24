@@ -1,7 +1,9 @@
 ﻿using DriverLicenseExamLearning_Data.Entity;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
+using DriverLicenseExamLearning_Service.DTOs.State;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -16,6 +18,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         {
             _transactionService = transactionService;
         }
+        [Authorize(Roles = RoleNames.Staff)]
         [HttpGet]
         [EnableQuery]
         public async Task<ActionResult<TransactionResponse>> GetAllTransaction()
@@ -23,6 +26,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             var rs = await _transactionService.GetAllAsync();
             return rs != null ? Ok(rs) : NotFound();
         }
+        [Authorize(Roles = RoleNames.Member)]
         [HttpPost]
         public async Task<ActionResult> CreateTransaction([FromBody] TransactionRequest req)
         {
@@ -35,6 +39,7 @@ namespace DriverLicenseExamLearning_API.Controllers
                 msg = "Create transaction fail!"
             });
         }
+        []
         [HttpPut("{transactionId:int}")]
         public async Task<ActionResult> UpdateTransaction(int transactionId, [FromBody] TransactionRequest req)
         {
