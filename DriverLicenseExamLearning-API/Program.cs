@@ -85,6 +85,7 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy.Al
 
 builder.Services.AddSwaggerGen(opt =>
 {
+    opt.EnableAnnotations();
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "DriverLicenseExamLearning-API", Version = "v1" });
     opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

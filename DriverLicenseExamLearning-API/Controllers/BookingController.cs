@@ -14,6 +14,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         {
             _bookingService = bookingService;
         }
+
         [HttpPost]
         public async Task<ActionResult> CreateBooking([FromBody] BookingRequest req)
         {

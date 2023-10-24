@@ -1,11 +1,15 @@
 ﻿using DriverLicenseExamLearning_Service.DTOs.Request;
+using DriverLicenseExamLearning_Service.DTOs.State;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.Support.Ultilities;
 using FirebaseAdmin.Messaging;
+using Microsoft.AspNetCore.Authorization;
 
 //using DriverLicenseExamLearning_Service.ServiceBase.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DriverLicenseExamLearning_API.Controllers
 {
@@ -19,12 +23,9 @@ namespace DriverLicenseExamLearning_API.Controllers
             _service = service;
         }
 
-        /// <summary>
-        /// Add List Question to Bank Question
-        /// </summary>
-        /// <param name=""></param>
-        /// <returns></returns>
-        [HttpPost]
+        [SwaggerOperation(Summary = $"[Role:{RoleNames.Staff}][Description:Using to add many question to QuestionBank]")]
+        [Authorize(Roles = RoleNames.Staff)]
+        [HttpPost]  
         public async Task<IActionResult> AddMultipleQuestion([FromBody]List<AddQuestionRequest> quizRequests)
         {
             if (!ModelState.IsValid)
