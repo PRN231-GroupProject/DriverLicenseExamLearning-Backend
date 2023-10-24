@@ -35,33 +35,33 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
             if (book != null && book.Package != null)
             {
-                var packageTypeId = book.Package.FirstOrDefault(row => true)?.PackageTypeId;
-                string processing = "0";
-                string total = "";
+                var package = book.Package.FirstOrDefault(x => x.PackageId == req.PackageId);
+                var packageTypeId = package.PackageTypeId; //1 = Km, 2 = Days
 
-                if (packageTypeId == 1)
+                string type = "";
+                int? total = 0;
+
+                if (package != null)
                 {
-                    total = "800km";
-                }
-                if (packageTypeId == 2)
-                {
-                    total = "15 days";
-                }
-                if (packageTypeId == 3)
-                {
-                    total = "30 days";
-                }
-                if (packageTypeId == 4)
-                {
-                    total = "1600km";
+                    if (packageTypeId == 1)
+                    {
+                        type = "Km";
+                        total = package.NumberOfKmOrDays;
+                    }
+                    else if (packageTypeId == 2)
+                    {
+                        type = "Days";
+                        total = package.NumberOfKmOrDays;
+                    }
                 }
 
                 var tracking = new TrackingRequest
                 {
                     BookingId = newBooking.BookingId,
                     Note = "",
-                    Processing = processing,
-                    Total = total
+                    Processing = 0,
+                    Total = total,
+                    Type = type,
                 };
 
                 var newTracking = _mapper.Map<Tracking>(tracking);
@@ -126,8 +126,9 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     {
                         new PackageResponse
                         {
+                            PackageId = b.PackageId,
                             PackageName = b.Package.PackageName,
-                            PackageTypeId = b.PackageId,
+                            PackageTypeId = b.Package.PackageTypeId,
                             Price = b.Package.Price,
                             Description = b.Package.Description,
                             CreateDate = b.Package.CreateDate,
@@ -139,6 +140,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                                     LicenseName = b.Package.LicenseType.LicenseName,
                                 }
                             },
+                            NumberOfKmOrDays = b.Package.NumberOfKmOrDays
                         }
                     },
                     CreateDate = b.CreateDate,
@@ -201,8 +203,10 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     {
                         new PackageResponse
                         {
+                            PackageId = b.Package.PackageId,
                             PackageName = b.Package.PackageName,
-                            PackageTypeId = b.Package.PackageId,
+                            PackageTypeId = b.Package.PackageTypeId,
+                            NumberOfKmOrDays = b.Package.NumberOfKmOrDays,
                             Price = b.Package.Price,
                             Description = b.Package.Description,
                             CreateDate = b.Package.CreateDate,

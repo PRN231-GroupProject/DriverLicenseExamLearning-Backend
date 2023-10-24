@@ -23,17 +23,32 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
     
         public async Task<bool> CreateTransactionByBookingId(int bookingId, TrackingRequest request)
         {
-            var check = _unitOfWork.Repository<Booking>().GetById(bookingId);
-            request.BookingId = check.Id;
-            var booking = _mapper.Map<Tracking>(request);
-            await _unitOfWork.Repository<Tracking>().CreateAsync(booking);
-            await _unitOfWork.CommitAsync();
-            return true;
+            var existingTrackings = await _unitOfWork.Repository<Tracking>().GetWhere(x => x.BookingId == bookingId);
+
+            int? totalProcessing = existingTrackings.Sum(tracking => tracking.Processing);
+            request.Total = existingTrackings.FirstOrDefault().Total; //add the first value (0)
+
+            if (totalProcessing + request.Processing < request.Total)
+            {
+                request.Type = existingTrackings.First().Type;
+                if(request.Type == "Days")
+                {
+                    request.Processing = 1;
+                }
+
+                var newTracking = _mapper.Map<Tracking>(request);
+                newTracking.BookingId = bookingId;
+
+                await _unitOfWork.Repository<Tracking>().CreateAsync(newTracking);
+                await _unitOfWork.CommitAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public Task<IEnumerable<Tracking>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<IEnumerable<Tracking>> GetAllAsync() => await _unitOfWork.Repository<Tracking>().GetAllAsync();
     }
 }

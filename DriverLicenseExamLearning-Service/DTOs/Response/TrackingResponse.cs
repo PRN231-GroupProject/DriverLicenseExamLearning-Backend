@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DriverLicenseExamLearning_Data.Entity
+namespace DriverLicenseExamLearning_Service.DTOs.Response
 {
-    public partial class Tracking
+    public class TrackingResponse
     {
-        public int TrackingId { get; set; }
         public int? BookingId { get; set; }
         public DateTime? TrackingDate { get; set; }
         public string? Note { get; set; }
@@ -13,6 +15,5 @@ namespace DriverLicenseExamLearning_Data.Entity
         public string? Status { get; set; }
         public int? Total { get; set; }
         public string? Type { get; set; }
-        public virtual Booking? Booking { get; set; }
     }
 }

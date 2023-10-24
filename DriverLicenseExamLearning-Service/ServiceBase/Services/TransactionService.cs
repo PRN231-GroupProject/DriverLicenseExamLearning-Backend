@@ -5,6 +5,7 @@ using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public async Task<bool> UpdateTransaction(int id, TransactionRequest request)
         {
-            var check = _unitOfWork.Repository<Transaction>().Where(x => x.TransactionId == id).FirstOrDefault();
+            var check = await _unitOfWork.Repository<Transaction>().Where(x => x.TransactionId == id).FirstOrDefaultAsync();
             await _unitOfWork.Repository<Transaction>().Update(check, id);
             await _unitOfWork.CommitAsync();
             return true;

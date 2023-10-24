@@ -48,6 +48,8 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IMemberDayRegisterService, MemberDayRegisterService>();
 builder.Services.AddScoped<IClaimsService, ClaimsService>();
 builder.Services.AddScoped<IPackagesService, PackageService>();
+builder.Services.AddScoped<ITrackingService, TrackingService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IExamService, ExamService>();
 builder.Services.AddScoped<ILicenseTypeService, LicenseTypeService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

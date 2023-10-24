@@ -10,9 +10,11 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
 {
     public class PackageResponse
     {
+        public int? PackageId { get; set; }
         public int? PackageTypeId { get; set; }
         public string? PackageName { get; set; }
         public int? Price { get; set; }
+        public int? NumberOfKmOrDays { get; set; }
         public string? Description { get; set; }
         [JsonIgnore]
         public DateTime? CreateDate { get; set; } = DateTime.Now;

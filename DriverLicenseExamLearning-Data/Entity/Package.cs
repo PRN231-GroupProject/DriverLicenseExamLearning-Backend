@@ -18,6 +18,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         public DateTime? CreateDate { get; set; }
         public string? Status { get; set; }
         public int? LicenseTypeId { get; set; }
+        public int? NumberOfKmOrDays { get; set; }
 
         public virtual LicenseType? LicenseType { get; set; }
         public virtual PackageType? PackageType { get; set; }
