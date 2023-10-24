@@ -3,6 +3,7 @@ using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace DriverLicenseExamLearning_API.Controllers
@@ -16,6 +17,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             _transactionService = transactionService;
         }
         [HttpGet]
+        [EnableQuery]
         public async Task<ActionResult<TransactionResponse>> GetAllTransaction()
         {
             var rs = await _transactionService.GetAllAsync();
