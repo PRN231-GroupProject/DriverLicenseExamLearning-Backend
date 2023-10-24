@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DriverLicenseExamLearning_Service.DTOs.Request;
+using DriverLicenseExamLearning_Service.DTOs.Response;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +11,10 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
 {
     public interface ILicenseApplicationService
     {
-
-        Task<bool> GetAll();
-
-
-        Task<bool> SubmitLicenseApplication(List<IFormFile> formFiles);
-
-        Task<bool> UpdateLicenseApplicationByCustomer();
-
+        Task<IQueryable<LicenseApplicationDetailResponse>> GetByCustomer();
+        Task<IQueryable<LicenseApplicationResponse>> GetAll();
+        Task<bool> SubmitLicenseApplication(SubmitLicenseApplicationRequest submit);
+        Task<bool> UpdateLicenseApplicationByCustomer(int licenseApplicationID,SubmitLicenseApplicationRequest submit);
+        Task<bool> UpdateLicenseApplicationByStaff(int licenseApplicationID, string? Status = null);
     }
 }

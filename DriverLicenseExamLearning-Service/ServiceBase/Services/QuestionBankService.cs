@@ -5,6 +5,7 @@ using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using DriverLicenseExamLearning_Service.State;
+using DriverLicenseExamLearning_Service.Support.HandleError;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -34,10 +35,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
 
             // Check role
-            if (!_claimsService.GetCurrentUserRole.Equals(RoleInSystem.Staff.ToString()))
-            {
-                throw new CrudException<string>(HttpStatusCode.BadRequest, "You are not allowed to this function", "");
-            }
+         
             int checkErrorQuiz = 0;
             List<string> errors = new List<string>();
             #region "Add New Quiz And Check"
@@ -62,7 +60,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
             if (checkErrorQuiz > 0)
             {
-                throw new CrudException<List<string>>(HttpStatusCode.BadRequest, "Have problem when add new questions to bank", errors);
+                throw new HttpStatusCodeException(HttpStatusCode.BadRequest,errors.ToString());
             }
 
 

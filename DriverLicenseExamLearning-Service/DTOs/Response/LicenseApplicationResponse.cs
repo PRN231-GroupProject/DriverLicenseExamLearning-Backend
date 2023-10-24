@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +11,15 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
     {
         public int userId { get ; set; }
 
+        public IReadOnlyCollection<LicenseApplicationDetailResponse>  loader { get; set; }
+
 
     }
 
 
     public struct LicenseApplicationDetailResponse
     {
-        public string? LicenseTypeID { get; set; }
+        public int? LicenseTypeID { get; set; }
 
         public string? CitizenIdentificationCard { get; set; }
 
@@ -25,5 +28,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
         public string? UserImage { get; set; }
 
         public string? CurriculumVitae { get; set; }
+
+        public string? Status { get; set; }
     }
 }

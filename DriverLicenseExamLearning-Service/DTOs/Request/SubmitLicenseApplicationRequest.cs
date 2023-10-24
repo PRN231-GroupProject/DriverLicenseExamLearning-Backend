@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,14 +9,14 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
 {
     public class SubmitLicenseApplicationRequest
     {
-        public string? LicenseTypeID { get; set; }
+        public IFormFile? LicenseTypeID { get; set; }
 
-        public string? CitizenIdentificationCard { get; set;}
+        public IFormFile? CitizenIdentificationCard { get; set;}
   
-        public string? HealthCertification { get; set;}   
+        public IFormFile? HealthCertification { get; set;}   
 
-        public string? UserImage  { get; set;}
+        public IFormFile? UserImage  { get; set;}
 
-        public string? CurriculumVitae { get; set;}
+        public IFormFile? CurriculumVitae { get; set;}
     }
 }

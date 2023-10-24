@@ -18,6 +18,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             _examService = examService;
         }
 
+        
         [EnableQuery]
         [HttpGet("GetQuizByStaff")]
         public async Task<ActionResult<IQueryable<ExamQueryGeneralResponse>>> GetQuiz()
