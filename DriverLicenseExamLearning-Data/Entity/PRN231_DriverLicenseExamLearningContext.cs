@@ -227,6 +227,8 @@ namespace DriverLicenseExamLearning_Data.Entity
 
                 entity.Property(e => e.Price).HasColumnType("int");
 
+                entity.Property(e => e.NumberOfKmOrDays).HasColumnType("int");
+
                 entity.Property(e => e.Status).HasMaxLength(20);
 
                 entity.HasOne(d => d.LicenseType)
@@ -288,7 +290,11 @@ namespace DriverLicenseExamLearning_Data.Entity
 
                 entity.Property(e => e.Status).HasMaxLength(20);
 
-                entity.Property(e => e.Total).HasMaxLength(4000);
+                entity.Property(e => e.Type).HasMaxLength(20);
+
+                entity.Property(e => e.Processing).HasColumnType("int");
+
+                entity.Property(e => e.Total).HasColumnType("int");
 
                 entity.Property(e => e.TrackingDate).HasColumnType("date");
 
@@ -304,7 +310,7 @@ namespace DriverLicenseExamLearning_Data.Entity
 
                 entity.Property(e => e.Status).HasMaxLength(20);
 
-                entity.Property(e => e.Total).HasMaxLength(20);
+                entity.Property(e => e.Total).HasColumnType("int");
 
                 entity.HasOne(d => d.Booking)
                     .WithMany(p => p.Transactions)

@@ -14,9 +14,12 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
         [JsonIgnore]
         public DateTime? TrackingDate { get; set; } = DateTime.Now;
         public string? Note { get; set; }
-        public string? Processing { get; set; }
+        public int? Processing { get; set; }
         [JsonIgnore]
         public string? Status { get; set; } = "Active";
-        public string? Total { get; set; }
+        [JsonIgnore]
+        public int? Total { get; set; }
+        [JsonIgnore]
+        public string? Type { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace DriverLicenseExamLearning_API.Controllers
@@ -28,6 +29,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             });
         }
         [HttpGet]
+        [EnableQuery]
         public async Task<ActionResult<BookingResponse>> GetAllAsync()
         {
             var rs = await _bookingService.GetAllBooking();

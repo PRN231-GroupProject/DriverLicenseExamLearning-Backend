@@ -8,7 +8,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         public int TransactionId { get; set; }
         public int? BookingId { get; set; }
         public int? UserId { get; set; }
-        public string? Total { get; set; }
+        public int? Total { get; set; }
         public string? Status { get; set; }
 
         public virtual Booking? Booking { get; set; }

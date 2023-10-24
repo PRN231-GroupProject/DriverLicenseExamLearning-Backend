@@ -13,6 +13,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
         public int? Price { get; set; }
         public string? Description { get; set; }
         public int? PackageTypeId { get; set; }
+        public int? NumberOfKmOrDays { get; set; }
         public int? LicenseTypeId { get; set; }
         [JsonIgnore]
         public DateTime? CreateDate { get; set; } = DateTime.Now;
