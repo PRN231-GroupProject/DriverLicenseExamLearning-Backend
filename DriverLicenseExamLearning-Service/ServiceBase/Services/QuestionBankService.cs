@@ -42,10 +42,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             foreach (var item in requests)
             {
                 bool check = await CheckQuiz(item.Answer, new string[4] { item.Options1, item.Options2, item.Options3, item.Options4 });
-                if (check)
+                bool check2= await CheckQuizTestInSystem(item.Text);
+                if (check && check2)
                 {
                     var quizAdd = _mapper.Map<Question>(item);
-
+                    quizAdd.Status = "Active";
                     await _unitOfWork.Repository<Question>().CreateAsync(quizAdd);
                     _unitOfWork.Commit();
                 }
@@ -60,7 +61,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
             if (checkErrorQuiz > 0)
             {
-                throw new HttpStatusCodeException(HttpStatusCode.BadRequest,errors.ToString());
+                throw new HttpStatusCodeException(HttpStatusCode.BadRequest, string.Join(Environment.NewLine, errors));
             }
 
 
@@ -100,6 +101,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             {
                 questionFind.Image = request.Image;
             }
+            if(request.LicenseTypeId != 0)
+            {
+                questionFind.LicenseType = request.LicenseTypeId;
+            }
+            questionFind.IsParalysisQuestion = request.ParalysisQuestion;
             await _unitOfWork.Repository<Question>().Update(questionFind, quizID);
             _unitOfWork.Commit();
             return true;
@@ -117,6 +123,17 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 }
             }
             return valueCheck == 1;
+        }
+
+
+        private async Task<bool> CheckQuizTestInSystem(string text)
+        {
+            var questionCheck = _unitOfWork.Repository<Question>().Where(x => x.Question1 == text).FirstOrDefault();
+            if(questionCheck is null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

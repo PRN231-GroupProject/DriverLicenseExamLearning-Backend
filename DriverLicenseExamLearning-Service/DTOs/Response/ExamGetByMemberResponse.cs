@@ -7,6 +7,15 @@ using System.Threading.Tasks;
 
 namespace DriverLicenseExamLearning_Service.DTOs.Response
 {
+    public class ExamGetByLicenseTye
+    {
+        public int LicenseId { get; set; }
+
+        public string LicenseName { get; set; }
+
+        public IReadOnlyCollection<ExamGetByMemberResponse> exams { get; set; }
+
+    }
     public class ExamGetByMemberResponse
     {
         public int ExamId { get; set; }
@@ -15,7 +24,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
 
         public DateTime ExamDate { get; set; }
 
-        public List<QuestionGetByMemberResponse> questions { get; set; }
+        public IReadOnlyCollection<QuestionGetByMemberResponse> questions { get; set; }
 
     }
 
