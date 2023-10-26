@@ -31,21 +31,31 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
             int ? totalProcessing = existingTrackings.Sum(tracking => tracking.Processing);
             request.Total = existingTrackings.FirstOrDefault().Total;
+            request.Type = existingTrackings.First().Type;
 
-            if (totalProcessing + request.Processing < request.Total)
+            //if (request.Type == "Km")
+            //{
+            //    request.Total += 1;
+            //}
+
+            if (totalProcessing + request.Processing <= request.Total)
             {
-                request.Type = existingTrackings.First().Type;
                 if(request.Type == "Days")
                 {
                     request.Processing = 1;
                 }
+
+                //if (request.Type == "Km")
+                //{
+                //    request.Total -= 1;
+                //}
 
                 var newTracking = _mapper.Map<Tracking>(request);
                 newTracking.BookingId = bookingId;
 
                 await _unitOfWork.Repository<Tracking>().CreateAsync(newTracking);
 
-                if (totalProcessing + request.Processing == request.Total - 1)
+                if (totalProcessing + request.Processing == request.Total)
                 {
                     #region Change Status Car
                     var existingBookings = await _unitOfWork.Repository<Booking>().FindAsync(x => x.BookingId == bookingId);
