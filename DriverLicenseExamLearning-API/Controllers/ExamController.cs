@@ -34,13 +34,12 @@ namespace DriverLicenseExamLearning_API.Controllers
             }
             return Ok(quiz);
         }
-        [Authorize(Roles = RoleNames.Member)]
-        [SwaggerOperation(Summary = $"[Role : {RoleNames.Member}][Description:Get Quiz without answer]")]
+
         [EnableQuery]
         [HttpGet("GetQuizByMember")]
-        public async Task<ActionResult<IQueryable<ExamGetByMemberResponse>>> GetQuiz(int licenseTypeID)
+        public async Task<ActionResult<IQueryable<ExamGetByMemberResponse>>> GetQuizByMemeber()
         {
-            var quiz = await _examService.GetExamListByCustomer(licenseTypeID);
+            var quiz = await _examService.GetExamListByCustomer();
             if(quiz is null)
             {
                 return NotFound();
@@ -49,8 +48,7 @@ namespace DriverLicenseExamLearning_API.Controllers
 
         }
 
-        [Authorize(Roles = RoleNames.Member)]
-        [SwaggerOperation(Summary = $"[Role : {RoleNames.Member}][Description:Doing Quiz and Show the Result]")]
+      
         [HttpPost("DoingQuiz")]
         public async Task<ActionResult> DoingQuiz([FromBody]AnswerByMemberRequest answer)
         {
@@ -94,6 +92,10 @@ namespace DriverLicenseExamLearning_API.Controllers
         [HttpPost("Create")]
         public async Task<ActionResult> Create([FromBody]CreateNewExamRequest create)
         {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
             await _examService.CreateExam(create);
             return Ok(
                 new

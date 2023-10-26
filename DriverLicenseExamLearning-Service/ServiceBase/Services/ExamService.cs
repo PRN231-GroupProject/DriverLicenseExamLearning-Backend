@@ -4,6 +4,7 @@ using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.Support.HandleError;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,6 +14,8 @@ using System.Linq.Dynamic.Core;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Twilio.Http;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 {
@@ -52,7 +55,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
             if (_unitOfWork.Repository<Exam>().Where(x => x.ExamName == create.ExamName).FirstOrDefault() is not null)
             {
-                throw new CrudException<string>(HttpStatusCode.BadRequest, "hi", $"Have this {create.ExamName} in ExamBank before");
+                throw new HttpStatusCodeException(HttpStatusCode.BadRequest, $"Have this {create.ExamName} in ExamBank before");
             }
             var newExam = _mapper.Map<Exam>(create);
             newExam.ExamDate = DateTime.UtcNow;
@@ -82,13 +85,58 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             }
             if (errorHandle.Count > 0)
             {
-                throw new CrudException<List<string>>(HttpStatusCode.BadRequest, "Error when create new exam", errorHandle);
+                throw new HttpStatusCodeException(HttpStatusCode.BadRequest, "Error when create new exam" + string.Join(Environment.NewLine, errorHandle));
             }
             return true;
 
         }
 
+        public async Task<string> DoingQuizByNonUser(AnswerByMemberRequest answer)
+        {
+            int rightAnswer = 0;
+            int wrongAnswer = 0;
+            int total = _unitOfWork.Repository<ExamQuestion>().Where(x => x.QuestionId == answer.QuizID).Count();
+            foreach (var request in answer.answerDetails)
+            {
+                var checkTrue = _unitOfWork.Repository<Question>().Where(x => x.QuestionId == request.QuestionID && x.Answer == request.Answer).FirstOrDefault();
+                if (checkTrue is null)
+                {
+                    bool checkParalysis = (bool)_unitOfWork.Repository<Question>().Where(x => x.QuestionId == request.QuestionID ).FirstOrDefault().IsParalysisQuestion;
+                    if (checkParalysis)
+                    {
+                        throw new HttpStatusCodeException(HttpStatusCode.Accepted, $"You wrong in Paralaysis Question ");
+                    }
+
+                }
+                else
+                {
+                    rightAnswer++;
+                }
+
+
+
+            }
+            return $"{rightAnswer}/{total}";
+
+        }
+
         public async Task<string> DoingQuiz(AnswerByMemberRequest answer)
+        {
+            string result = "";
+            int checkCustomer = 0;
+            checkCustomer = _claimService.GetCurrentUserId;
+            if (checkCustomer == 0)
+            {
+                result = await DoingQuizByNonUser(answer);
+            }
+            else
+            {
+                result = await DoingQuizByMember(answer);
+            }
+            return result;
+        }
+
+        public async Task<string> DoingQuizByMember(AnswerByMemberRequest answer)
         {
             //? Doing Quiz Process
             int AttemptNumber = 0;
@@ -119,14 +167,14 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
 
             int examResultID = _unitOfWork.Repository<ExamResult>().Where(x => x.Result == "NoUpdateYet").FirstOrDefault().ExamResultId;
-            int mark = await RightNumberAnswer(answer.answerDetails, examResultID);
+            List<int> mark = await RightNumberAnswer(answer.answerDetails, examResultID);
 
-            exam.Result = $"{mark}/{answer.answerDetails.Count()}";
+            exam.Result = $"{mark.First()}/{answer.answerDetails.Count()}";
 
             await _unitOfWork.Repository<ExamResult>().Update(exam, examResultID);
             _unitOfWork.Commit();
 
-            return $"{mark}/{answer.answerDetails.Count()}";
+            return $"Your Mark: {mark}/{answer.answerDetails.Count()} and Number Of Paralysis Wrong: {mark.Last()}";
 
         }
 
@@ -137,9 +185,9 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             return results;
         }
 
-        public async Task<IQueryable<ExamGetByMemberResponse>> GetExamListByCustomer(int licenseTypeID)
+        public async Task<IQueryable<ExamGetByLicenseTye>> GetExamListByCustomer()
         {
-            var examQuery = await QueryFormat.QueryExamFollowLisenceTypeByMember(licenseTypeID);
+            var examQuery = await QueryFormat.QueryExamFollowLisenceTypeByMember();
             return examQuery;
         }
 
@@ -195,33 +243,54 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         }
 
-        private async Task<int> RightNumberAnswer(List<AnswerDetailMemberRequest> requests, int examResultID)
+        private async Task<List<int>> RightNumberAnswer(List<AnswerDetailMemberRequest> requests, int examResultID)
         {
+            List<int> markOut = new List<int>();
             int rightAnswer = 0;
+            int paralysisAnswerWrong = 0;
             foreach (var request in requests)
             {
                 var checkTrue = _unitOfWork.Repository<Question>().Where(x => x.QuestionId == request.QuestionID && x.Answer == request.Answer).FirstOrDefault();
                 if (checkTrue is null)
                 {
-                    ExamResultDetail detail = new ExamResultDetail()
+                    if ((bool)checkTrue.IsParalysisQuestion)
                     {
-                        QuestionId = request.QuestionID,
-                        WrongAnswer = request.Answer,
-                        ExamResultId = examResultID
-                    };
-                    await _unitOfWork.Repository<ExamResultDetail>().CreateAsync(detail);
-                    _unitOfWork.Commit();
+                        paralysisAnswerWrong++;
+                        ExamResultDetail detail = new ExamResultDetail()
+                        {
+                            QuestionId = request.QuestionID,
+                            WrongAnswer = request.Answer,
+                            ExamResultId = examResultID
+                        };
+                        await _unitOfWork.Repository<ExamResultDetail>().CreateAsync(detail);
+                        _unitOfWork.Commit();
+                    }
+                    else
+                    {
+                        {
+                            ExamResultDetail detail = new ExamResultDetail()
+                            {
+                                QuestionId = request.QuestionID,
+                                WrongAnswer = request.Answer,
+                                ExamResultId = examResultID
+                            };
+                            await _unitOfWork.Repository<ExamResultDetail>().CreateAsync(detail);
+                            _unitOfWork.Commit();
 
+                        }
+                    }
                 }
                 else
                 {
                     rightAnswer++;
                 }
 
+                markOut.Add(rightAnswer);
+                markOut.Add(paralysisAnswerWrong);
 
 
             }
-            return rightAnswer;
+            return markOut;
         }
 
     }

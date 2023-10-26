@@ -21,7 +21,7 @@ namespace DriverLicenseExamLearning_Data.Entity
         public string? Option4 { get; set; }
         public string? Answer { get; set; }
         public string? Status { get; set; }
-
+        public bool? IsParalysisQuestion { get; set; }
         public virtual LicenseType? LicenseTypeNavigation { get; set; }
         public virtual ICollection<ExamQuestion> ExamQuestions { get; set; }
         public virtual ICollection<ExamResultDetail> ExamResultDetails { get; set; }

@@ -21,7 +21,7 @@ namespace DriverLicenseExamLearning_Service.Support.HandleError
         {
             try
             {
-                await next(context);
+                    await next(context);
             }
             catch (HttpStatusCodeException ex)
             {

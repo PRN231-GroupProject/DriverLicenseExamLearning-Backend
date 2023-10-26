@@ -34,6 +34,7 @@ namespace DriverLicenseExamLearning_API.Mapper
                 .ForMember(dex => dex.Option3, opt => opt.MapFrom(src => src.Options3))
                 .ForMember(dex => dex.Option4, opt => opt.MapFrom(src => src.Options4))
                 .ForMember(dex => dex.Answer, opt => opt.MapFrom(src => src.Answer))
+                .ForMember(dex => dex.IsParalysisQuestion, opt => opt.MapFrom(src => src.ParalysisQuestion))
                 .ReverseMap();
 
             CreateMap<UpdateCarRequest, Car>()

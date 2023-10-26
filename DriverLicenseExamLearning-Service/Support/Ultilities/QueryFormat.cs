@@ -33,13 +33,19 @@ namespace DriverLicenseExamLearning_Service.Support.Ultilities
                                                                             Options1 = on1.Option1,
                                                                             Options2 = on1.Option2,
                                                                             Options3 = on1.Option3,
-
+                                                                            LicenseTypeId = lisencetype.LicenseTypeId
+                                                                            ,
+                                                                            Image = on1.Image != null ? on1.Image : "Not have picture",
+                                                                            ParalysisQuestion = on1.IsParalysisQuestion
 
                                                                         }).ToList()
 
 
                                                        }
-                          ).AsQueryable();
+                                                )
+                                               .GroupBy(x => x.LicenseTypeID)
+                                                 .Select(x => x.First())
+                                                .AsQueryable();
             return result;
 
         }
@@ -76,69 +82,46 @@ namespace DriverLicenseExamLearning_Service.Support.Ultilities
                                                                                                  ).ToList()
 
                                                                               }).ToList()
-                                                           }).AsQueryable();
+                                                           })
+                                                           .AsQueryable();
 
 
             return result;
         }
 
 
-        public static async Task<IQueryable<ExamGetByMemberResponse>> QueryExamFollowLisenceTypeByMember(int licenseTypeID)
+        public static async Task<IQueryable<ExamGetByLicenseTye>> QueryExamFollowLisenceTypeByMember()
         {
-            IQueryable<ExamGetByMemberResponse> result = (from LicenseType in _context.LicenseTypes
-                                                          join exam in _context.Exams on LicenseType.LicenseTypeId equals exam.LicenseId
-                                                          where LicenseType.LicenseTypeId == licenseTypeID
-                                                          select new ExamGetByMemberResponse
-                                                          {
-                                                              ExamDate = (DateTime)exam.ExamDate,
-                                                              ExamId = exam.ExamId,
-                                                              ExamName = exam.ExamName,
-                                                              questions = (from eq in _context.ExamQuestions
-                                                                           join q in _context.Questions on eq.QuestionId equals q.QuestionId
-                                                                           where eq.ExamId == exam.ExamId
-                                                                           select new QuestionGetByMemberResponse
-                                                                           {
-                                                                               Image = q.Image,
-                                                                               Option1 = q.Option1,
-                                                                               Option2 = q.Option2,
-                                                                               Option3 = q.Option3,
-                                                                               Option4 = q.Option4,
-                                                                               Title = q.Question1,
-                                                                               QuestionId = q.QuestionId,
-                                                                           }
-                                                                           ).ToList()
-
-                                                          }
-                                                          ).AsQueryable();
-            /*     IQueryable<ExamQueryGeneralResponse> result = (from LicenseType in _context.LicenseTypes
-                                                                select new ExamQueryGeneralResponse
-                                                                {
-                                                                    LicenseTypeId = LicenseType.LicenseTypeId,
-                                                                    Name = LicenseType.LicenseName,
-                                                                    examQueries = (from li in _context.LicenseTypes
-                                                                                   join ex in _context.Exams on li.LicenseTypeId equals ex.LicenseId
-                                                                                   where li.LicenseTypeId == LicenseType.LicenseTypeId
-                                                                                   select new ExamQueryResponse
-                                                                                   {
-                                                                                       Date = (DateTime)ex.ExamDate,
-                                                                                       ExamId = ex.ExamId,
-                                                                                       examDetails = (from eq in _context.ExamQuestions
-                                                                                                      join q in _context.Questions on eq.QuestionId equals q.QuestionId
-                                                                                                      where eq.ExamId == ex.ExamId && eq.ExamId == ex.ExamId
-                                                                                                      select new ExamDetailResponse
-                                                                                                      {
-                                                                                                          Answer = q.Answer,
-                                                                                                          Options1 = q.Option1,
-                                                                                                          Options2 = q.Option2,
-                                                                                                          Options3 = q.Option3,
-                                                                                                          Options4 = q.Option4,
-                                                                                                          Text = q.Question1
-                                                                                                      }
-                                                                                                      ).ToList()
-
-                                                                                   }).ToList()
-                                                                }).AsQueryable();*/
-
+            IQueryable<ExamGetByLicenseTye> result = (from licensetype in _context.LicenseTypes
+                                                      select new ExamGetByLicenseTye
+                                                      {
+                                                          LicenseId = licensetype.LicenseTypeId,
+                                                          LicenseName = licensetype.LicenseName,
+                                                          exams = (from lct in _context.LicenseTypes
+                                                                   join exam in _context.Exams on lct.LicenseTypeId equals exam.LicenseId
+                                                                   where lct.LicenseTypeId == licensetype.LicenseTypeId
+                                                                   select new ExamGetByMemberResponse
+                                                                   {
+                                                                       ExamDate = (DateTime)exam.ExamDate,
+                                                                       ExamId = exam.ExamId,
+                                                                       ExamName = exam.ExamName,
+                                                                       questions = (from eq in _context.ExamQuestions
+                                                                                    join q in _context.Questions on eq.QuestionId equals q.QuestionId
+                                                                                    where eq.ExamId == exam.ExamId
+                                                                                    select new QuestionGetByMemberResponse
+                                                                                    {
+                                                                                        Image = q.Image,
+                                                                                        Option1 = q.Option1,
+                                                                                        Option2 = q.Option2,
+                                                                                        Option3 = q.Option3,
+                                                                                        Option4 = q.Option4,
+                                                                                        Title = q.Question1,
+                                                                                        QuestionId = q.QuestionId,
+                                                                                    }
+                                                                          ).ToList()
+                                                                   }).ToList()
+                                                      }).GroupBy(x => x.LicenseId)
+                                                      .Select(x => x.First()).AsQueryable();
 
             return result;
         }
@@ -196,7 +179,7 @@ namespace DriverLicenseExamLearning_Service.Support.Ultilities
                                                                                                     UserImage = licenseapplication.UserImage,
                                                                                                     LicenseTypeID = licenseapplication.LicenseTypeId,
                                                                                                     Status = licenseapplication.Status
-                                                                                                    
+
                                                                                                 })).ToList()
 
 
@@ -225,6 +208,21 @@ namespace DriverLicenseExamLearning_Service.Support.Ultilities
 
 
             return result;
+        }
+
+
+        public static async Task<int> CheckMemberInBooking(int examId , int memberId)
+        {
+            int licenseTypeID = 0;
+            var result = (from exam in _context.Exams
+                         join licenseType in _context.LicenseTypes on exam.LicenseId equals licenseType.LicenseTypeId
+                         join package in _context.Packages on licenseType.LicenseTypeId equals package.LicenseTypeId
+                         join booking in _context.Bookings on package.PackageTypeId equals booking.PackageId
+                         where booking.MemberId == memberId && exam.ExamId == examId
+                         select   licenseType.LicenseTypeId).First();
+            licenseTypeID = result;
+            
+            return licenseTypeID;
         }
     }
 }

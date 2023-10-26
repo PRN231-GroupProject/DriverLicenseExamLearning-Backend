@@ -21,11 +21,14 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
         public string? Options3 { get; set; }
         [AllowNull]
         public string? Image { get; set; }
-        [Required]
+        [AllowNull]
         public string? Options4 { get; set; }
         [Required]
         public string? Answer { get; set; }
         [Required]
         public int? LicenseTypeId { get; set; }
+
+        [Required]
+        public bool? ParalysisQuestion { get; set; }
     }
 }

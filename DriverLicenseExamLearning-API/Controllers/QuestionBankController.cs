@@ -42,7 +42,10 @@ namespace DriverLicenseExamLearning_API.Controllers
                 });
             }
 
-            return Ok("Add Question To Bank Sucessfully");
+            return Ok(new
+            {
+                message = "Add Question To Bank Sucessfully"
+            });
         }
         
         [HttpGet]
@@ -52,18 +55,22 @@ namespace DriverLicenseExamLearning_API.Controllers
             var result = await _service.QuestionBank();
             if(result == null)
             {
-                return NotFound("Not Found");
+                return NotFound(new { 
+                    message ="Not Found" });
             }
             return Ok(result);
         }
-
+      
         [Authorize(Roles = RoleNames.Staff)]
         [HttpPut]
         public async Task<IActionResult> Update(int questionID, [FromBody] AddQuestionRequest request)
         {
             await _service.UpdateQuizRequests(questionID, request);
 
-            return Ok("Update Sucessfully");
+            return Ok(new
+            {
+                message = "Update Sucessfully"
+            });
         }
 
     }
