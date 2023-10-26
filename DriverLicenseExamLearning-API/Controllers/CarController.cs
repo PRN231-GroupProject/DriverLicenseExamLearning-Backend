@@ -27,7 +27,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         public async Task<ActionResult> Get()
         {
             var car = await _carService.GetCar();
-            return Ok(car);
+            return car != null ? Ok(car) : NotFound();
         }
 
         [HttpDelete]
@@ -74,12 +74,15 @@ namespace DriverLicenseExamLearning_API.Controllers
         [HttpPost]
         [Authorize(Roles = RoleNames.Staff)]
         [SwaggerOperation(Summary = $"[Role : {RoleNames.Staff}][Description:Add new  Car]")]
-        public async Task<IActionResult> Add(UpdateCarRequest carRequest)
+        public async Task<IActionResult> Add([FromBody] UpdateCarRequest carRequest)
         {
-            await _carService.CreateCar(carRequest);
-            return Ok(new
+            var rs = await _carService.CreateCar(carRequest);
+            return rs == true ? Ok(new
             {
                 message = "Create Sucessfully"
+            }) : BadRequest(new
+            {
+                msg = "Create fail!"
             });
         }
     }

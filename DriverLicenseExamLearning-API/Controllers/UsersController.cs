@@ -68,7 +68,10 @@ namespace DriverLicenseExamLearning_API.Controllers
             }
             #endregion
             var rs = await _userService.LoginAsync(loginRequest);
-            return rs != null ? Ok(rs) : NotFound();
+            return rs != null ? Ok(rs) : BadRequest(new
+            {
+                msg = "Login Fail!"
+            });
         }
         [HttpPost("register")]
         public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterRequest model)

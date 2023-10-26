@@ -30,7 +30,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         [HttpPost]
         public async Task<ActionResult<TrackingResponse>> CreateTracking(int bookingId, [FromBody] TrackingRequest req)
         {
-            var rs = await _trackingService.CreateTransactionByBookingId(bookingId, req);
+            var rs = await _trackingService.CreateTrackingByBookingId(bookingId, req);
             return rs == true ? Ok(new
             {
                 msg = "Create new tracking successfully!"

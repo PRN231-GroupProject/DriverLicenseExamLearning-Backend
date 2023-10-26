@@ -9,6 +9,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
 {
     public class BookingRequest
     {
+        [JsonIgnore]
         public int? MemberId { get; set; }
         public int? PackageId { get; set; }
         public int? MentorId { get; set; }
