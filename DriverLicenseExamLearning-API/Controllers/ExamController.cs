@@ -45,7 +45,6 @@ namespace DriverLicenseExamLearning_API.Controllers
                 return NotFound();
             }
             return Ok(quiz);
-
         }
 
       
@@ -59,8 +58,6 @@ namespace DriverLicenseExamLearning_API.Controllers
             }
             return Ok(result);  
         }
-
-
 
         [Authorize(Roles = RoleNames.Member)]
         [SwaggerOperation(Summary = $"[Role : {RoleNames.Member}][Description: View Quiz Customer have been done before]")]

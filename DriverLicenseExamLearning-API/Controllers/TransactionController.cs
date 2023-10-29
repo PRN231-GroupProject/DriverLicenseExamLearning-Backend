@@ -39,7 +39,7 @@ namespace DriverLicenseExamLearning_API.Controllers
                 msg = "Create transaction fail!"
             });
         }
-        [Authorize(Roles = RoleNames.Member)]
+        [Authorize(Roles = RoleNames.Mentor)]
         [HttpPut("{transactionId:int}")]
         public async Task<ActionResult> UpdateTransaction(int transactionId, [FromBody] TransactionRequest req)
         {

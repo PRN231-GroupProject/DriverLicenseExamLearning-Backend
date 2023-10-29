@@ -14,18 +14,21 @@ namespace DriverLicenseExamLearning_API.Controllers
     public class BookingController : ODataController
     {
         private readonly IBookingService _bookingService;
-        public BookingController(IBookingService bookingService)
+        private readonly IClaimsService _claimsService;
+        public BookingController(IBookingService bookingService, IClaimsService claimsService)
         {
             _bookingService = bookingService;
+            _claimsService = claimsService;
         }
 
-        [SwaggerOperation(Summary = $"[Role:{RoleNames.Staff}][Description:Add New Booking to System]")]
-        [Authorize(Roles = RoleNames.Staff)]
+        [SwaggerOperation(Summary = $"[Role:{RoleNames.Member}][Description:Add New Booking to System]")]
+        [Authorize(Roles = RoleNames.Member)]
         [HttpPost]
         public async Task<ActionResult> CreateBooking([FromBody] BookingRequest req)
         {
+            req.MemberId = _claimsService.GetCurrentUserId;
             var rs = await _bookingService.CreateBooking(req);
-            return rs != null ? Ok(new
+            return rs == true ? Ok(new
             {
                 msg = "Create Booking Successfully!"
             }) : BadRequest(new
@@ -49,6 +52,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         [HttpPut("{bookingId:int}")]
         public async Task<ActionResult<BookingResponse>> UpdateBooking(int bookingId, [FromBody] BookingRequest req)
         {
+            req.MemberId = _claimsService.GetCurrentUserId;
             var rs = await _bookingService.UpdateBooking(bookingId, req);
             return rs != null ? Ok(new
             {

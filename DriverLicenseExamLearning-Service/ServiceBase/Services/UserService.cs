@@ -93,6 +93,8 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var check = user.RoleId;
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
@@ -157,10 +159,12 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             {
                 UserName = request.UserName,
                 Password = request.Password,
+                RoleId = request.RoleId,
                 Name = request.Name,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
-                Address = request.Address
+                Address = request.Address,
+                Status = request.Status,
             };
             await _unitOfWork.Repository<User>().CreateAsync(newUser);
             await _unitOfWork.CommitAsync();

@@ -4,6 +4,7 @@ using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.Support.HandleError;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,15 +25,37 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<bool> CreateBooking(BookingRequest req)
+        public async Task<bool> CreateBooking(BookingRequest req) //Teaching - Done
         {
+            #region Check and Set Status Car
+            int? car = req.CarId;
+            var checkActiveCar = await _unitOfWork.Repository<Car>().FindAsync(x => x.Status == "Active" && x.CarId == req.CarId);
+            if (checkActiveCar == null)
+            {
+                throw new HttpStatusCodeException(System.Net.HttpStatusCode.BadRequest, "This car is not available right now!");
+            }
+            checkActiveCar.Status = "Inactive";
+            _unitOfWork.Repository<Car>().Update(checkActiveCar, car.Value);
+            #endregion
+
+            #region Check and Set Mentor Status
+            int? mentorId = req.MentorId;
+            var checkAvailableMentor = await _unitOfWork.Repository<User>().FindAsync(x => x.Status == "Available" && x.UserId == req.MentorId && x.RoleId == 3); // 
+            if (checkAvailableMentor == null)
+            {
+                throw new HttpStatusCodeException(System.Net.HttpStatusCode.BadRequest, "This mentor is not available right now!");
+            }
+            checkAvailableMentor.Status = "Not Available";
+            _unitOfWork.Repository<User>().Update(checkAvailableMentor, mentorId.Value);
+            #endregion
+
             var newBooking = _mapper.Map<Booking>(req);
             await _unitOfWork.Repository<Booking>().CreateAsync(newBooking);
             await _unitOfWork.CommitAsync();
 
             int bookingId = newBooking.BookingId;
             var book = await GetInformationByBookId(bookingId);
-
+             
             if (book != null && book.Package != null)
             {
                 var package = book.Package.FirstOrDefault(x => x.PackageId == req.PackageId);
@@ -67,7 +90,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 var newTracking = _mapper.Map<Tracking>(tracking);
                 await _unitOfWork.Repository<Tracking>().CreateAsync(newTracking);
             }
-
             await _unitOfWork.CommitAsync();
             return true;
         }
@@ -88,6 +110,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     {
                         new CarResponse
                         {
+                            CarId = b.CarId,
                             CarName = b.Car.CarName,
                             CarType = b.Car.CarType,
                             Image = b.Car.Image,

@@ -33,6 +33,7 @@ namespace DriverLicenseExamLearning_API.Controllers
                 message = "Empty"});
             }
             return Ok(car);
+
         }
 
         [HttpDelete]
@@ -79,12 +80,15 @@ namespace DriverLicenseExamLearning_API.Controllers
         [HttpPost]
         [Authorize(Roles = RoleNames.Staff)]
         [SwaggerOperation(Summary = $"[Role : {RoleNames.Staff}][Description:Add new  Car]")]
-        public async Task<IActionResult> Add(UpdateCarRequest carRequest)
+        public async Task<IActionResult> Add([FromBody] UpdateCarRequest carRequest)
         {
-            await _carService.CreateCar(carRequest);
-            return Ok(new
+            var rs = await _carService.CreateCar(carRequest);
+            return rs == true ? Ok(new
             {
                 message = "Create Sucessfully"
+            }) : BadRequest(new
+            {
+                msg = "Create fail!"
             });
         }
     }
