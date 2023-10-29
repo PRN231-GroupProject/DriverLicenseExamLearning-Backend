@@ -1,4 +1,5 @@
-﻿using DriverLicenseExamLearning_Service.DTOs.Request;
+﻿using DriverLicenseExamLearning_Data.Entity;
+using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.State;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using FirebaseAdmin.Messaging;
@@ -21,12 +22,16 @@ namespace DriverLicenseExamLearning_API.Controllers
         }
 
         [Authorize]
-        [SwaggerOperation(Summary = $"[Role : All-Role][Description:Get All Car]")]
         [EnableQuery]
         [HttpGet]
         public async Task<ActionResult> Get()
         {
             var car = await _carService.GetCar();
+            if(car is null)
+            {
+                return BadRequest(new {
+                message = "Empty"});
+            }
             return Ok(car);
         }
 

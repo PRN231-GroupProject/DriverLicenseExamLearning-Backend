@@ -125,7 +125,8 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             string result = "";
             int checkCustomer = 0;
             checkCustomer = _claimService.GetCurrentUserId;
-            if (checkCustomer == 0)
+            int checkInTransaction = await QueryFormat.CheckMemberInBooking(answer.QuizID, checkCustomer);
+            if (checkCustomer == 0 || checkInTransaction == 0 )
             {
                 result = await DoingQuizByNonUser(answer);
             }

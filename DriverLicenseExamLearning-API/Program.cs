@@ -47,7 +47,7 @@ builder.Services.AddScoped<ILicenseApplicationService, LicenseApplicationService
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IMemberDayRegisterService, MemberDayRegisterService>();
-
+builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<IClaimsService, ClaimsService>();
 builder.Services.AddScoped<IPackagesService, PackageService>();
 builder.Services.AddScoped<ITrackingService, TrackingService>();
