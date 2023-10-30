@@ -30,6 +30,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         }
 
 
+        [EnableQuery]
         [HttpGet("NormalGetWithFilter")]
         public async Task<ActionResult<List<UserResponse>>> GetCustomer([FromQuery] PagingRequest pagingRequest, [FromQuery] UserRequest customerRequest)
         {
