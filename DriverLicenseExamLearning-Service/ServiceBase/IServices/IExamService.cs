@@ -19,7 +19,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         Task<bool> ChangeStatusExam(int examID, string status);
 
         //Get All Exam Query by Staff
-        Task<IQueryable<ExamQueryGeneralResponse>> GetExamQuery();
+        Task<IEnumerable<ExamQueryGeneralResponse>> GetExamQuery();
 
         //Get Quiz by Customer
         Task<IQueryable<ExamGetByLicenseTye>> GetExamListByCustomer(int? licenseTypeID);

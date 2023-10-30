@@ -19,8 +19,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         {
             _userService = userService;
         }
-
-        [Authorize(Roles = RoleNames.Staff)]
+        [Authorize(Roles = RoleNames.Staff + "," + RoleNames.Mentor + "," + RoleNames.Member)]
         [HttpGet()]
         [EnableQuery]
         //https://localhost:7018/api/user?$select=userId,firstname,lastname,email&$filter=status%20eq%20%27Active%27
