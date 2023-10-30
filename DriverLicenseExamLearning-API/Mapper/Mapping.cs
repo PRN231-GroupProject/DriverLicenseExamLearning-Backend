@@ -71,6 +71,11 @@ namespace DriverLicenseExamLearning_API.Mapper
             CreateMap<Tracking, TrackingRequest>().ReverseMap();
             CreateMap<Tracking, TrackingResponse>().ReverseMap();
             CreateMap<TrackingRequest, TrackingResponse>().ReverseMap();
+            
+            CreateMap<Package, PackageRequest>().ReverseMap();
+            CreateMap<Package, IEnumerable<PackageResponse>>().ReverseMap();
+            CreateMap<Package, PackageResponse>().ReverseMap();
+            CreateMap<Package, PackageResponse>().ReverseMap();
         }
     }
 }

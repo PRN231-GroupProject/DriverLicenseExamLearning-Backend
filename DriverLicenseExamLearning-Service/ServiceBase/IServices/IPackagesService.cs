@@ -11,7 +11,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
 {
     public interface IPackagesService
     {
-        Task<IEnumerable<Package>> GetAllAsync();
+        Task<IEnumerable<PackageResponse>> GetAllAsync();
         Task<PackageResponse> DeletePackage(int id);
         Task<PackageResponse> CreatePackage(PackageRequest request);
         Task<PackageResponse> UpdatePackage(int id, PackageRequest request);

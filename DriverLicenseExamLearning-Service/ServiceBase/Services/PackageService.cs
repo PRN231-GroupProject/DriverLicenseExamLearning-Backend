@@ -42,7 +42,42 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         //    await _unitOfWork.CommitAsync();
         //    return _mapper.Map<Package, PackageResponse>(p);
         //}
-        public async Task<IEnumerable<Package>> GetAllAsync() => await _unitOfWork.Repository<Package>().GetAllAsync();
+        public async Task<IEnumerable<PackageResponse>> GetAllAsync()
+        {
+            var packageResponses = await _unitOfWork.Repository<Package>()
+                .Include(p => p.LicenseType)
+                .Include(p => p.PackageType) // Adjust the navigation property name
+                .Select(p => new PackageResponse
+                {
+                    PackageId = p.PackageId,
+                    PackageName = p.PackageName,
+                    PackageTypeId = p.PackageTypeId,
+                    NumberOfKmOrDays = p.NumberOfKmOrDays,
+                    Price = p.Price,
+                    Description = p.Description,
+                    CreateDate = p.CreateDate,
+                    Status = p.Status,
+                    LicenseType = new List<LicenseTypeResponse>
+                    {
+                        new LicenseTypeResponse
+                        {
+                            LicenseName = p.LicenseType.LicenseName
+                        }
+                    },
+                    PackageTypes = new List<PackageTypeResponse>
+                    {
+                        new PackageTypeResponse
+                        {
+                            PackageTypeName = p.PackageType.PackageTypeName,
+                            Status = p.PackageType.Status
+                        }
+                    }
+                })
+                .ToListAsync();
+
+            return packageResponses;
+        }
+
 
         public async Task<PackageResponse> UpdatePackage(int id, PackageRequest request)
         {
