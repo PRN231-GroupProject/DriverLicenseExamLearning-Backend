@@ -23,7 +23,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
         public string ExamName { get; set; }
         public int ExamId { get; set; }
 
-        public DateTime Date  { get; set; }  
+        public DateTime? Date  { get; set; }  
        public List<ExamDetailResponse> examDetails { get; set; }
     }
 

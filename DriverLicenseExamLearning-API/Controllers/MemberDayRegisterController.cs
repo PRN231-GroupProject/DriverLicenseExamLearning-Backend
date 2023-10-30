@@ -29,8 +29,7 @@ namespace DriverLicenseExamLearning_API.Controllers
                 msg = "Register Day Failed!"
             });
         }
-        [Authorize(Roles = RoleNames.Mentor)]
-        [Authorize(Roles = RoleNames.Member)]
+        [Authorize(Roles = RoleNames.Mentor + "," + RoleNames.Member)]
         [HttpGet("{bookingId:int}")]
         public async Task<ActionResult<MemberDayRegisterRequest>> GetMemberDayRegisterByBookingId(int bookingId)
         {

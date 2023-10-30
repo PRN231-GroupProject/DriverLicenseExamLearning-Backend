@@ -192,11 +192,41 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             return examQuery;
         }
 
-        public async Task<IQueryable<ExamQueryGeneralResponse>> GetExamQuery()
+        public async Task<IEnumerable<ExamQueryGeneralResponse>> GetExamQuery()
         {
-            var examQuery = await QueryFormat.QueryExamFollowLisenceTypeGetByStaff();
+            var examQuery = await _unitOfWork.Repository<Exam>()
+                .Include(ex => ex.License)
+                .Include(e => e.ExamQuestions)
+                .ThenInclude(eq => eq.Question)
+                .Select(ex => new ExamQueryGeneralResponse
+                {
+                    LicenseTypeId = ex.License.LicenseTypeId,
+                    Name = ex.License.LicenseName,
+                    examQueries = new List<ExamQueryResponse>
+                    {
+                        new ExamQueryResponse
+                        {
+                            ExamName = ex.ExamName,
+                            Date = ex.ExamDate,
+                            ExamId = ex.ExamId,
+                            examDetails = ex.ExamQuestions.Select(eq => new ExamDetailResponse
+                            {
+                                Answer = eq.Question.Answer,
+                                Options1 = eq.Question.Option1,
+                                Options2 = eq.Question.Option2,
+                                Options3 = eq.Question.Option3,
+                                Options4 = eq.Question.Option4,
+                                Text = eq.Question.Question1
+                            }).ToList()
+                        }
+                    }
+                })
+                .ToListAsync();
+
             return examQuery;
         }
+
+
 
 
 
