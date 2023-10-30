@@ -1,6 +1,7 @@
 ﻿using DriverLicenseExamLearning_Data.Entity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
         public string LicenseName { get; set; }
 
         public IReadOnlyCollection<ExamGetByMemberResponse> exams { get; set; }
+
+
 
     }
     public class ExamGetByMemberResponse
@@ -30,8 +33,8 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
 
 
 
-public class QuestionGetByMemberResponse
-{
+public class QuestionGetByMemberResponse{
+    
     public int QuestionId { get; set; }
 
     public string? Image { get; set; }

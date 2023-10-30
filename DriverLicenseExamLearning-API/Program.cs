@@ -2,6 +2,7 @@ using DriverLicenseExamLearning_API;
 using DriverLicenseExamLearning_API.Mapper;
 using DriverLicenseExamLearning_Data.Entity;
 using DriverLicenseExamLearning_Data.UnitOfWork;
+using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using DriverLicenseExamLearning_Service.ServiceBase.Services;
 using DriverLicenseExamLearning_Service.Support.HandleError;
@@ -17,7 +18,9 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var modelBuilder = new ODataConventionModelBuilder();
+ODataModelBuilder modelBuilder = new ODataConventionModelBuilder();
+modelBuilder.EntitySet<ExamGetByMemberResponse>("ExamGetByMemberResponse");
+modelBuilder.EntitySet<ExamGetByLicenseTye>("ExamGetByLicenseTye");
 //modelBuilder.EntitySet<Booking>("Bookings");
 //modelBuilder.EntitySet<Exam>("Exams");
 //modelBuilder.EntitySet<ExamQuestion>("ExamQuestions");

@@ -186,10 +186,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             return results;
         }
 
-        public async Task<IQueryable<ExamGetByLicenseTye>> GetExamListByCustomer()
+        public async Task<IQueryable<ExamGetByLicenseTye>> GetExamListByCustomer(int? licenseTypeId)
         {
-            var examQuery = await QueryFormat.QueryExamFollowLisenceTypeByMember();
-            return examQuery;
+            IQueryable examQuery = await QueryFormat.QueryExamFollowLisenceTypeByMember(licenseTypeId);
+           
+            return (IQueryable<ExamGetByLicenseTye>)examQuery;
         }
 
         public async Task<IQueryable<ExamQueryGeneralResponse>> GetExamQuery()

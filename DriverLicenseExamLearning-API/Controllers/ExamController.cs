@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Microsoft.OData;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace DriverLicenseExamLearning_API.Controllers
@@ -35,11 +36,14 @@ namespace DriverLicenseExamLearning_API.Controllers
             return Ok(quiz);
         }
 
+       
         [EnableQuery]
         [HttpGet("GetQuizByMember")]
-        public async Task<ActionResult<IQueryable<ExamGetByMemberResponse>>> GetQuizByMemeber()
+        public async Task<ActionResult<IQueryable<ExamGetByMemberResponse>>> GetQuizByMemeber(int? licenseTypeID)
         {
-            var quiz = await _examService.GetExamListByCustomer();
+           
+            
+            IQueryable quiz = await _examService.GetExamListByCustomer(licenseTypeID);
             if(quiz is null)
             {
                 return NotFound();
