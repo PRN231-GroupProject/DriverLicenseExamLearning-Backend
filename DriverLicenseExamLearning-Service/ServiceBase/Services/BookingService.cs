@@ -25,7 +25,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<bool> CreateBooking(BookingRequest req) //Teaching - Done
+        public async Task<BookingResponse> CreateBooking(BookingRequest req) //Teaching - Done
         {
             #region Check and Set Status Car
             int? car = req.CarId;
@@ -49,17 +49,58 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             _unitOfWork.Repository<User>().Update(checkAvailableMentor, mentorId.Value);
             #endregion
 
+            //var newBooking = _mapper.Map<Booking>(req);
+            //await _unitOfWork.Repository<Booking>().CreateAsync(newBooking);
+            //await _unitOfWork.CommitAsync();
+
+            //int bookingId = newBooking.BookingId;
+            //var book = await GetInformationByBookId(bookingId);
+
+            //if (book != null && book.Package != null)
+            //{
+            //    var package = book.Package.FirstOrDefault(x => x.PackageId == req.PackageId);
+            //    var packageTypeId = package.PackageTypeId; //1 = Km, 2 = Days
+
+            //    string type = "";
+            //    int? total = 0;
+
+            //    if (package != null)
+            //    {
+            //        if (packageTypeId == 1)
+            //        {
+            //            type = "Km";
+            //            total = package.NumberOfKmOrDays;
+            //        }
+            //        else if (packageTypeId == 2)
+            //        {
+            //            type = "Days";
+            //            total = package.NumberOfKmOrDays;
+            //        }
+            //    }
+
+            //    var tracking = new TrackingRequest
+            //    {
+            //        BookingId = newBooking.BookingId,
+            //        Note = "",
+            //        Processing = 0,
+            //        Total = total,
+            //        Type = type,
+            //    };
+
+            //    var newTracking = _mapper.Map<Tracking>(tracking);
+            //    await _unitOfWork.Repository<Tracking>().CreateAsync(newTracking);
+            //}
+            //await _unitOfWork.CommitAsync();
+            // Create a new booking
             var newBooking = _mapper.Map<Booking>(req);
             await _unitOfWork.Repository<Booking>().CreateAsync(newBooking);
             await _unitOfWork.CommitAsync();
 
-            int bookingId = newBooking.BookingId;
-            var book = await GetInformationByBookId(bookingId);
-             
+            var book = await GetInformationByBookId(newBooking.BookingId);
             if (book != null && book.Package != null)
             {
                 var package = book.Package.FirstOrDefault(x => x.PackageId == req.PackageId);
-                var packageTypeId = package.PackageTypeId; //1 = Km, 2 = Days
+                var packageTypeId = package.PackageTypeId;
 
                 string type = "";
                 int? total = 0;
@@ -89,9 +130,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
                 var newTracking = _mapper.Map<Tracking>(tracking);
                 await _unitOfWork.Repository<Tracking>().CreateAsync(newTracking);
+                _unitOfWork.Commit();
             }
-            await _unitOfWork.CommitAsync();
-            return true;
+
+            var bookingResponse = _mapper.Map<BookingResponse>(book);
+            return bookingResponse;
         }
 
         private async Task<BookingResponse> GetInformationByBookId(int id)
@@ -161,6 +204,13 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                                 new LicenseTypeResponse
                                 {
                                     LicenseName = b.Package.LicenseType.LicenseName,
+                                }
+                            },
+                            PackageTypes = new List<PackageTypeResponse>
+                            {
+                                new PackageTypeResponse
+                                {
+                                    PackageTypeName = b.Package.PackageType.PackageTypeName,
                                 }
                             },
                             NumberOfKmOrDays = b.Package.NumberOfKmOrDays

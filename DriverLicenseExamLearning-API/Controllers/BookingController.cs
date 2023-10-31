@@ -28,10 +28,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         {
             req.MemberId = _claimsService.GetCurrentUserId;
             var rs = await _bookingService.CreateBooking(req);
-            return rs == true ? Ok(new
-            {
-                msg = "Create Booking Successfully!"
-            }) : BadRequest(new
+            return rs != null ? Ok(rs) : BadRequest(new
             {
                 msg = "Create Booking Fail!"
             });
