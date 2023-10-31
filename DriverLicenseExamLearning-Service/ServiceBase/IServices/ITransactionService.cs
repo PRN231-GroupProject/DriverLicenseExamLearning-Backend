@@ -15,6 +15,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices {
         Task<bool> DeleteTransaction(int id);
         Task<bool> CreateTransactionByBookingId(int bookingId, TransactionRequest request);
         Task<bool> UpdateTransaction(int id, TransactionRequest request);
-        Task<bool> RefundTransactionByBookingId(int bookingId, [FromBody] TransactionRequest request)
+        Task<bool> RefundTransactionByBookingId(int bookingId, [FromBody] TransactionRequest request);
     }
 }
