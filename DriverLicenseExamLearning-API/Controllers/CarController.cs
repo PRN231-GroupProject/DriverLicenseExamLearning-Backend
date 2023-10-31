@@ -60,8 +60,12 @@ namespace DriverLicenseExamLearning_API.Controllers
         [Authorize(Roles = RoleNames.Staff)]
         [SwaggerOperation(Summary = $"[Role : {RoleNames.Staff}][Description:Update  Car]")]
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateCarRequest car, int carID)
+        public async Task<IActionResult> Update([FromBody]UpdateCarRequest car, int carID)
         {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
             bool check = await _carService.UpdateCar(car, carID);
             if (!check)
             {
@@ -82,6 +86,10 @@ namespace DriverLicenseExamLearning_API.Controllers
         [SwaggerOperation(Summary = $"[Role : {RoleNames.Staff}][Description:Add new  Car]")]
         public async Task<IActionResult> Add([FromBody] UpdateCarRequest carRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
             var rs = await _carService.CreateCar(carRequest);
             return rs == true ? Ok(new
             {
