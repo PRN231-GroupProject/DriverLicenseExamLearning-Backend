@@ -23,7 +23,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<BookingResponse> CreateBooking(BookingRequest req) //Teaching - Done
+        public async Task<BookingResponse> CreateBooking(BookingRequest req) //Available - Not Available
         {
             #region Check and Set Status Car
             int? car = req.CarId;

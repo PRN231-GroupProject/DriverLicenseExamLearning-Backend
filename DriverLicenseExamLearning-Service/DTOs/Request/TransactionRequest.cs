@@ -9,10 +9,15 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
 {
     public class TransactionRequest
     {
+        [JsonIgnore]
         public int? BookingId { get; set; }
+        [JsonIgnore]
         public int? UserId { get; set; }
+        [JsonIgnore]
         public int? Total { get; set; }
         [JsonIgnore]
-        public string? Status { get; set; } = "Active";
+        public string? Status { get; set; }
+        [JsonIgnore]
+        public string? TransactionType { get; set; }
     }
 }

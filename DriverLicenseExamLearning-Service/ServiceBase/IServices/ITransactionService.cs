@@ -1,6 +1,7 @@
 ﻿using DriverLicenseExamLearning_Data.Entity;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices {
     {
         Task<IEnumerable<Transaction>> GetAllAsync();
         Task<bool> DeleteTransaction(int id);
-        Task<bool> CreateTransaction(TransactionRequest request);
+        Task<bool> CreateTransactionByBookingId(int bookingId, TransactionRequest request);
         Task<bool> UpdateTransaction(int id, TransactionRequest request);
+        Task<bool> RefundTransactionByBookingId(int bookingId, [FromBody] TransactionRequest request)
     }
 }

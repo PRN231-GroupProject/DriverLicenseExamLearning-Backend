@@ -310,6 +310,10 @@ namespace DriverLicenseExamLearning_Data.Entity
 
                 entity.Property(e => e.Status).HasMaxLength(20);
 
+                entity.Property(e => e.TransactionType).HasMaxLength(20);
+
+                entity.Property(e => e.Status).HasMaxLength(20);
+
                 entity.Property(e => e.Total).HasColumnType("int");
 
                 entity.HasOne(d => d.Booking)

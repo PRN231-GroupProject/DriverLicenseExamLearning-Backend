@@ -33,22 +33,12 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             request.Total = existingTrackings.FirstOrDefault().Total;
             request.Type = existingTrackings.First().Type;
 
-            //if (request.Type == "Km")
-            //{
-            //    request.Total += 1;
-            //}
-
             if (totalProcessing + request.Processing <= request.Total)
             {
                 if(request.Type == "Days")
                 {
                     request.Processing = 1;
                 }
-
-                //if (request.Type == "Km")
-                //{
-                //    request.Total -= 1;
-                //}
 
                 var newTracking = _mapper.Map<Tracking>(request);
                 newTracking.BookingId = bookingId;
@@ -65,10 +55,15 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     await _unitOfWork.Repository<Car>().Update(existingCars, carId.Value);
                     #endregion
 
+                    #region Change Mentor Status
                     var mentorId = _claimsService.GetCurrentUserId;
                     var existingMentors = await _unitOfWork.Repository<User>().FindAsync(x => x.UserId == mentorId && x.Status == "Not Available");
                     existingMentors.Status = "Available";
                     await _unitOfWork.Repository<User>().Update(existingMentors, mentorId);
+                    #endregion
+
+                    #region Give Salary To Mentor
+                    #endregion
                 }
 
                 await _unitOfWork.CommitAsync();

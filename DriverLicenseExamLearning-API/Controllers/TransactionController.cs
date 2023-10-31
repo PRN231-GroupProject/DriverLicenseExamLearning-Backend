@@ -28,15 +28,28 @@ namespace DriverLicenseExamLearning_API.Controllers
         }
         [Authorize(Roles = RoleNames.Member)]
         [HttpPost]
-        public async Task<ActionResult> CreateTransaction([FromBody] TransactionRequest req)
+        public async Task<ActionResult> CreateTransaction(int bookingId, [FromBody] TransactionRequest req)
         {
-            var rs = await _transactionService.CreateTransaction(req);
+            var rs = await _transactionService.CreateTransactionByBookingId(bookingId, req);
             return rs != null ? Ok(new
             {
                 msg = "Create Transaction Successfully!"
             }) : BadRequest(new
             {
                 msg = "Create transaction fail!"
+            });
+        }
+        [Authorize(Roles = RoleNames.Member)]
+        [HttpPost]
+        public async Task<ActionResult> CreateRefund(int bookingId, [FromBody] TransactionRequest req)
+        {
+            var rs = await _transactionService.RefundTransactionByBookingId(bookingId, req);
+            return rs == true ? Ok(new
+            {
+                msg = "Waiting for the dev to refund your money!"
+            }) : BadRequest(new
+            {
+                msg = "Refund fail!"
             });
         }
         [Authorize(Roles = RoleNames.Mentor)]
