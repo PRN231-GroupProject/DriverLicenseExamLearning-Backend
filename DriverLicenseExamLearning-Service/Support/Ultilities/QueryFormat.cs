@@ -92,13 +92,13 @@ namespace DriverLicenseExamLearning_Service.Support.Ultilities
         }
 
 
-        public static async Task<IQueryable<ExamGetByLicenseTye>> QueryExamFollowLisenceTypeByMember(int? licenseTypeID)
+        public static async Task<IQueryable<ExamGetByLicenseType>> QueryExamFollowLisenceTypeByMember(int? licenseTypeID)
         {
 
             
-            IQueryable<ExamGetByLicenseTye> result = (from licensetype in _context.LicenseTypes
+            IQueryable<ExamGetByLicenseType> result = (from licensetype in _context.LicenseTypes
                                                       where licensetype.LicenseTypeId == licenseTypeID
-                                                      select new ExamGetByLicenseTye
+                                                      select new ExamGetByLicenseType
                                                       {
                                                           LicenseId = licensetype.LicenseTypeId,
                                                           LicenseName = licensetype.LicenseName,

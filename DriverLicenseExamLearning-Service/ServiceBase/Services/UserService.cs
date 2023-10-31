@@ -5,6 +5,7 @@ using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.Support.HandleError;
 using DriverLicenseExamLearning_Service.Support.Helpers;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
 using Microsoft.AspNetCore.Mvc;
@@ -200,6 +201,55 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             await _unitOfWork.Repository<User>().Update(user, id);
             await _unitOfWork.CommitAsync();
             return _mapper.Map<User, UserResponse>(user);
+        }
+
+        public async Task<bool> RegisterMentorApplication(MentorRegisterRequest registerRequest)
+        {
+
+         FireBaseFile file =   await  FirebaseHelper.UploadFileAsync(registerRequest.Bio, "MentorApplication");
+
+            var checkGmail =  _unitOfWork.Repository<User>().Where(x =>x.Email == registerRequest.Email).FirstOrDefault();
+            if(checkGmail != null) {
+
+                throw new HttpStatusCodeException(HttpStatusCode.BadRequest, "This Email has in the system ");
+            }
+            User user = new User()
+            {
+                Name = registerRequest.Name,
+                Address = registerRequest.Address,
+                PhoneNumber = registerRequest.Address,
+                UserName = registerRequest.MentorName,
+                Email = registerRequest.Email,
+                Password = "12345678",
+                RoleId = 3,
+                Status = "InActive"
+                
+
+            };
+
+             await _unitOfWork.Repository<User>().CreateAsync(user);
+            _unitOfWork.Commit();   
+
+            int userId = _unitOfWork.Repository<User>().Where(x => x.Email == registerRequest.Email).FirstOrDefault().UserId;  
+            
+            MentorAttribute mentor = new MentorAttribute()
+            {
+                Experience = registerRequest.Experience,
+                Status = "Processing",
+                Bio = file.FileName,
+                UserId = userId,
+                
+            };
+
+            await _unitOfWork.Repository<MentorAttribute>().CreateAsync(mentor);
+            _unitOfWork.Commit();
+
+            return true;
+
+
+
+
+
         }
     }
 }

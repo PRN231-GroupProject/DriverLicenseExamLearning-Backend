@@ -21,11 +21,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
     public class QuestionBankService : IQuestionBankService
     {
-         private readonly IClaimsService _claimsService;
+        private readonly IClaimsService _claimsService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public QuestionBankService(IUnitOfWork unitOfWork, IMapper mapper,IClaimsService claimsService)
+        public QuestionBankService(IUnitOfWork unitOfWork, IMapper mapper, IClaimsService claimsService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -35,14 +35,14 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
 
             // Check role
-         
+
             int checkErrorQuiz = 0;
             List<string> errors = new List<string>();
             #region "Add New Quiz And Check"
             foreach (var item in requests)
             {
                 bool check = await CheckQuiz(item.Answer, new string[4] { item.Options1, item.Options2, item.Options3, item.Options4 });
-                bool check2= await CheckQuizTestInSystem(item.Text);
+                bool check2 = await CheckQuizTestInSystem(item.Text);
                 if (check && check2)
                 {
                     var quizAdd = _mapper.Map<Question>(item);
@@ -69,7 +69,33 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         }
 
-        public async Task<IQueryable<QuestionBankResponse>> QuestionBank() => await QueryFormat.QueryQuestionFollowLisenceType();
+        public async Task<IEnumerable<QuestionBankResponse>> QuestionBank()
+        {
+           IEnumerable<QuestionBankResponse> result = await _unitOfWork.Repository<Question>().Include(x => x.LicenseTypeNavigation).Select(x => new QuestionBankResponse
+            {
+                LicenseTypeID = (int)x.LicenseType,
+                Name = x.LicenseTypeNavigation.LicenseName,
+                questions = new List<AddQuestionRequest>
+                {
+                    new AddQuestionRequest
+                    {
+                        Answer = x.Answer,
+                        Image = x.Image != null ? x.Image : "Not Have Image", 
+                        LicenseTypeId = x.LicenseType,
+                        Options1 = x.Option1,
+                        Options2 = x.Option2,
+                        Options3 = x.Option3,
+                        Options4 = x.Option4,
+                        ParalysisQuestion = x.IsParalysisQuestion,
+                        Text = x.Question1
+                    }
+                }
+
+            }).ToListAsync();
+
+            return result;
+
+        }
 
 
 
@@ -77,7 +103,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         public async Task<bool> UpdateQuizRequests(int quizID, AddQuestionRequest request)
         {
             Question questionFind = _unitOfWork.Repository<Question>().Where(x => x.QuestionId == quizID).FirstOrDefault();
-           if(request.Options4  != null && !request.Options4.Equals("string"))
+            if (request.Options4 != null && !request.Options4.Equals("string"))
             {
                 questionFind.Option4 = request.Options4;
             }
@@ -97,11 +123,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             {
                 questionFind.Question1 = request.Text;
             }
-            if(request.Image != null && !request.Image.Equals("string"))
+            if (request.Image != null && !request.Image.Equals("string"))
             {
                 questionFind.Image = request.Image;
             }
-            if(request.LicenseTypeId != 0)
+            if (request.LicenseTypeId != 0)
             {
                 questionFind.LicenseType = request.LicenseTypeId;
             }
@@ -129,7 +155,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         private async Task<bool> CheckQuizTestInSystem(string text)
         {
             var questionCheck = _unitOfWork.Repository<Question>().Where(x => x.Question1 == text).FirstOrDefault();
-            if(questionCheck is null)
+            if (questionCheck is null)
             {
                 return true;
             }

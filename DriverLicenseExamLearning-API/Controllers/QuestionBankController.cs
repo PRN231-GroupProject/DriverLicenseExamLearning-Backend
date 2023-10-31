@@ -1,4 +1,5 @@
 ﻿using DriverLicenseExamLearning_Service.DTOs.Request;
+using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.DTOs.State;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections;
 
 namespace DriverLicenseExamLearning_API.Controllers
 {
@@ -50,9 +52,9 @@ namespace DriverLicenseExamLearning_API.Controllers
         
         [HttpGet]
         [EnableQuery]
-        public async Task<IActionResult> Get()
+        public async Task<ActionResult<IQueryable<QuestionBankResponse>>> Get()
         {
-            var result = await _service.QuestionBank();
+            IEnumerable<QuestionBankResponse> result = await _service.QuestionBank();
             if(result == null)
             {
                 return NotFound(new { 

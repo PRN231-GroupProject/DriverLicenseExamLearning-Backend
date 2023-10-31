@@ -11,10 +11,10 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
 {
     public interface ILicenseApplicationService
     {
-        Task<IQueryable<LicenseApplicationDetailResponse>> GetByCustomer();
-        Task<IQueryable<LicenseApplicationResponse>> GetAll();
-        Task<bool> SubmitLicenseApplication(SubmitLicenseApplicationRequest submit);
+        Task<IEnumerable<LicenseApplicationDetailResponse>> GetByCustomer();
+        Task<IEnumerable<LicenseApplicationResponse>> GetAll();
+        Task<bool> SubmitLicenseApplication(int licenseTypeId ,SubmitLicenseApplicationRequest submit);
         Task<bool> UpdateLicenseApplicationByCustomer(int licenseApplicationID,SubmitLicenseApplicationRequest submit);
-        Task<bool> UpdateLicenseApplicationByStaff(int licenseApplicationID, string? Status = null);
+        Task<bool> UpdateLicenseApplicationByStaff(int licenseApplicationID, UpdateApplicationRequest request);
     }
 }

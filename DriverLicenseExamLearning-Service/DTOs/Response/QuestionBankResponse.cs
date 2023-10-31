@@ -14,6 +14,6 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
 
         public string? Name { get ; set; }
 
-        public List<AddQuestionRequest>? questions { get; set; }
+        public List<AddQuestionRequest>? questions { get; set; } = new List<AddQuestionRequest>();
     }
 }

@@ -11,7 +11,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
     {
         public int userId { get ; set; }
 
-        public IReadOnlyCollection<LicenseApplicationDetailResponse>  loader { get; set; }
+        public List<LicenseApplicationDetailResponse>  loader { get; set; }
 
 
     }

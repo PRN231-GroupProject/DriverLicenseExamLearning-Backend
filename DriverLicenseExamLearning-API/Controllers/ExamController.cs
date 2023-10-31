@@ -39,11 +39,10 @@ namespace DriverLicenseExamLearning_API.Controllers
        
         [EnableQuery]
         [HttpGet("GetQuizByMember")]
-        public async Task<ActionResult<IQueryable<ExamGetByMemberResponse>>> GetQuizByMemeber(int? licenseTypeID)
+        public async Task<ActionResult<IQueryable<ExamGetByLicenseType>>> GetQuizByMemeber()
         {
-           
             
-            IQueryable quiz = await _examService.GetExamListByCustomer(licenseTypeID);
+            var quiz = await _examService.GetExamListByCustomer();
             if(quiz is null)
             {
                 return NotFound();

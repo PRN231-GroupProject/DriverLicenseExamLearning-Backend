@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace DriverLicenseExamLearning_Service.DTOs.Response
 {
-    public class ExamGetByLicenseTye
+    public class ExamGetByLicenseType
     {
         public int LicenseId { get; set; }
 
-        public string LicenseName { get; set; }
+        public string? LicenseName { get; set; }
 
-        public IReadOnlyCollection<ExamGetByMemberResponse> exams { get; set; }
+        public List<ExamGetByMemberResponse>? exams { get; set; }
 
 
 
@@ -23,11 +23,11 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
     {
         public int ExamId { get; set; }
 
-        public string ExamName { get; set; }
+        public string? ExamName { get; set; }
 
         public DateTime ExamDate { get; set; }
 
-        public IReadOnlyCollection<QuestionGetByMemberResponse> questions { get; set; }
+        public List<QuestionGetByMemberResponse>? questions { get; set; }
 
     }
 

@@ -101,7 +101,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 var checkTrue = _unitOfWork.Repository<Question>().Where(x => x.QuestionId == request.QuestionID && x.Answer == request.Answer).FirstOrDefault();
                 if (checkTrue is null)
                 {
-                    bool checkParalysis = (bool)_unitOfWork.Repository<Question>().Where(x => x.QuestionId == request.QuestionID ).FirstOrDefault().IsParalysisQuestion;
+                    bool checkParalysis = (bool)_unitOfWork.Repository<Question>().Where(x => x.QuestionId == request.QuestionID).FirstOrDefault().IsParalysisQuestion;
                     if (checkParalysis)
                     {
                         throw new HttpStatusCodeException(HttpStatusCode.Accepted, $"You wrong in Paralaysis Question ");
@@ -126,7 +126,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             int checkCustomer = 0;
             checkCustomer = _claimService.GetCurrentUserId;
             int checkInTransaction = await QueryFormat.CheckMemberInBooking(answer.QuizID, checkCustomer);
-            if (checkCustomer == 0 || checkInTransaction == 0 )
+            if (checkCustomer == 0 || checkInTransaction == 0)
             {
                 result = await DoingQuizByNonUser(answer);
             }
@@ -179,18 +179,81 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         }
 
-        public async Task<IQueryable<ResultExamByCustomerResponse>> GetExamHistory(int licenseTypeID)
+        public async Task<IEnumerable<ResultExamByCustomerResponse>> GetExamHistory(int licenseTypeID)
         {
             int userID = _claimService.GetCurrentUserId;
-            IQueryable<ResultExamByCustomerResponse> results = await QueryFormat.GetHistoryExam(licenseTypeID, userID);
-            return results;
+           // IQueryable<ResultExamByCustomerResponse> results1 = await QueryFormat.GetHistoryExam(licenseTypeID, userID);
+            //var results = await _unitOfWork.Repository<Exam>().Include(ex => ex.License).Include(e => e.ExamQuestions).ThenInclude(eq => eq.Question)
+            //    .Select(x => new )
+
+
+            IEnumerable<ResultExamByCustomerResponse> result = await _unitOfWork.Repository<ExamResultDetail>()
+                .Include(x => x.Question)
+                .Include(x => x.ExamResult)
+                .ThenInclude(x => x.Exam)
+                .ThenInclude(x => x.License)
+                .ThenInclude(x => x.Questions)
+                .Where(x => x.ExamResult.Exam.LicenseId == licenseTypeID && x.ExamResult.UserId == userID)
+                .Select(x =>
+            new ResultExamByCustomerResponse
+            {
+                Mark = x.ExamResult.Result,
+                QuizID = x.ExamResult.Exam.ExamId,
+                QuizName = x.ExamResult.Exam.ExamName,
+                resultExamDetails = new HashSet<ResultExamDetailByCustomerResponse>
+                {
+                    new ResultExamDetailByCustomerResponse
+                    {
+                        Image = x.Question.Image,
+                        Option1 = x.Question.Option1,
+                        Option2 = x.Question.Option2,
+                        Option3 = x.Question.Option3,
+                        Option4 = x.Question.Option4,
+                        QuestionId = x.Question.QuestionId,
+                        RightAnswer = x.Question.Answer,
+                        UserAnswer = x.WrongAnswer != null ? x.WrongAnswer : x.Question.Answer,
+                    }
+                }
+
+
+            }).ToListAsync();
+            return result;
         }
 
-        public async Task<IQueryable<ExamGetByLicenseTye>> GetExamListByCustomer(int? licenseTypeId)
+        public async Task<IEnumerable<ExamGetByLicenseType>> GetExamListByCustomer()
         {
-            IQueryable examQuery = await QueryFormat.QueryExamFollowLisenceTypeByMember(licenseTypeId);
-           
-            return (IQueryable<ExamGetByLicenseTye>)examQuery;
+
+            IEnumerable<ExamGetByLicenseType> examQuery = await _unitOfWork.Repository<Exam>().Include(x => x.License).Include(x => x.ExamQuestions).ThenInclude(x => x.Question).Select(x => new ExamGetByLicenseType
+            {
+                LicenseId = (int)x.LicenseId,
+                LicenseName = x.ExamName,
+                exams = new List<ExamGetByMemberResponse>
+                {
+                    new ExamGetByMemberResponse
+                    {
+
+                              ExamDate =(DateTime)x.ExamDate,
+                              ExamId = x.ExamId,
+                              ExamName = x.ExamName,
+                              questions = x.ExamQuestions.Select(eq => new QuestionGetByMemberResponse
+                              {
+
+                                  QuestionId = eq.Question.QuestionId,
+                                  Image = eq.Question.Image,
+                                  Option1 = eq.Question.Option1,
+                                  Option2 = eq.Question.Option2,
+                                  Option3 = eq.Question.Option3,
+                                  Option4 = eq.Question.Option4,
+                                  Title = eq.Question.Question1
+                              }).ToList()
+
+                        }
+                        }
+
+            }).ToListAsync();
+
+
+            return examQuery;
         }
 
         public async Task<IEnumerable<ExamQueryGeneralResponse>> GetExamQuery()
