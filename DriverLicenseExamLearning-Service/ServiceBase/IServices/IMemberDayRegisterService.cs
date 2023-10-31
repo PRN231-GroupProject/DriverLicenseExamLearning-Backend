@@ -12,5 +12,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
     {
         Task<IEnumerable<MemberDayRegisterResponse>> CreateMemberDayRegisterByBookingId(int booking, MemberDayRegisterRequest req);
         Task<MemberDayRegisterResponse> GetMemberDayRegisterByBookId(int bookId);
+        bool checkDate(string date);
     }
 }

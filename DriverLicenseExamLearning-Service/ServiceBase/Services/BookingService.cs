@@ -35,7 +35,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             checkActiveCar.Status = "Inactive";
             _unitOfWork.Repository<Car>().Update(checkActiveCar, car.Value);
             #endregion
-
             #region Check and Set Mentor Status
             int? mentorId = req.MentorId;
             var checkAvailableMentor = await _unitOfWork.Repository<User>().FindAsync(x => x.Status == "Available" && x.UserId == req.MentorId && x.RoleId == 3); // 
@@ -46,7 +45,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             checkAvailableMentor.Status = "Not Available";
             _unitOfWork.Repository<User>().Update(checkAvailableMentor, mentorId.Value);
             #endregion
-
+            #region V1
             //var newBooking = _mapper.Map<Booking>(req);
             //await _unitOfWork.Repository<Booking>().CreateAsync(newBooking);
             //await _unitOfWork.CommitAsync();
@@ -89,7 +88,8 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             //    await _unitOfWork.Repository<Tracking>().CreateAsync(newTracking);
             //}
             //await _unitOfWork.CommitAsync();
-            // Create a new booking
+            #endregion 
+
             var newBooking = _mapper.Map<Booking>(req);
             await _unitOfWork.Repository<Booking>().CreateAsync(newBooking);
             await _unitOfWork.CommitAsync();

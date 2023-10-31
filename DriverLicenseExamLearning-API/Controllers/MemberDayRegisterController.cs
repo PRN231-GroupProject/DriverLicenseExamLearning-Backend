@@ -20,6 +20,15 @@ namespace DriverLicenseExamLearning_API.Controllers
         [HttpPost("{bookingId:int}")]
         public async Task<ActionResult<MemberDayRegisterResponse>> CreateMemberDayRegisterByBookingId(int bookingId, [FromBody] MemberDayRegisterRequest req)
         {
+            #region validate before input
+            if (req == null)
+            {
+                return BadRequest(new
+                {
+                    msg = "Wrong day format or missing type of date!!!"
+                });
+            }
+            #endregion
             var rs = await _memberDayRegisterService.CreateMemberDayRegisterByBookingId(bookingId, req);
             return rs != null ? Ok(new
             {
