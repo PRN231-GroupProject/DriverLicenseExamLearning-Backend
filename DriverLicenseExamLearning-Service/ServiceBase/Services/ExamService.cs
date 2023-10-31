@@ -14,7 +14,6 @@ using System.Linq.Dynamic.Core;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Twilio.Http;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DriverLicenseExamLearning_Service.ServiceBase.Services

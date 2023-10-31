@@ -19,7 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 ODataModelBuilder modelBuilder = new ODataConventionModelBuilder();
-
+//modelBuilder.EntitySet<ExamGetByMemberResponse>("ExamGetByMemberResponse");
+//modelBuilder.EntitySet<ExamGetByLicenseTye>("ExamGetByLicenseTye");
 //modelBuilder.EntitySet<Booking>("Bookings");
 //modelBuilder.EntitySet<Exam>("Exams");
 //modelBuilder.EntitySet<ExamQuestion>("ExamQuestions");

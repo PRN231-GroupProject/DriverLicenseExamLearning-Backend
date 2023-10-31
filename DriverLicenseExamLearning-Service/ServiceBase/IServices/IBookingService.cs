@@ -10,7 +10,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
 {
     public interface IBookingService
     {
-        Task<bool> CreateBooking(BookingRequest req);
+        Task<BookingResponse> CreateBooking(BookingRequest req);
         Task<BookingResponse> UpdateBooking(int bookingId, BookingRequest req);
         Task<IEnumerable<BookingResponse>> GetAllBooking();
     }
