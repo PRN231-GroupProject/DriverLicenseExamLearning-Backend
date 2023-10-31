@@ -12,7 +12,6 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using System.Text;
 using System.Threading.Tasks;
-using Twilio.Rest.Api.V2010.Account;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.Support.HandleError;
 using System.Net.Mail;

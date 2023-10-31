@@ -27,6 +27,5 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
 		<PackageReference Include="NTQ.Sdk.Core" Version="1.1.6" />
-		<PackageReference Include="Twilio" Version="6.8.0" />
 	</ItemGroup>
 </Project>

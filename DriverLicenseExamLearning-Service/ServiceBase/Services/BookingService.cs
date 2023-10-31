@@ -11,8 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Twilio.Http;
-using Twilio.TwiML;
 
 namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 {
