@@ -55,14 +55,30 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     await _unitOfWork.Repository<Car>().Update(existingCars, carId.Value);
                     #endregion
 
-                    #region Change Mentor Status
+                    #region Change Mentor Status and Give Salary To Mentor
                     var mentorId = _claimsService.GetCurrentUserId;
-                    var existingMentors = await _unitOfWork.Repository<User>().FindAsync(x => x.UserId == mentorId && x.Status == "Not Available");
+                    var existingMentors = await _unitOfWork.Repository<User>()
+                                                           .FindAsync(x => x.UserId == mentorId && x.Status == "Not Available");
                     existingMentors.Status = "Available";
                     await _unitOfWork.Repository<User>().Update(existingMentors, mentorId);
-                    #endregion
 
-                    #region Give Salary To Mentor
+                    var moneyOfPackage = _unitOfWork.Repository<Booking>()
+                                           .Include(x => x.Package)
+                                           .Where(x => x.BookingId == bookingId)
+                                           .Select(x => x.Package.Price)
+                                           .FirstOrDefault();
+
+                    var salaryOfMentor = moneyOfPackage * 70 / 100;
+                    var transaction = new TransactionRequest
+                    {
+                        BookingId = bookingId,
+                        UserId = mentorId,
+                        Total = salaryOfMentor,
+                        Status = "Pending",
+                        TransactionType = "Refund"
+                    };
+                    var newTransaction = _mapper.Map<Transaction>(transaction);
+                    await _unitOfWork.Repository<Transaction>().CreateAsync(newTransaction);
                     #endregion
                 }
 
