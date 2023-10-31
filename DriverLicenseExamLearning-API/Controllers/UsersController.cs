@@ -130,5 +130,20 @@ namespace DriverLicenseExamLearning_API.Controllers
                 msg = "Update profile error!"
             });
         }
+
+
+        [HttpPost("mentor-regiser")]
+        public async Task<ActionResult> MentorRegister([FromForm] MentorRegisterRequest mentorRegister)
+        {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+            await _userService.RegisterMentorApplication(mentorRegister);
+            return Ok(new
+            {
+                message = "Register Mentor Sucessfully"
+            });
+        }
     }
 }

@@ -8,12 +8,10 @@ using System.Threading.Tasks;
 
 namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
 {
-    public interface IQuestionBankService
+    public interface IMentorApplication
     {
-        Task<bool> AddQuizRequests(List<AddQuestionRequest> requests);
+        Task<IEnumerable<MentorApplicationResponse>> GetMentorApplications();
 
-        Task<bool> UpdateQuizRequests(int quizID, AddQuestionRequest request);
-
-        Task<IEnumerable<QuestionBankResponse>> QuestionBank();
+        Task<bool> UpdateMentorApplication(MentorApplicationRequest request);
     }
 }

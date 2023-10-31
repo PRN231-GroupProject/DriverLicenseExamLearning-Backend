@@ -24,9 +24,9 @@ namespace DriverLicenseExamLearning_API.Controllers
 
         [Authorize(Roles = RoleNames.Member)]
         [HttpPost("Submit")]
-        public async Task<ActionResult> Submit(SubmitLicenseApplicationRequest file)
+        public async Task<ActionResult> Submit(int licenseTypeID,SubmitLicenseApplicationRequest file)
         {
-            await _licenseApplicationService.SubmitLicenseApplication(file);
+            await _licenseApplicationService.SubmitLicenseApplication(licenseTypeID,file);
             return Ok();
         }
 
@@ -58,16 +58,13 @@ namespace DriverLicenseExamLearning_API.Controllers
 
         [Authorize(Roles = RoleNames.Staff)]
         [HttpPost("Check")]
-        public async Task<ActionResult> Update(int licenseApplication,[FromBody]string status)
+        public async Task<ActionResult> Update(int licenseApplication,[FromBody]UpdateApplicationRequest request)
         {
-            if (!Regex.IsMatch(status, @"^(Accepted|Denied)$"))
+            if (!ModelState.IsValid)
             {
-                return BadRequest(new
-                {
-                    message = "Status can be Accepted or Denied"
-                });
+                return UnprocessableEntity(ModelState);
             }
-          bool check =   await _licenseApplicationService.UpdateLicenseApplicationByStaff(licenseApplication, status);
+          bool check =   await _licenseApplicationService.UpdateLicenseApplicationByStaff(licenseApplication, request);
             if (!check)
             {
                 return BadRequest(new

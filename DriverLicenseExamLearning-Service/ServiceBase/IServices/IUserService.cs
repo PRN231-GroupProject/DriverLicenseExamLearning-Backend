@@ -21,5 +21,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         bool CheckPassword(User user, string password);
         Task<RefreshTokenResponse> RefreshTokenAsync(string refreshToken);
         Task<UserResponse> UpdateAsync(int id, UserRequest request);
+
+        Task<bool> RegisterMentorApplication(MentorRegisterRequest registerRequest);
     }
 }

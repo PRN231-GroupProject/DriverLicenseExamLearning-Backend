@@ -45,7 +45,7 @@ builder.Services.AddControllers()
                                 .AddRouteComponents("odata", modelBuilder.GetEdmModel()));
 // Add Dependency Injection
 
-
+builder.Services.AddTransient<IMentorApplication, MentorApplication>();
 builder.Services.AddScoped<ILicenseApplicationService, LicenseApplicationService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBookingService, BookingService>();

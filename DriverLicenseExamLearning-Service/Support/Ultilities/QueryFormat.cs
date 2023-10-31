@@ -1,6 +1,7 @@
 ﻿using DriverLicenseExamLearning_Data.Entity;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace DriverLicenseExamLearning_Service.Support.Ultilities
 
         public static async Task<IQueryable<QuestionBankResponse>> QueryQuestionFollowLisenceType()
         {
+           
             IQueryable<QuestionBankResponse> result = (from lisencetype in _context.LicenseTypes
                                                        join question in _context.Questions on lisencetype.LicenseTypeId equals question.LicenseType
                                                        select new QuestionBankResponse
@@ -90,11 +92,13 @@ namespace DriverLicenseExamLearning_Service.Support.Ultilities
         }
 
 
-        public static async Task<IQueryable<ExamGetByLicenseTye>> QueryExamFollowLisenceTypeByMember(int? licenseTypeID)
+        public static async Task<IQueryable<ExamGetByLicenseType>> QueryExamFollowLisenceTypeByMember(int? licenseTypeID)
         {
-            IQueryable<ExamGetByLicenseTye> result = (from licensetype in _context.LicenseTypes
+
+            
+            IQueryable<ExamGetByLicenseType> result = (from licensetype in _context.LicenseTypes
                                                       where licensetype.LicenseTypeId == licenseTypeID
-                                                      select new ExamGetByLicenseTye
+                                                      select new ExamGetByLicenseType
                                                       {
                                                           LicenseId = licensetype.LicenseTypeId,
                                                           LicenseName = licensetype.LicenseName,
