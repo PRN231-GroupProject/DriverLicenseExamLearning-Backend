@@ -1,6 +1,7 @@
 using DriverLicenseExamLearning_Data.Entity;
 using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_gRPC.Services;
+using Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpc();
 builder.Services.AddScoped<PRN231_DriverLicenseExamLearningContext>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddAutoMapper(typeof(Mapping));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
