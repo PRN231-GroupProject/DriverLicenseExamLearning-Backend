@@ -4,6 +4,7 @@ using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.Support.HandleError;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,16 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public async Task<bool> CreateTransactionByBookingId(int bookingId, [FromBody] TransactionRequest request) //Pay - Receive - Refund
         {
-            request.UserId = _claimsService.GetCurrentUserId;
+            var userId = _claimsService.GetCurrentUserId;
+            var memberIdInBooking = _unitOfWork.Repository<Booking>()
+                                               .Where(x => x.BookingId == bookingId)
+                                               .Select(x => x.MemberId)
+                                               .FirstOrDefault();
+            if (userId != memberIdInBooking)
+            {
+                throw new HttpStatusCodeException(System.Net.HttpStatusCode.BadRequest, "You cannot use others bookingId!");
+            }
+            request.UserId = userId;
             request.TransactionType = "Pay";
             request.Total = _unitOfWork.Repository<Booking>()
                                    .Include(x => x.Package)
@@ -46,7 +56,16 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         }
         public async Task<bool> RefundTransactionByBookingId(int bookingId, [FromBody] TransactionRequest request)
         {
-            request.UserId = _claimsService.GetCurrentUserId;
+            var userId = _claimsService.GetCurrentUserId;
+            var memberIdInBooking = _unitOfWork.Repository<Booking>()
+                                               .Where(x => x.BookingId == bookingId)
+                                               .Select(x => x.MemberId)
+                                               .FirstOrDefault();
+            if (userId != memberIdInBooking)
+            {
+                throw new HttpStatusCodeException(System.Net.HttpStatusCode.BadRequest, "You cannot use others bookingId!");
+            }
+            request.UserId = userId;
             request.TransactionType = "Refund";
 
             var totalMoneyInPackage = _unitOfWork.Repository<Booking>()
