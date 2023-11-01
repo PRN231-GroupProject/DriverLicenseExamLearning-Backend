@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "DriverLicenseExamLearning_gRPC";
+
+package staff;
+
+// The greeting service definition.
+service Staff {
+  // Sends a greeting
+  rpc CreateNewStaff (NewStaffRequest) returns (NewStaffRequest);
+}
+
+// The request message containing the user's name.
+message NewStaffRequest {
+  string UserName = 1;
+  string Password = 2;
+  string Name = 3;
+  string PhoneNumber = 4;
+  string Email = 5;
+  string Address = 6;
+
+}
+
+// The response message containing the greetings.
+message NewStaffReponse {
+  string message = 1;
+}
