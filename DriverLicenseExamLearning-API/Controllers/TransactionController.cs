@@ -27,7 +27,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             return rs != null ? Ok(rs) : NotFound();
         }
         [Authorize(Roles = RoleNames.Member)]
-        [HttpPost]
+        [HttpPost("transaction")]
         public async Task<ActionResult> CreateTransaction(int bookingId, [FromBody] TransactionRequest req)
         {
             var rs = await _transactionService.CreateTransactionByBookingId(bookingId, req);
@@ -40,7 +40,7 @@ namespace DriverLicenseExamLearning_API.Controllers
             });
         }
         [Authorize(Roles = RoleNames.Member)]
-        [HttpPost]
+        [HttpPost("refund")]
         public async Task<ActionResult> CreateRefund(int bookingId, [FromBody] TransactionRequest req)
         {
             var rs = await _transactionService.RefundTransactionByBookingId(bookingId, req);
