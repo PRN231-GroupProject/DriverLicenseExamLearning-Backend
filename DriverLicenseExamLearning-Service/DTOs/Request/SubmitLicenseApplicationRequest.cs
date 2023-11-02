@@ -9,8 +9,6 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
 {
     public class SubmitLicenseApplicationRequest
     {
-        public IFormFile? LicenseTypeID { get; set; }
-
         public IFormFile? CitizenIdentificationCard { get; set;}
   
         public IFormFile? HealthCertification { get; set;}   

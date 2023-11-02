@@ -8,6 +8,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
 {
     public class ResultExamByCustomerResponse
     {
+        public int ResultExamId { get; set; }
         public int QuizID { get; set; }
         public string? QuizName { get; set; }
         public string? Mark { get; set; }
