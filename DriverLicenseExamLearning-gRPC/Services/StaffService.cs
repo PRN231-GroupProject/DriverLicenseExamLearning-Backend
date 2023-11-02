@@ -184,8 +184,8 @@ namespace DriverLicenseExamLearning_gRPC.Services
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", $"{token}");
-            var response = await client.GetAsync(ApiConstans.ApiCheckStaff);
-            //  var response = await client.GetAsync(ApiConstans.ApiCheckStaffDeploy);
+            //var response = await client.GetAsync(ApiConstans.ApiCheckStaff);
+             var response = await client.GetAsync(ApiConstans.ApiCheckStaffDeploy);
             if (response.IsSuccessStatusCode)
             {
                 return true;
