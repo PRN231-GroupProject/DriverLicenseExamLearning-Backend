@@ -75,10 +75,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             {
                 LicenseTypeID = (int)x.LicenseType,
                 Name = x.LicenseTypeNavigation.LicenseName,
-                questions = new List<AddQuestionRequest>
+                questions = new List<AddQuestionResponse>
                 {
-                    new AddQuestionRequest
+                    new AddQuestionResponse
                     {
+                        questionId = x.QuestionId,
                         Answer = x.Answer,
                         Image = x.Image != null ? x.Image : "Not Have Image", 
                         LicenseTypeId = x.LicenseType,

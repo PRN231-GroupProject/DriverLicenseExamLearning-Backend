@@ -19,14 +19,12 @@ namespace DriverLicenseExamLearning_Service.Support.Ultilities
         {
             int licenseTypeID = 0;
 
-            var result = (from exam in _context.Exams
+            var result = await  (from exam in _context.Exams
                           join licenseType in _context.LicenseTypes on exam.LicenseId equals licenseType.LicenseTypeId
                           join package in _context.Packages on licenseType.LicenseTypeId equals package.LicenseTypeId
                           join booking in _context.Bookings on package.PackageTypeId equals booking.PackageId
-                          join transaction in _context.Transactions on booking.BookingId equals transaction.BookingId
-                          join user in _context.Users on transaction.UserId equals user.UserId
-                          where user.UserId == memberId && exam.ExamId == examId
-                          select licenseType.LicenseTypeId).FirstOrDefault(); // Use FirstOrDefault to avoid exceptions
+                          where booking.MemberId == memberId && exam.ExamId == examId
+                          select licenseType.LicenseTypeId).FirstOrDefaultAsync(); // Use FirstOrDefault to avoid exceptions
             if (result != 0)
             {
                 licenseTypeID = result;

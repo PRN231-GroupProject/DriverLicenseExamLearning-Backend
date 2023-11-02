@@ -90,11 +90,12 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         }
 
-        public async Task<string> DoingQuizByNonUser(AnswerByMemberRequest answer)
+        public async Task<MarkResultResponse> DoingQuizByNonUser(AnswerByMemberRequest answer)
         {
             int rightAnswer = 0;
             int wrongAnswer = 0;
-            int total = _unitOfWork.Repository<ExamQuestion>().Where(x => x.QuestionId == answer.QuizID).Count();
+            int paralysisAnswer = 0;
+            int total = _unitOfWork.Repository<ExamQuestion>().Where(x => x.ExamId == answer.QuizID).Count();
             foreach (var request in answer.answerDetails)
             {
                 var checkTrue = _unitOfWork.Repository<Question>().Where(x => x.QuestionId == request.QuestionID && x.Answer == request.Answer).FirstOrDefault();
@@ -103,7 +104,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     bool checkParalysis = (bool)_unitOfWork.Repository<Question>().Where(x => x.QuestionId == request.QuestionID).FirstOrDefault().IsParalysisQuestion;
                     if (checkParalysis)
                     {
-                        throw new HttpStatusCodeException(HttpStatusCode.Accepted, $"You wrong in Paralaysis Question ");
+                        paralysisAnswer++;
+                    }
+                    else
+                    {
+                        wrongAnswer++;
                     }
 
                 }
@@ -115,13 +120,31 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
 
             }
-            return $"{rightAnswer}/{total}";
+           
+            double examStatusCheck = PercentageInLicenseType((int)await _unitOfWork.Repository<Exam>().Where(x => x.ExamId == answer.QuizID).Select(x => x.LicenseId).FirstOrDefaultAsync())  ;
+            string? examCheck;
+            if (paralysisAnswer > 0)
+            {
+                examCheck = "Failed";
+            }else
+            {
+                examCheck = rightAnswer / total > examStatusCheck ? "Passed" : "Failed";
+            }
+            return new MarkResultResponse
+            {
+                Mark = $"{rightAnswer}/{total}",
+                RightAnswer = rightAnswer,
+                WrongAnswer = wrongAnswer + paralysisAnswer,
+                WrongParalysisAnswer = paralysisAnswer,
+                ExamStatus = examCheck,
+               
+            };
 
         }
 
-        public async Task<string> DoingQuiz(AnswerByMemberRequest answer)
+        public async Task<MarkResultResponse> DoingQuiz(AnswerByMemberRequest answer)
         {
-            string result = "";
+            MarkResultResponse result;
             int checkCustomer = 0;
             checkCustomer = _claimService.GetCurrentUserId;
             int checkInTransaction = await QueryFormat.CheckMemberInBooking(answer.QuizID, checkCustomer);
@@ -136,11 +159,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             return result;
         }
 
-        public async Task<string> DoingQuizByMember(AnswerByMemberRequest answer)
+        public async Task<MarkResultResponse> DoingQuizByMember(AnswerByMemberRequest answer)
         {
             //? Doing Quiz Process
             int AttemptNumber = 0;
-            int rightAnswer = 0;
+            
 
             //Check The number of time to this quiz or maybe first time 
             var examResultFind = _unitOfWork.Repository<ExamResult>().Where(x => x.ExamId == answer.QuizID && x.UserId == _claimService.GetCurrentUserId).FirstOrDefault();
@@ -165,23 +188,65 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             _unitOfWork.Commit();
 
 
+            int totalQuestion = _unitOfWork.Repository<ExamQuestion>().Where(x => x.ExamId == exam.ExamId).Count();
+                int examResultID = _unitOfWork.Repository<ExamResult>().Where(x => x.Result == "NoUpdateYet").FirstOrDefault().ExamResultId;
+                List<int> mark = await RightNumberAnswer(answer.answerDetails, examResultID);
 
-            int examResultID = _unitOfWork.Repository<ExamResult>().Where(x => x.Result == "NoUpdateYet").FirstOrDefault().ExamResultId;
-            List<int> mark = await RightNumberAnswer(answer.answerDetails, examResultID);
-
-            exam.Result = $"{mark.First()}/{answer.answerDetails.Count()}";
+            exam.Result = $"{mark.First()}/{examResultID}";
 
             await _unitOfWork.Repository<ExamResult>().Update(exam, examResultID);
             _unitOfWork.Commit();
+            double examStatusCheck = PercentageInLicenseType((int)await _unitOfWork.Repository<Exam>().Where(x => x.ExamId == answer.QuizID).Select(x => x.LicenseId).FirstOrDefaultAsync());
+            string? examCheck;
+            if (mark.Last() > 0)
+            {
+                examCheck = "Failed";
+            }
+            else
+            {
+                examCheck = mark.First() /  totalQuestion> examStatusCheck ? "Passed" : "Failed";
+            }
 
-            return $"Your Mark: {mark}/{answer.answerDetails.Count()} and Number Of Paralysis Wrong: {mark.Last()}";
+            return new MarkResultResponse
+            {
+                WrongParalysisAnswer = mark.Last(),
+                Mark = $"{mark.First()}/{totalQuestion}",
+                RightAnswer = mark.First(),
+                WrongAnswer =totalQuestion  - mark.First() ,
+                ExamStatus = examCheck
+
+            };
+            /*
+               double examStatusCheck = PercentageInLicenseType((int)await _unitOfWork.Repository<Exam>().Where(x => x.ExamId == answer.QuizID).Select(x => x.LicenseId).FirstOrDefaultAsync())  ;
+            string? examCheck;
+            if (paralysisAnswer > 0)
+            {
+                examCheck = "Failed";
+            }else
+            {
+                examCheck = rightAnswer / total > examStatusCheck ? "Passed" : "Failed";
+            }
+            return new MarkResultResponse
+            {
+                Mark = $"{rightAnswer}/{total}",
+                RightAnswer = rightAnswer,
+                WrongAnswer = wrongAnswer + paralysisAnswer,
+                WrongParalysisAnswer = paralysisAnswer,
+                ExamStatus = examCheck,
+               
+            };
+             
+             
+             
+             
+             */
 
         }
 
         public async Task<IEnumerable<ResultExamByCustomerResponse>> GetExamHistory(int licenseTypeID)
         {
             int userID = _claimService.GetCurrentUserId;
-           // IQueryable<ResultExamByCustomerResponse> results1 = await QueryFormat.GetHistoryExam(licenseTypeID, userID);
+            // IQueryable<ResultExamByCustomerResponse> results1 = await QueryFormat.GetHistoryExam(licenseTypeID, userID);
             //var results = await _unitOfWork.Repository<Exam>().Include(ex => ex.License).Include(e => e.ExamQuestions).ThenInclude(eq => eq.Question)
             //    .Select(x => new )
 
@@ -196,6 +261,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 .Select(x =>
             new ResultExamByCustomerResponse
             {
+                ResultExamId = x.ExamResult.ExamResultId,
                 Mark = x.ExamResult.Result,
                 QuizID = x.ExamResult.Exam.ExamId,
                 QuizName = x.ExamResult.Exam.ExamName,
@@ -250,8 +316,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                         }
 
             }).ToListAsync();
-
-
             return examQuery;
         }
 
@@ -274,6 +338,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                             ExamId = ex.ExamId,
                             examDetails = ex.ExamQuestions.Select(eq => new ExamDetailResponse
                             {
+                                QuestionId = eq.Question.QuestionId,
                                 Answer = eq.Question.Answer,
                                 Options1 = eq.Question.Option1,
                                 Options2 = eq.Question.Option2,
@@ -304,7 +369,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             {
                 foreach (var item in modify.RemoveFromQuiz)
                 {
-                    ExamQuestion examQuestion = _unitOfWork.Repository<ExamQuestion>().Where(x => x.ExamId == quizID && x.QuestionId == item).FirstOrDefault();
+                    ExamQuestion examQuestion =   await _unitOfWork.Repository<ExamQuestion>().Where(x => x.ExamId == quizID && x.QuestionId == item).FirstOrDefaultAsync();
                     if (examQuestion is not null)
                     {
                         examQuestion.Status = "Delete";
@@ -347,7 +412,9 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 var checkTrue = _unitOfWork.Repository<Question>().Where(x => x.QuestionId == request.QuestionID && x.Answer == request.Answer).FirstOrDefault();
                 if (checkTrue is null)
                 {
-                    if ((bool)checkTrue.IsParalysisQuestion)
+
+                    bool checkParalysisQuestion = (bool)_unitOfWork.Repository<Question>().Where(x => x.QuestionId == request.QuestionID).FirstOrDefault().IsParalysisQuestion;
+                    if (checkParalysisQuestion)
                     {
                         paralysisAnswerWrong++;
                         ExamResultDetail detail = new ExamResultDetail()
@@ -386,6 +453,16 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             }
             return markOut;
         }
-
+        private double PercentageInLicenseType(int licenseType)
+        {
+            switch (licenseType)
+            {
+                case 1: return 0.9;
+                case 2: return 0.8;
+                case 3: return 0.9;
+                    
+            }
+            throw new HttpStatusCodeException(HttpStatusCode.NotFound, "Not Found the License Type");
+        }
     }
 }

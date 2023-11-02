@@ -54,7 +54,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         [HttpPost("DoingQuiz")]
         public async Task<ActionResult> DoingQuiz([FromBody]AnswerByMemberRequest answer)
         {
-            string result = await _examService.DoingQuiz(answer);   
+            MarkResultResponse result = await _examService.DoingQuiz(answer);   
             if(result == null)
             {
                 return NotFound();
