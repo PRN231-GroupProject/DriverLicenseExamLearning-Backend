@@ -120,13 +120,14 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
 
             }
-           
-            double examStatusCheck = PercentageInLicenseType((int)await _unitOfWork.Repository<Exam>().Where(x => x.ExamId == answer.QuizID).Select(x => x.LicenseId).FirstOrDefaultAsync())  ;
+
+            double examStatusCheck = PercentageInLicenseType((int)await _unitOfWork.Repository<Exam>().Where(x => x.ExamId == answer.QuizID).Select(x => x.LicenseId).FirstOrDefaultAsync());
             string? examCheck;
             if (paralysisAnswer > 0)
             {
                 examCheck = "Failed";
-            }else
+            }
+            else
             {
                 examCheck = rightAnswer / total > examStatusCheck ? "Passed" : "Failed";
             }
@@ -137,7 +138,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 WrongAnswer = wrongAnswer + paralysisAnswer,
                 WrongParalysisAnswer = paralysisAnswer,
                 ExamStatus = examCheck,
-               
+
             };
 
         }
@@ -163,17 +164,19 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
             //? Doing Quiz Process
             int AttemptNumber = 0;
-            
+
 
             //Check The number of time to this quiz or maybe first time 
-            var examResultFind = _unitOfWork.Repository<ExamResult>().Where(x => x.ExamId == answer.QuizID && x.UserId == _claimService.GetCurrentUserId).FirstOrDefault();
-            if (examResultFind is null)
+            AttemptNumber = (int)_unitOfWork.Repository<ExamResult>().Where(x => x.ExamId == answer.QuizID && x.UserId == _claimService.GetCurrentUserId).Max(x => x.AttemptNumber);
+          
+            if (AttemptNumber == 0)
             {
                 AttemptNumber = 1;
             }
             else
             {
-                AttemptNumber += 1;
+
+                AttemptNumber++;
             }
 
             ExamResult exam = new ExamResult()
@@ -189,10 +192,10 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
 
             int totalQuestion = _unitOfWork.Repository<ExamQuestion>().Where(x => x.ExamId == exam.ExamId).Count();
-                int examResultID = _unitOfWork.Repository<ExamResult>().Where(x => x.Result == "NoUpdateYet").FirstOrDefault().ExamResultId;
-                List<int> mark = await RightNumberAnswer(answer.answerDetails, examResultID);
+            int examResultID = _unitOfWork.Repository<ExamResult>().Where(x => x.Result == "NoUpdateYet").FirstOrDefault().ExamResultId;
+            List<int> mark = await RightNumberAnswer(answer.answerDetails, examResultID);
 
-            exam.Result = $"{mark.First()}/{examResultID}";
+            exam.Result = $"{mark.First()}/{totalQuestion}";
 
             await _unitOfWork.Repository<ExamResult>().Update(exam, examResultID);
             _unitOfWork.Commit();
@@ -204,7 +207,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             }
             else
             {
-                examCheck = mark.First() /  totalQuestion> examStatusCheck ? "Passed" : "Failed";
+                examCheck = mark.First() / totalQuestion > examStatusCheck ? "Passed" : "Failed";
             }
 
             return new MarkResultResponse
@@ -212,35 +215,10 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 WrongParalysisAnswer = mark.Last(),
                 Mark = $"{mark.First()}/{totalQuestion}",
                 RightAnswer = mark.First(),
-                WrongAnswer =totalQuestion  - mark.First() ,
+                WrongAnswer = totalQuestion - mark.First(),
                 ExamStatus = examCheck
 
             };
-            /*
-               double examStatusCheck = PercentageInLicenseType((int)await _unitOfWork.Repository<Exam>().Where(x => x.ExamId == answer.QuizID).Select(x => x.LicenseId).FirstOrDefaultAsync())  ;
-            string? examCheck;
-            if (paralysisAnswer > 0)
-            {
-                examCheck = "Failed";
-            }else
-            {
-                examCheck = rightAnswer / total > examStatusCheck ? "Passed" : "Failed";
-            }
-            return new MarkResultResponse
-            {
-                Mark = $"{rightAnswer}/{total}",
-                RightAnswer = rightAnswer,
-                WrongAnswer = wrongAnswer + paralysisAnswer,
-                WrongParalysisAnswer = paralysisAnswer,
-                ExamStatus = examCheck,
-               
-            };
-             
-             
-             
-             
-             */
-
         }
 
         public async Task<IEnumerable<ResultExamByCustomerResponse>> GetExamHistory(int licenseTypeID)
@@ -250,39 +228,40 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             //var results = await _unitOfWork.Repository<Exam>().Include(ex => ex.License).Include(e => e.ExamQuestions).ThenInclude(eq => eq.Question)
             //    .Select(x => new )
 
-
-            IEnumerable<ResultExamByCustomerResponse> result = await _unitOfWork.Repository<ExamResultDetail>()
-                .Include(x => x.Question)
-                .Include(x => x.ExamResult)
-                .ThenInclude(x => x.Exam)
-                .ThenInclude(x => x.License)
-                .ThenInclude(x => x.Questions)
-                .Where(x => x.ExamResult.Exam.LicenseId == licenseTypeID && x.ExamResult.UserId == userID)
-                .Select(x =>
-            new ResultExamByCustomerResponse
-            {
-                ResultExamId = x.ExamResult.ExamResultId,
-                Mark = x.ExamResult.Result,
-                QuizID = x.ExamResult.Exam.ExamId,
-                QuizName = x.ExamResult.Exam.ExamName,
-                resultExamDetails = new HashSet<ResultExamDetailByCustomerResponse>
+            IEnumerable<ResultExamByCustomerResponse> result1 = await QueryFormat.GetHistoryExam(licenseTypeID, userID);
+                IEnumerable<ResultExamByCustomerResponse> result = await _unitOfWork.Repository<ExamResultDetail>()
+                    .Include(x => x.Question)
+                    .Include(x => x.ExamResult)
+                    .ThenInclude(x => x.Exam)
+                    .ThenInclude(x => x.License)
+                    .ThenInclude(x => x.Questions)
+                    .ThenInclude(x => x.ExamQuestions)
+                    .Where(x => x.ExamResult.Exam.LicenseId == licenseTypeID && x.ExamResult.UserId == userID)
+                    .Select(x =>
+                new ResultExamByCustomerResponse
                 {
-                    new ResultExamDetailByCustomerResponse
+                    ResultExamId = x.ExamResult.ExamResultId,
+                    Mark = x.ExamResult.Result,
+                    QuizID = x.ExamResult.Exam.ExamId,
+                    QuizName = x.ExamResult.Exam.ExamName,
+                    resultExamDetails = new HashSet<ResultExamDetailByCustomerResponse>
                     {
-                        Image = x.Question.Image,
-                        Option1 = x.Question.Option1,
-                        Option2 = x.Question.Option2,
-                        Option3 = x.Question.Option3,
-                        Option4 = x.Question.Option4,
-                        QuestionId = x.Question.QuestionId,
-                        RightAnswer = x.Question.Answer,
-                        UserAnswer = x.WrongAnswer != null ? x.WrongAnswer : x.Question.Answer,
-                    }
-                }
+                        new ResultExamDetailByCustomerResponse
+                        {
+                            Image = x.Question.Image,
+                            Option1 = x.Question.Option1,
+                            Option2 = x.Question.Option2,
+                            Option3 = x.Question.Option3,
+                            Option4 = x.Question.Option4,
+                            QuestionId = x.Question.QuestionId,
+                            RightAnswer = x.Question.Answer,
+                            UserAnswer =  x.WrongAnswer
+                        },
+    }
 
 
-            }).ToListAsync();
-            return result;
+                }).ToListAsync();
+            return result1;
         }
 
         public async Task<IEnumerable<ExamGetByLicenseType>> GetExamListByCustomer()
@@ -369,7 +348,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             {
                 foreach (var item in modify.RemoveFromQuiz)
                 {
-                    ExamQuestion examQuestion =   await _unitOfWork.Repository<ExamQuestion>().Where(x => x.ExamId == quizID && x.QuestionId == item).FirstOrDefaultAsync();
+                    ExamQuestion examQuestion = await _unitOfWork.Repository<ExamQuestion>().Where(x => x.ExamId == quizID && x.QuestionId == item).FirstOrDefaultAsync();
                     if (examQuestion is not null)
                     {
                         examQuestion.Status = "Delete";
@@ -460,7 +439,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 case 1: return 0.9;
                 case 2: return 0.8;
                 case 3: return 0.9;
-                    
+
             }
             throw new HttpStatusCodeException(HttpStatusCode.NotFound, "Not Found the License Type");
         }
