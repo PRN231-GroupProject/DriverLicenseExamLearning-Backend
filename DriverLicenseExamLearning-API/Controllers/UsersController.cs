@@ -145,5 +145,15 @@ namespace DriverLicenseExamLearning_API.Controllers
                 message = "Register Mentor Sucessfully"
             });
         }
+
+        [HttpGet("IsStaff")]
+        [Authorize(Roles = RoleNames.Adminastor)]
+        public ActionResult IsStaff()
+        {
+            return Ok(new
+            {
+                message = "Is Staff!"
+            });
+        }
     }
 }

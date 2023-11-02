@@ -18,6 +18,14 @@ namespace DriverLicenseExamLearning_gRPC.Services
         }
         public override async Task<ReponseModel> CreateNewStaff(NewStaffRequest request, ServerCallContext context)
         {
+            var token = context.RequestHeaders.GetValue("authorization");
+            var isAdmin = await CheckAdmin(token);
+            if (!isAdmin)
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Required admin"));
+            }
+
+
             var newUser = new User
             {
                 UserName = request.UserName,
@@ -41,6 +49,13 @@ namespace DriverLicenseExamLearning_gRPC.Services
 
         public override async Task<StaffReponse> GetStaff(StaffLookUpModel request, ServerCallContext context)
         {
+            var token = context.RequestHeaders.GetValue("authorization");
+            var isAdmin = await CheckAdmin(token);
+            if (!isAdmin)
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Required admin"));
+            }
+
             var user = await _unitOfWork.Repository<User>().GetById(request.UserId);
 
             if (user != null && user.RoleId == 2)
@@ -67,6 +82,13 @@ namespace DriverLicenseExamLearning_gRPC.Services
 
         public override async Task<GetStaffsReponse> GetStaffs(RequestModel request, ServerCallContext context)
         {
+            var token = context.RequestHeaders.GetValue("authorization");
+            var isAdmin = await CheckAdmin(token);
+            if (!isAdmin)
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Required admin"));
+            }
+
             var users = await _unitOfWork.Repository<User>().GetWhere(o => o.RoleId == 2);
 
             if (users != null)
@@ -78,7 +100,7 @@ namespace DriverLicenseExamLearning_gRPC.Services
                         new StaffReponse
                         {
                             UserId = user.UserId,
-                            UserName = user.UserName,
+                            UserName = token,
                             Address = user.Address,
                             Email = user.Email,
                             Name = user.UserName,
@@ -99,6 +121,14 @@ namespace DriverLicenseExamLearning_gRPC.Services
         }
         public override async Task<ReponseModel> DeleteStaff(StaffLookUpModel request, ServerCallContext context)
         {
+            var token = context.RequestHeaders.GetValue("authorization");
+            var isAdmin = await CheckAdmin(token);
+            if (!isAdmin)
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Required admin"));
+            }
+
+
             var user = await _unitOfWork.Repository<User>().GetAsync(u => u.UserId == request.UserId && u.RoleId == 2);
             if(user != null)
             {
@@ -119,6 +149,13 @@ namespace DriverLicenseExamLearning_gRPC.Services
 
         public override async Task<ReponseModel> UpdateStaff(UpdateStaffRequest request, ServerCallContext context)
         {
+            var token = context.RequestHeaders.GetValue("authorization");
+            var isAdmin = await CheckAdmin(token);
+            if (!isAdmin)
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Required admin"));
+            }
+
             var user = await _unitOfWork.Repository<User>().GetAsync(u => u.UserId == request.UserId && u.RoleId == 2);
             if (user != null)
             {
@@ -141,6 +178,20 @@ namespace DriverLicenseExamLearning_gRPC.Services
             {
                 throw new RpcException(new Status(StatusCode.NotFound, "Staff not found"));
             }
+        }
+
+        public async Task<bool> CheckAdmin(string token)
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", $"{token}");
+            var response = await client.GetAsync(ApiConstans.ApiCheckStaff);
+            //  var response = await client.GetAsync(ApiConstans.ApiCheckStaffDeploy);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 
