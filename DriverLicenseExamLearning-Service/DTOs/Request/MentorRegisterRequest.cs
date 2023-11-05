@@ -13,8 +13,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
         [Required]
         public IFormFile Bio { get ; set; }
         [Required]
-        [MinLength(10)]
-        [MaxLength(50)]
+        [Range(5, 30)]
         public string Experience { get; set; }
     }
 }

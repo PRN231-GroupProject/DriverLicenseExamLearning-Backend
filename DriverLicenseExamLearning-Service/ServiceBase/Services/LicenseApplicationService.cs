@@ -28,7 +28,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         public async Task<IEnumerable<LicenseApplicationResponse>> GetAll()
         {
             //var getData = await QueryFormat.GetLicenseApplicationByStaff();
-            IEnumerable<LicenseApplicationResponse> result = await _unitOfWork.Repository<LicenseApplication>().Include(x => x.User).Select(x => new LicenseApplicationResponse
+            var result = await _unitOfWork.Repository<LicenseApplication>().Include(x => x.User).Select(x => new LicenseApplicationResponse
             {
                 userId = x.User.UserId,
                 loader = new List<LicenseApplicationDetailResponse>
@@ -36,17 +36,16 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     new LicenseApplicationDetailResponse
                     {
                         LicenseTypeID = x.LicenseTypeId,
+                        LicenseApplicationId = x.LicenseApplicationId,
                         CitizenIdentificationCard = x.CitizenIdentificationCard,
                         CurriculumVitae = x.CurriculumVitae,
                         HealthCertification = x.HealthCertification,
                         Status = x.Status,
-                        UserImage = x.UserImage,
-
+                        UserImage = x.UserImage
                     }
                 }
             }).ToListAsync();
             return result;
-
         }
 
         public async Task<IEnumerable<LicenseApplicationDetailResponse>> GetByCustomer()
@@ -55,10 +54,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
             IEnumerable<LicenseApplicationDetailResponse> result = await _unitOfWork.Repository<LicenseApplication>().Include(x => x.User).Where(x => x.User.UserId == userId).Select(x => new LicenseApplicationDetailResponse
             {
-                  LicenseApplicationID =  x.LicenseApplicationId,
+            
                 CitizenIdentificationCard = x.CitizenIdentificationCard,
                 CurriculumVitae = x.CurriculumVitae,
                 HealthCertification = x.HealthCertification,
+                LicenseApplicationId = x.LicenseApplicationId,
                 LicenseTypeID = x.LicenseTypeId,
                 Status = x.Status,
                 UserImage = x.UserImage
@@ -68,7 +68,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
 
 
-        public async Task<bool> SubmitLicenseApplication(int LicenseTypeId ,SubmitLicenseApplicationRequest submit)
+        public async Task<bool> SubmitLicenseApplication(int LicenseTypeId, SubmitLicenseApplicationRequest submit)
         {
 
             var userId = _claimsService.GetCurrentUserId;
@@ -90,7 +90,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 HealthCertification = fileHealthCer.URL,
                 UserImage = fileImage.URL,
                 UserId = userId,
-                Status = "Processing",
+                Status = "Proccessing",
                 LicenseTypeId = LicenseTypeId, 
 
             };
@@ -142,7 +142,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             {
                 licenseApplication.Status = request.Status;
                 licenseApplication.Message = request.Message;
-                await _unitOfWork.Repository<LicenseApplication>().Update(licenseApplication, licenseApplication.LicenseApplicationId) ;
+                await _unitOfWork.Repository<LicenseApplication>().Update(licenseApplication, licenseApplication.LicenseApplicationId);
                 _unitOfWork.Commit();
                 return true;
             }
