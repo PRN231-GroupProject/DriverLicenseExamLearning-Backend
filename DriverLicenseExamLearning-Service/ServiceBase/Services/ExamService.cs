@@ -246,11 +246,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         public async Task<IEnumerable<ResultExamByCustomerResponse>> GetExamHistory(int licenseTypeID)
         {
             int userID = _claimService.GetCurrentUserId;
-            // IQueryable<ResultExamByCustomerResponse> results1 = await QueryFormat.GetHistoryExam(licenseTypeID, userID);
-            //var results = await _unitOfWork.Repository<Exam>().Include(ex => ex.License).Include(e => e.ExamQuestions).ThenInclude(eq => eq.Question)
-            //    .Select(x => new )
-
-
             IEnumerable<ResultExamByCustomerResponse> result = await _unitOfWork.Repository<ExamResultDetail>()
                 .Include(x => x.Question)
                 .Include(x => x.ExamResult)
@@ -259,29 +254,29 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 .ThenInclude(x => x.Questions)
                 .Where(x => x.ExamResult.Exam.LicenseId == licenseTypeID && x.ExamResult.UserId == userID)
                 .Select(x =>
-            new ResultExamByCustomerResponse
-            {
-                ResultExamId = x.ExamResult.ExamResultId,
-                Mark = x.ExamResult.Result,
-                QuizID = x.ExamResult.Exam.ExamId,
-                QuizName = x.ExamResult.Exam.ExamName,
-                resultExamDetails = new HashSet<ResultExamDetailByCustomerResponse>
-                {
-                    new ResultExamDetailByCustomerResponse
+                    new ResultExamByCustomerResponse
                     {
-                        Image = x.Question.Image,
-                        Option1 = x.Question.Option1,
-                        Option2 = x.Question.Option2,
-                        Option3 = x.Question.Option3,
-                        Option4 = x.Question.Option4,
-                        QuestionId = x.Question.QuestionId,
-                        RightAnswer = x.Question.Answer,
-                        UserAnswer = x.WrongAnswer != null ? x.WrongAnswer : x.Question.Answer,
-                    }
-                }
+                        ResultExamId = x.ExamResult.ExamResultId,
+                        Mark = x.ExamResult.Result,
+                        QuizID = x.ExamResult.Exam.ExamId,
+                        QuizName = x.ExamResult.Exam.ExamName,
+                        resultExamDetails = new HashSet<ResultExamDetailByCustomerResponse>
+                        {
+                            new ResultExamDetailByCustomerResponse
+                            {
+                                Image = x.Question.Image,
+                                Option1 = x.Question.Option1,
+                                Option2 = x.Question.Option2,
+                                Option3 = x.Question.Option3,
+                                Option4 = x.Question.Option4,
+                                QuestionId = x.Question.QuestionId,
+                                RightAnswer = x.Question.Answer,
+                                UserAnswer = x.WrongAnswer != null ? x.WrongAnswer : x.Question.Answer,
+                            }
+                        }
 
 
-            }).ToListAsync();
+                    }).ToListAsync();
             return result;
         }
 
