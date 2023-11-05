@@ -25,6 +25,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         }
         public async Task<BookingResponse> CreateBooking(BookingRequest req) //Available - Not Available
         {
+            var checkAccount = _unitOfWork.Repository<Booking>().Where(x => x.PackageId == req.PackageId && x.MemberId == req.MemberId).FirstOrDefault();
+            if(checkAccount != null)
+            {
+                throw new HttpStatusCodeException(System.Net.HttpStatusCode.BadRequest,"You already buy this package");
+            }
             #region Check and Set Status Car
             int? car = req.CarId;
             var checkActiveCar = await _unitOfWork.Repository<Car>().FindAsync(x => x.Status == "Active" && x.CarId == req.CarId);

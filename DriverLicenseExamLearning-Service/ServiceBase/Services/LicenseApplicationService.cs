@@ -3,6 +3,7 @@ using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.Support.HandleError;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +55,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
             IEnumerable<LicenseApplicationDetailResponse> result = await _unitOfWork.Repository<LicenseApplication>().Include(x => x.User).Where(x => x.User.UserId == userId).Select(x => new LicenseApplicationDetailResponse
             {
+                  LicenseApplicationID =  x.LicenseApplicationId,
                 CitizenIdentificationCard = x.CitizenIdentificationCard,
                 CurriculumVitae = x.CurriculumVitae,
                 HealthCertification = x.HealthCertification,
@@ -71,7 +73,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
             var userId = _claimsService.GetCurrentUserId;
 
-           
+          var checkSubmitinLicenseApplication  = _unitOfWork.Repository<LicenseApplication>().Where(x => x.UserId == userId && x.LicenseTypeId == LicenseTypeId).FirstOrDefault();
+            if(checkSubmitinLicenseApplication != null)
+            {
+                throw new HttpStatusCodeException(System.Net.HttpStatusCode.BadRequest, "You have already submit licenseapplication ");
+            }
             FireBaseFile fileCitizenCard = await FirebaseHelper.UploadFileAsync(submit.CitizenIdentificationCard, "license-application");
             FireBaseFile fileHealthCer = await FirebaseHelper.UploadFileAsync(submit.HealthCertification, "license-application");
             FireBaseFile fileCV = await FirebaseHelper.UploadFileAsync(submit.CurriculumVitae, "license-application");
@@ -84,7 +90,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 HealthCertification = fileHealthCer.URL,
                 UserImage = fileImage.URL,
                 UserId = userId,
-                Status = "Proccessing",
+                Status = "Processing",
                 LicenseTypeId = LicenseTypeId, 
 
             };

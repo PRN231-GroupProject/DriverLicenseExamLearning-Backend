@@ -19,6 +19,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
 
     public struct LicenseApplicationDetailResponse
     {
+     
         public int? LicenseTypeID { get; set; }
 
         public string? CitizenIdentificationCard { get; set; }
