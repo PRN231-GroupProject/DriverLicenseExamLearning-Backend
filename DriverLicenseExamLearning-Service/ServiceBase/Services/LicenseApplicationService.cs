@@ -129,14 +129,14 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             return true;
         }
 
-        public async Task<bool> UpdateLicenseApplicationByStaff(int licenseApplicationID, UpdateApplicationRequest request)
+        public async Task<bool> UpdateLicenseApplicationByStaff(UpdateApplicationRequest request)
         {
-            var licenseApplication = _unitOfWork.Repository<LicenseApplication>().Where(x => x.LicenseApplicationId == licenseApplicationID).FirstOrDefault();
+            LicenseApplication licenseApplication = _unitOfWork.Repository<LicenseApplication>().Where(x => x.LicenseApplicationId == request.LicenseTypeID && x.UserId == request.UserID).FirstOrDefault();
             if (licenseApplication != null)
             {
                 licenseApplication.Status = request.Status;
                 licenseApplication.Message = request.Message;
-                await _unitOfWork.Repository<LicenseApplication>().Update(licenseApplication, licenseApplicationID);
+                await _unitOfWork.Repository<LicenseApplication>().Update(licenseApplication, licenseApplication.LicenseApplicationId) ;
                 _unitOfWork.Commit();
                 return true;
             }

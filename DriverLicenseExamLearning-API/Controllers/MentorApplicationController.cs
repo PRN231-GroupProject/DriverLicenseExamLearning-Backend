@@ -37,7 +37,7 @@ namespace DriverLicenseExamLearning_API.Controllers
 
             return Ok(new
             {
-                message = "ngon"
+                message = "Successfully"
             }) ;
         }
 

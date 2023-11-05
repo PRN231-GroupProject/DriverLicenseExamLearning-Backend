@@ -64,7 +64,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             {
                 mentorAttributeFind.Status = "Denied";
                 await _unitOfWork.Repository<MentorAttribute>().Update(mentorAttributeFind, mentorAttributeFind.MentorAttributeId);
-                customerFind.Status = "Active";
+                customerFind.RoleId = 3;
                 await _unitOfWork.Repository<User>().Update(customerFind, customerFind.UserId);
                 _unitOfWork.Commit();
             }
