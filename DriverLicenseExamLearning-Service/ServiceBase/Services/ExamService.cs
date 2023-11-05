@@ -167,7 +167,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
 
             //Check The number of time to this quiz or maybe first time 
-            AttemptNumber = (int)_unitOfWork.Repository<ExamResult>().Where(x => x.ExamId == answer.QuizID && x.UserId == _claimService.GetCurrentUserId).Max(x => x.AttemptNumber);
+            AttemptNumber = _unitOfWork.Repository<ExamResult>().Where(x => x.ExamId == answer.QuizID && x.UserId == _claimService.GetCurrentUserId).Max(x => (int?)x.AttemptNumber) ?? 0 ;
           
             if (AttemptNumber == 0)
             {
@@ -243,39 +243,36 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             return result;
         }
 
-       
+
 
         public async Task<IEnumerable<ExamGetByLicenseType>> GetExamListByCustomer()
         {
 
-            IEnumerable<ExamGetByLicenseType> examQuery = await _unitOfWork.Repository<Exam>().Include(x => x.License).Include(x => x.ExamQuestions).ThenInclude(x => x.Question).Select(x => new ExamGetByLicenseType
+            IEnumerable<ExamGetByLicenseType> examQuery = await _unitOfWork.Repository<Exam>().Include(x => x.License).Include(x => x.ExamQuestions).ThenInclude(x => x.Question).GroupBy(x => x.LicenseId).Select(group => new ExamGetByLicenseType
             {
-                LicenseId = (int)x.LicenseId,
-                LicenseName = x.ExamName,
-                exams = new List<ExamGetByMemberResponse>
+                LicenseId = (int)group.First().LicenseId,
+                LicenseName = group.First().ExamName,
+                exams = group.Select(x => new ExamGetByMemberResponse
                 {
-                    new ExamGetByMemberResponse
+                    ExamDate = (DateTime)x.ExamDate,
+                    ExamId = x.ExamId,
+                    ExamName = x.ExamName,
+                    questions = x.ExamQuestions.Select(eq => new QuestionGetByMemberResponse
                     {
 
-                              ExamDate =(DateTime)x.ExamDate,
-                              ExamId = x.ExamId,
-                              ExamName = x.ExamName,
-                              questions = x.ExamQuestions.Select(eq => new QuestionGetByMemberResponse
-                              {
+                        QuestionId = eq.Question.QuestionId,
+                        Image = eq.Question.Image,
+                        Option1 = eq.Question.Option1,
+                        Option2 = eq.Question.Option2,
+                        Option3 = eq.Question.Option3,
+                        Option4 = eq.Question.Option4,
+                        Title = eq.Question.Question1
+                    }).ToList()
 
-                                  QuestionId = eq.Question.QuestionId,
-                                  Image = eq.Question.Image,
-                                  Option1 = eq.Question.Option1,
-                                  Option2 = eq.Question.Option2,
-                                  Option3 = eq.Question.Option3,
-                                  Option4 = eq.Question.Option4,
-                                  Title = eq.Question.Question1
-                              }).ToList()
-
-                        }
-                        }
-
+                }).ToList()
             }).ToListAsync();
+
+           
             return examQuery;
         }
 
@@ -285,14 +282,14 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 .Include(ex => ex.License)
                 .Include(e => e.ExamQuestions)
                 .ThenInclude(eq => eq.Question)
-                .Select(ex => new ExamQueryGeneralResponse
+                .GroupBy(x => x.LicenseId)
+                .Select(group => new ExamQueryGeneralResponse
                 {
-                    LicenseTypeId = ex.License.LicenseTypeId,
-                    Name = ex.License.LicenseName,
-                    examQueries = new List<ExamQueryResponse>
+                    LicenseTypeId = group.First().License.LicenseTypeId,
+                    Name = group.First().License.LicenseName,
+                    examQueries =group.Select( ex => new ExamQueryResponse
                     {
-                        new ExamQueryResponse
-                        {
+                       
                             ExamName = ex.ExamName,
                             Date = ex.ExamDate,
                             ExamId = ex.ExamId,
@@ -306,8 +303,8 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                                 Options4 = eq.Question.Option4,
                                 Text = eq.Question.Question1
                             }).ToList()
-                        }
-                    }
+                        
+                    }).ToList()
                 })
                 .ToListAsync();
 
