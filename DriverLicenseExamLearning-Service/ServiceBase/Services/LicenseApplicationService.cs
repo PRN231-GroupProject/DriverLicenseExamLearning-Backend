@@ -27,7 +27,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         public async Task<IEnumerable<LicenseApplicationResponse>> GetAll()
         {
             //var getData = await QueryFormat.GetLicenseApplicationByStaff();
-            IEnumerable<LicenseApplicationResponse> result = await _unitOfWork.Repository<LicenseApplication>().Include(x => x.User).Select(x => new LicenseApplicationResponse
+            var result = await _unitOfWork.Repository<LicenseApplication>().Include(x => x.User).Select(x => new LicenseApplicationResponse
             {
                 userId = x.User.UserId,
                 loader = new List<LicenseApplicationDetailResponse>
@@ -35,17 +35,16 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     new LicenseApplicationDetailResponse
                     {
                         LicenseTypeID = x.LicenseTypeId,
+                        LicenseApplicationId = x.LicenseApplicationId,
                         CitizenIdentificationCard = x.CitizenIdentificationCard,
                         CurriculumVitae = x.CurriculumVitae,
                         HealthCertification = x.HealthCertification,
                         Status = x.Status,
-                        UserImage = x.UserImage,
-
+                        UserImage = x.UserImage
                     }
                 }
             }).ToListAsync();
             return result;
-
         }
 
         public async Task<IEnumerable<LicenseApplicationDetailResponse>> GetByCustomer()
@@ -57,6 +56,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 CitizenIdentificationCard = x.CitizenIdentificationCard,
                 CurriculumVitae = x.CurriculumVitae,
                 HealthCertification = x.HealthCertification,
+                LicenseApplicationId = x.LicenseApplicationId,
                 LicenseTypeID = x.LicenseTypeId,
                 Status = x.Status,
                 UserImage = x.UserImage
@@ -66,12 +66,12 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
 
 
-        public async Task<bool> SubmitLicenseApplication(int LicenseTypeId ,SubmitLicenseApplicationRequest submit)
+        public async Task<bool> SubmitLicenseApplication(int LicenseTypeId, SubmitLicenseApplicationRequest submit)
         {
 
             var userId = _claimsService.GetCurrentUserId;
 
-           
+
             FireBaseFile fileCitizenCard = await FirebaseHelper.UploadFileAsync(submit.CitizenIdentificationCard, "license-application");
             FireBaseFile fileHealthCer = await FirebaseHelper.UploadFileAsync(submit.HealthCertification, "license-application");
             FireBaseFile fileCV = await FirebaseHelper.UploadFileAsync(submit.CurriculumVitae, "license-application");
@@ -85,7 +85,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 UserImage = fileImage.URL,
                 UserId = userId,
                 Status = "Proccessing",
-                LicenseTypeId = LicenseTypeId, 
+                LicenseTypeId = LicenseTypeId,
 
             };
 
@@ -129,14 +129,14 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             return true;
         }
 
-        public async Task<bool> UpdateLicenseApplicationByStaff(int licenseApplicationID, UpdateApplicationRequest request)
+        public async Task<bool> UpdateLicenseApplicationByStaff(UpdateApplicationRequest request)
         {
-            var licenseApplication = _unitOfWork.Repository<LicenseApplication>().Where(x => x.LicenseApplicationId == licenseApplicationID).FirstOrDefault();
+            LicenseApplication licenseApplication = _unitOfWork.Repository<LicenseApplication>().Where(x => x.LicenseApplicationId == request.LicenseTypeID && x.UserId == request.UserID).FirstOrDefault();
             if (licenseApplication != null)
             {
                 licenseApplication.Status = request.Status;
                 licenseApplication.Message = request.Message;
-                await _unitOfWork.Repository<LicenseApplication>().Update(licenseApplication, licenseApplicationID);
+                await _unitOfWork.Repository<LicenseApplication>().Update(licenseApplication, licenseApplication.LicenseApplicationId);
                 _unitOfWork.Commit();
                 return true;
             }

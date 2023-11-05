@@ -8,6 +8,7 @@ using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using DriverLicenseExamLearning_Service.Support.HandleError;
 using DriverLicenseExamLearning_Service.Support.Helpers;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -31,11 +32,13 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config)
+        private readonly IClaimsService _claimsService;
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config, IClaimsService claimsService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _config = config;
+            _claimsService = claimsService;
         }
 
         public bool CheckRegexEmail(string email)
@@ -207,31 +210,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
 
          FireBaseFile file =   await  FirebaseHelper.UploadFileAsync(registerRequest.Bio, "MentorApplication");
-
-            var checkGmail =  _unitOfWork.Repository<User>().Where(x =>x.Email == registerRequest.Email).FirstOrDefault();
-            if(checkGmail != null) {
-
-                throw new HttpStatusCodeException(HttpStatusCode.BadRequest, "This Email has in the system ");
-            }
-            User user = new User()
-            {
-                Name = registerRequest.Name,
-                Address = registerRequest.Address,
-                PhoneNumber = registerRequest.Address,
-                UserName = registerRequest.MentorName,
-                Email = registerRequest.Email,
-                Password = "12345678",
-                RoleId = 3,
-                Status = "InActive"
-                
-
-            };
-
-             await _unitOfWork.Repository<User>().CreateAsync(user);
-            _unitOfWork.Commit();   
-
-            int userId = _unitOfWork.Repository<User>().Where(x => x.Email == registerRequest.Email).FirstOrDefault().UserId;  
-            
+            int userId = _claimsService.GetCurrentUserId; 
             MentorAttribute mentor = new MentorAttribute()
             {
                 Experience = registerRequest.Experience,
@@ -240,7 +219,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 UserId = userId,
                 
             };
-
             await _unitOfWork.Repository<MentorAttribute>().CreateAsync(mentor);
             _unitOfWork.Commit();
 

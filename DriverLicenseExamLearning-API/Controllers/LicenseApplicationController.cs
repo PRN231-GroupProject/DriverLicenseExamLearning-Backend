@@ -65,13 +65,13 @@ namespace DriverLicenseExamLearning_API.Controllers
 
         [Authorize(Roles = RoleNames.Staff)]
         [HttpPost("Check")]
-        public async Task<ActionResult> Update(int licenseApplication,[FromBody]UpdateApplicationRequest request)
+        public async Task<ActionResult> Update([FromBody]UpdateApplicationRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return UnprocessableEntity(ModelState);
             }
-          bool check =   await _licenseApplicationService.UpdateLicenseApplicationByStaff(licenseApplication, request);
+          bool check =   await _licenseApplicationService.UpdateLicenseApplicationByStaff( request);
             if (!check)
             {
                 return BadRequest(new
