@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DriverLicenseExamLearning_Service.DTOs.Response
 {
-    public struct ExamDetailResponse
+    public class ExamDetailResponse
     {
         public int QuestionId { get; set;  }
         public string Text { get; set; }
@@ -18,7 +18,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
     }
 
 
-    public struct ExamQueryResponse
+    public class ExamQueryResponse
     {
         public string ExamName { get; set; }
         public int ExamId { get; set; }
@@ -28,7 +28,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
     }
 
 
-    public struct ExamQueryGeneralResponse
+    public class ExamQueryGeneralResponse
     {
         public int LicenseTypeId { get; set; }
 

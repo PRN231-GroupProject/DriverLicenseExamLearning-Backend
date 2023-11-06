@@ -168,7 +168,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                         new UserResponse
                         {
                             UserName = b.Member.UserName,
-                            Password = b.Member.Password,
                             RoleId = b.Member.RoleId,
                             Name = b.Member.Name,
                             PhoneNumber = b.Member.PhoneNumber,
@@ -182,7 +181,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                         new UserResponse
                         {
                             UserName = b.Mentor.UserName,
-                            Password = b.Mentor.Password,
                             RoleId = b.Mentor.RoleId,
                             Name = b.Mentor.Name,
                             PhoneNumber = b.Mentor.PhoneNumber,
@@ -252,7 +250,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                         new UserResponse
                         {
                             UserName = b.Member.UserName,
-                            Password = b.Member.Password,
                             RoleId = b.Member.RoleId,
                             Name = b.Member.Name,
                             PhoneNumber = b.Member.PhoneNumber,
@@ -266,7 +263,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                         new UserResponse
                         {
                             UserName = b.Mentor.UserName,
-                            Password = b.Mentor.Password,
                             RoleId = b.Mentor.RoleId,
                             Name = b.Mentor.Name,
                             PhoneNumber = b.Mentor.PhoneNumber,
