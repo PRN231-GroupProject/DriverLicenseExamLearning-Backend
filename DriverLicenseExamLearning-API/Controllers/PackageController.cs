@@ -29,6 +29,10 @@ namespace DriverLicenseExamLearning_API.Controllers
         [HttpPost]
         public async Task<ActionResult<PackageResponse>> CreatePackage([FromBody] PackageRequest req)
         {
+            if(!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
             var rs = await _packagesService.CreatePackage(req);
             return rs != null ? Ok(new
             {

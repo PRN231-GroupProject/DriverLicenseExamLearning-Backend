@@ -145,5 +145,15 @@ namespace DriverLicenseExamLearning_API.Controllers
                 message = "Register Mentor Sucessfully"
             });
         }
+
+        [HttpDelete]
+        public async Task<ActionResult> BanAccount([FromBody]BanAccountRequest request)
+        {
+           await _userService.BanAccount(request);
+            return Ok(new
+            {
+                message = "Ban This User Successfully"
+            }) ; 
+        }
     }
 }

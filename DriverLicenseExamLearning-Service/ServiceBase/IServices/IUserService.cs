@@ -24,5 +24,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         Task<UserResponse> UpdateAsync(int id, UserRequest request);
 
         Task<bool> RegisterMentorApplication(MentorRegisterRequest registerRequest);
+
+        Task<bool> BanAccount(BanAccountRequest request);
     }
 }

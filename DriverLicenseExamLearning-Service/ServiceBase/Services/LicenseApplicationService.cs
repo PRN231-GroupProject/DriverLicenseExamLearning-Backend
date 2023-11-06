@@ -28,13 +28,12 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         public async Task<IEnumerable<LicenseApplicationResponse>> GetAll()
         {
             //var getData = await QueryFormat.GetLicenseApplicationByStaff();
-            var result = await _unitOfWork.Repository<LicenseApplication>().Include(x => x.User).Select(x => new LicenseApplicationResponse
+            var result = await _unitOfWork.Repository<LicenseApplication>().Include(x => x.User).GroupBy(x => x.UserId).Select(group => new LicenseApplicationResponse
             {
-                userId = x.User.UserId,
-                loader = new List<LicenseApplicationDetailResponse>
+                userId = group.First().User.UserId,
+                loader = group.Select(x => new LicenseApplicationDetailResponse
                 {
-                    new LicenseApplicationDetailResponse
-                    {
+                  
                         LicenseTypeID = x.LicenseTypeId,
                         LicenseApplicationId = x.LicenseApplicationId,
                         CitizenIdentificationCard = x.CitizenIdentificationCard,
@@ -42,8 +41,8 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                         HealthCertification = x.HealthCertification,
                         Status = x.Status,
                         UserImage = x.UserImage
-                    }
-                }
+                   
+                }).ToList()
             }).ToListAsync();
             return result;
         }

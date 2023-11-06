@@ -5,6 +5,7 @@ using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.State;
 using DriverLicenseExamLearning_Service.Support.HandleError;
 using DriverLicenseExamLearning_Service.Support.Helpers;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
@@ -69,7 +70,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public async Task<UserLoginResponse> LoginAsync(UserLoginRequest request)
         {
-            var user =  _unitOfWork.Repository<User>().Include(u => u.Role).Where(u => u.Email == request.Email && u.Password == request.Password).FirstOrDefault();
+            var user = _unitOfWork.Repository<User>().Include(u => u.Role).Where(u => u.Email == request.Email && u.Password == request.Password).FirstOrDefault();
+           if(user.Status == "Ban")
+            {
+                throw new HttpStatusCodeException(HttpStatusCode.BadRequest, "You Ban Account have been banned"); 
+            }
             string secretKeyConfig = _config["JWTSecretKey:SecretKey"];
 
             DateTime secretKeyDate = DateTime.UtcNow;
@@ -143,7 +148,8 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             if (user == null)
             {
                 return true;
-            } return false;
+            }
+            return false;
         }
 
         public bool CheckPassword(User user, string password)
@@ -158,7 +164,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public async Task<UserResponse> RegisterAsync(RegisterRequest request)
         {
-            
+
             var newUser = new User
             {
                 UserName = request.UserName,
@@ -208,16 +214,20 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public async Task<bool> RegisterMentorApplication(MentorRegisterRequest registerRequest)
         {
-
-         FireBaseFile file =   await  FirebaseHelper.UploadFileAsync(registerRequest.Bio, "MentorApplication");
-            int userId = _claimsService.GetCurrentUserId; 
+            int userId = _claimsService.GetCurrentUserId;
+            var checkMentorRegisterApplicationYet = _unitOfWork.Repository<MentorAttribute>().Where(x => x.UserId == userId).FirstOrDefault();
+            if(checkMentorRegisterApplicationYet != null)
+            {
+                throw new HttpStatusCodeException(HttpStatusCode.BadRequest,"You have already registered before");
+            }
+            FireBaseFile file = await FirebaseHelper.UploadFileAsync(registerRequest.Bio, "MentorApplication");
             MentorAttribute mentor = new MentorAttribute()
             {
                 Experience = registerRequest.Experience,
                 Status = "Processing",
                 Bio = file.FileName,
                 UserId = userId,
-                
+
             };
             await _unitOfWork.Repository<MentorAttribute>().CreateAsync(mentor);
             _unitOfWork.Commit();
@@ -227,6 +237,22 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
 
 
+
+        }
+
+        public async Task<bool> BanAccount(BanAccountRequest request)
+        {
+            User checkAccountInSystem = _unitOfWork.Repository<User>().Where(x => x.UserId == request.AccountId).FirstOrDefault();
+            if (checkAccountInSystem == null)
+            {
+
+                throw new HttpStatusCodeException(HttpStatusCode.BadRequest, "Not Find this UserId in System");
+
+            }
+            checkAccountInSystem.Status = UserState.Ban.ToString();
+            await _unitOfWork.Repository<User>().Update(checkAccountInSystem, checkAccountInSystem.UserId);
+            _unitOfWork.Commit();
+            return true;
 
         }
     }
