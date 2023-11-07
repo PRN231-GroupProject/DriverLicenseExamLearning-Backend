@@ -25,6 +25,11 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         }
         public async Task<BookingResponse> CreateBooking(BookingRequest req) //Available - Not Available
         {
+            var checkAccount = _unitOfWork.Repository<Booking>().Where(x => x.PackageId == req.PackageId && x.MemberId == req.MemberId).FirstOrDefault();
+            if(checkAccount != null)
+            {
+                throw new HttpStatusCodeException(System.Net.HttpStatusCode.BadRequest,"You already buy this package");
+            }
             #region Check and Set Status Car
             int? car = req.CarId;
             var checkActiveCar = await _unitOfWork.Repository<Car>().FindAsync(x => x.Status == "Active" && x.CarId == req.CarId);
@@ -163,7 +168,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                         new UserResponse
                         {
                             UserName = b.Member.UserName,
-                            Password = b.Member.Password,
                             RoleId = b.Member.RoleId,
                             Name = b.Member.Name,
                             PhoneNumber = b.Member.PhoneNumber,
@@ -177,7 +181,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                         new UserResponse
                         {
                             UserName = b.Mentor.UserName,
-                            Password = b.Mentor.Password,
                             RoleId = b.Mentor.RoleId,
                             Name = b.Mentor.Name,
                             PhoneNumber = b.Mentor.PhoneNumber,
@@ -247,7 +250,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                         new UserResponse
                         {
                             UserName = b.Member.UserName,
-                            Password = b.Member.Password,
                             RoleId = b.Member.RoleId,
                             Name = b.Member.Name,
                             PhoneNumber = b.Member.PhoneNumber,
@@ -261,7 +263,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                         new UserResponse
                         {
                             UserName = b.Mentor.UserName,
-                            Password = b.Mentor.Password,
                             RoleId = b.Mentor.RoleId,
                             Name = b.Mentor.Name,
                             PhoneNumber = b.Mentor.PhoneNumber,

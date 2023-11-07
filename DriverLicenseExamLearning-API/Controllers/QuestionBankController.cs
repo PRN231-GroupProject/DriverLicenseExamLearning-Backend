@@ -75,5 +75,20 @@ namespace DriverLicenseExamLearning_API.Controllers
             });
         }
 
+        [Authorize(Roles = RoleNames.Staff)]
+        [HttpPost("Upload-image")]
+        public async Task<IActionResult> Upload(IFormFile imgae)
+        {
+            if(imgae != null)
+            {
+                FireBaseFile imageInfo =  await FirebaseHelper.UploadFileAsync(imgae,"signage");
+                return Ok(new { imageInfo.FileName });
+            }
+            return BadRequest(new
+            {
+                message = "Download Failed"
+            });
+
+        }
     }
 }

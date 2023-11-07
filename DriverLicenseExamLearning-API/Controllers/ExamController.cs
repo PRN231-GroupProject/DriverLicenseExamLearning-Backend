@@ -54,7 +54,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         [HttpPost("DoingQuiz")]
         public async Task<ActionResult> DoingQuiz([FromBody]AnswerByMemberRequest answer)
         {
-            string result = await _examService.DoingQuiz(answer);   
+            MarkResultResponse result = await _examService.DoingQuiz(answer);   
             if(result == null)
             {
                 return NotFound();
@@ -64,7 +64,7 @@ namespace DriverLicenseExamLearning_API.Controllers
 
         [Authorize(Roles = RoleNames.Member)]
         [SwaggerOperation(Summary = $"[Role : {RoleNames.Member}][Description: View Quiz Customer have been done before]")]
-        [HttpGet("GetQuizHistoryByCustomer")]
+        [HttpGet("QuizHistory")]
         [EnableQuery]
         public async Task<ActionResult<IQueryable>> GetQuizHistory(int licenseTypeID)
         {
@@ -75,6 +75,21 @@ namespace DriverLicenseExamLearning_API.Controllers
             }
             return Ok(quizHistory);
         }
+
+        [Authorize(Roles = RoleNames.Member)]
+        [SwaggerOperation(Summary = $"[Role : {RoleNames.Member}][Description: View Quiz Customer have been done before]")]
+        [HttpGet("QuizHistoryDetail")]
+        [EnableQuery]
+        public async Task<ActionResult<IQueryable<ResultExamDetailByCustomerResponse>>> GetQuizHistoryDetail(int examresultId)
+        {
+            var quizHistory = await _examService.GetExamDetailHistory(examresultId);
+            if (quizHistory is null)
+            {
+                return NotFound();
+            }
+            return Ok(quizHistory);
+        }
+
 
         [Authorize(Roles = RoleNames.Staff)]
         [SwaggerOperation(Summary = $"[Role : {RoleNames.Staff}][Description:Modify Quiz with different question]")]

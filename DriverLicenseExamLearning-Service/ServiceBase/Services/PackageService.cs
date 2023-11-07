@@ -4,6 +4,7 @@ using DriverLicenseExamLearning_Data.UnitOfWork;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
+using DriverLicenseExamLearning_Service.Support.HandleError;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,10 +25,14 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         }
         public async Task<PackageResponse> CreatePackage(PackageRequest request)
         {
+            if(await CheckPackageName(request.PackageName))
+            {
             var p = _mapper.Map<Package>(request);
             await _unitOfWork.Repository<Package>().CreateAsync(p);
             await _unitOfWork.CommitAsync();
             return _mapper.Map<Package, PackageResponse>(p);
+            }
+            return null;
         }
 
         public Task<PackageResponse> DeletePackage(int id)
@@ -86,6 +91,18 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             await _unitOfWork.Repository<Package>().Update(package, id);
             await _unitOfWork.CommitAsync();
             return _mapper.Map<Package, PackageResponse>(package);
+        }
+
+
+
+        private async Task<bool> CheckPackageName(string PackageName)
+        {
+            var package = _unitOfWork.Repository<Package>().Where(x => x.PackageName == PackageName).FirstOrDefault();
+            if (package is not null)
+            {
+                throw new HttpStatusCodeException(System.Net.HttpStatusCode.BadRequest, "This Package Name have already used in system");
+            }
+            return true;
         }
     }
 }

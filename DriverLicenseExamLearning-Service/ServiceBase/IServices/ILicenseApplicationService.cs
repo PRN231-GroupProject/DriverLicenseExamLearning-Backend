@@ -15,6 +15,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         Task<IEnumerable<LicenseApplicationResponse>> GetAll();
         Task<bool> SubmitLicenseApplication(int licenseTypeId ,SubmitLicenseApplicationRequest submit);
         Task<bool> UpdateLicenseApplicationByCustomer(int licenseApplicationID,SubmitLicenseApplicationRequest submit);
-        Task<bool> UpdateLicenseApplicationByStaff(int licenseApplicationID, UpdateApplicationRequest request);
+        public Task<bool> UpdateLicenseApplicationByStaff(UpdateApplicationRequest request);
     }
 }

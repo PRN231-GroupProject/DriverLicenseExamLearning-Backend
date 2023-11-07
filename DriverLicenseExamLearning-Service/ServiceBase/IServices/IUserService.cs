@@ -1,6 +1,7 @@
 ﻿using DriverLicenseExamLearning_Data.Entity;
 using DriverLicenseExamLearning_Service.DTOs.Request;
 using DriverLicenseExamLearning_Service.DTOs.Response;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         Task<UserResponse> UpdateAsync(int id, UserRequest request);
 
         Task<bool> RegisterMentorApplication(MentorRegisterRequest registerRequest);
+
+        Task<bool> BanAccount(BanAccountRequest request);
     }
 }

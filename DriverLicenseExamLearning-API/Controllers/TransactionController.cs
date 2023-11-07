@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using System.Data;
 
 namespace DriverLicenseExamLearning_API.Controllers
 {
@@ -18,7 +19,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         {
             _transactionService = transactionService;
         }
-        [Authorize(Roles = RoleNames.Staff)]
+        [Authorize(Roles = RoleNames.Mentor + "," + RoleNames.Member + "," + RoleNames.Staff)]
         [HttpGet]
         [EnableQuery]
         public async Task<ActionResult<TransactionResponse>> GetAllTransaction()

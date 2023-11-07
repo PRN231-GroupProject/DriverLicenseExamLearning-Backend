@@ -45,6 +45,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 bool check2 = await CheckQuizTestInSystem(item.Text);
                 if (check && check2)
                 {
+
                     var quizAdd = _mapper.Map<Question>(item);
                     quizAdd.Status = "Active";
                     await _unitOfWork.Repository<Question>().CreateAsync(quizAdd);
@@ -71,27 +72,29 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public async Task<IEnumerable<QuestionBankResponse>> QuestionBank()
         {
-           IEnumerable<QuestionBankResponse> result = await _unitOfWork.Repository<Question>().Include(x => x.LicenseTypeNavigation).Select(x => new QuestionBankResponse
-            {
-                LicenseTypeID = (int)x.LicenseType,
-                Name = x.LicenseTypeNavigation.LicenseName,
-                questions = new List<AddQuestionRequest>
-                {
-                    new AddQuestionRequest
-                    {
-                        Answer = x.Answer,
-                        Image = x.Image != null ? x.Image : "Not Have Image", 
-                        LicenseTypeId = x.LicenseType,
-                        Options1 = x.Option1,
-                        Options2 = x.Option2,
-                        Options3 = x.Option3,
-                        Options4 = x.Option4,
-                        ParalysisQuestion = x.IsParalysisQuestion,
-                        Text = x.Question1
-                    }
-                }
+            IEnumerable<QuestionBankResponse> result = await _unitOfWork.Repository<Question>()
+                 .Include(x => x.LicenseTypeNavigation)
+                 .GroupBy(x => x.LicenseType)
+                 .Select(group => new QuestionBankResponse
+                 {
+                     LicenseTypeID = (int)group.Key,
+                     Name = group.First().LicenseTypeNavigation.LicenseName,
+                     questions = group.Select(x => new AddQuestionResponse
+                     {
 
-            }).ToListAsync();
+                         questionId = x.QuestionId,
+                         Answer = x.Answer,
+                         Image = x.Image != null ? x.Image : "Not Have Image",
+                         LicenseTypeId = x.LicenseType,
+                         Options1 = x.Option1,
+                         Options2 = x.Option2,
+                         Options3 = x.Option3,
+                         Options4 = x.Option4,
+                         ParalysisQuestion = x.IsParalysisQuestion,
+                         Text = x.Question1
+                     }).ToList()
+
+                 }).ToListAsync();
 
             return result;
 

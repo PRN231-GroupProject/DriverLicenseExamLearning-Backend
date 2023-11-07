@@ -25,13 +25,13 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.IServices
         Task<IEnumerable<ExamGetByLicenseType>> GetExamListByCustomer();
 
         //Doing quiz
-        Task<string> DoingQuiz(AnswerByMemberRequest answer); 
+        Task<MarkResultResponse> DoingQuiz(AnswerByMemberRequest answer); 
 
 
         //View Exam History Doing follow licenseType
-        Task<IEnumerable<ResultExamByCustomerResponse>> GetExamHistory(int licenseTypeID);
+        Task<IEnumerable<ExamResultResponse>> GetExamHistory(int licenseTypeID);
 
-
+        Task<IEnumerable<ResultExamDetailByCustomerResponse>> GetExamDetailHistory(int examResultId);
         Task<bool> CreateExam(CreateNewExamRequest request);
 
 

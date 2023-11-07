@@ -10,7 +10,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
 {
     public class AddQuestionRequest
     {
-
+        
         [Required]
         public string? Text { get; set; }
         [Required]

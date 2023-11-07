@@ -15,8 +15,8 @@ namespace DriverLicenseExamLearning_API.Mapper
             CreateMap<User, UserResponse>().ReverseMap();
             CreateMap<User, UserLoginResponse>().ReverseMap();
             CreateMap<User, UserLoginResponse>().ReverseMap();
+            CreateMap<User , UserUpdateRequest>().ReverseMap();
             CreateMap<UserRequest, UserResponse>().ReverseMap();
-
             CreateMap<Role, RoleResponse>().ReverseMap();
             #endregion
 

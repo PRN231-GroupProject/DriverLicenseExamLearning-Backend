@@ -1,4 +1,5 @@
 ﻿using DriverLicenseExamLearning_Service.DTOs.Request;
+using DriverLicenseExamLearning_Service.DTOs.Response;
 using DriverLicenseExamLearning_Service.DTOs.State;
 using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using Microsoft.AspNetCore.Authorization;
@@ -24,21 +25,27 @@ namespace DriverLicenseExamLearning_API.Controllers
 
         [Authorize(Roles = RoleNames.Member)]
         [HttpPost("Submit")]
-        public async Task<ActionResult> Submit(int licenseTypeID,SubmitLicenseApplicationRequest file)
+        public async Task<ActionResult> Submit(int licenseTypeID,[FromForm]SubmitLicenseApplicationRequest file)
         {
             await _licenseApplicationService.SubmitLicenseApplication(licenseTypeID,file);
-            return Ok();
+            return Ok(new
+            {
+                message ="Submit Successfully"
+            });
         }
 
         [Authorize(Roles = RoleNames.Staff)]
         [HttpGet("ByStaff")]
         [EnableQuery]
-        public async Task<ActionResult> GetByStaff()
+        public async Task<ActionResult<IQueryable<LicenseApplicationResponse>>> GetByStaff()
         {
             var data = await _licenseApplicationService.GetAll();
-            if(data is null)
+            if(data is null )
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    message ="Not Found"
+                });
             }
             return Ok(data);
         }
@@ -58,13 +65,13 @@ namespace DriverLicenseExamLearning_API.Controllers
 
         [Authorize(Roles = RoleNames.Staff)]
         [HttpPost("Check")]
-        public async Task<ActionResult> Update(int licenseApplication,[FromBody]UpdateApplicationRequest request)
+        public async Task<ActionResult> Update([FromBody]UpdateApplicationRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return UnprocessableEntity(ModelState);
             }
-          bool check =   await _licenseApplicationService.UpdateLicenseApplicationByStaff(licenseApplication, request);
+          bool check =   await _licenseApplicationService.UpdateLicenseApplicationByStaff( request);
             if (!check)
             {
                 return BadRequest(new
