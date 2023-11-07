@@ -45,6 +45,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 bool check2 = await CheckQuizTestInSystem(item.Text);
                 if (check && check2)
                 {
+
                     var quizAdd = _mapper.Map<Question>(item);
                     quizAdd.Status = "Active";
                     await _unitOfWork.Repository<Question>().CreateAsync(quizAdd);

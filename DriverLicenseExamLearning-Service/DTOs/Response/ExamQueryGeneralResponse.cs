@@ -8,13 +8,14 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
 {
     public class ExamDetailResponse
     {
+        public string? Image { get ; set; }
         public int QuestionId { get; set;  }
-        public string Text { get; set; }
-        public string Options1 { get; set; }
-        public string Options2 { get; set; }
-        public string Options3 { get; set; }
-        public string Options4 { get; set; }
-        public string Answer { get; set; }
+        public string? Text { get; set; }
+        public string? Options1 { get; set; }
+        public string? Options2 { get; set; }
+        public string? Options3 { get; set; }
+        public string? Options4 { get; set; }
+        public string? Answer { get; set; }
     }
 
 

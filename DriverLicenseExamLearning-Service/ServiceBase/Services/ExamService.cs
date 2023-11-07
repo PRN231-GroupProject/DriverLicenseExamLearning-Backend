@@ -295,6 +295,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                             ExamId = ex.ExamId,
                             examDetails = ex.ExamQuestions.Select(eq => new ExamDetailResponse
                             {
+                                Image = eq.Question.Image,
                                 QuestionId = eq.Question.QuestionId,
                                 Answer = eq.Question.Answer,
                                 Options1 = eq.Question.Option1,
