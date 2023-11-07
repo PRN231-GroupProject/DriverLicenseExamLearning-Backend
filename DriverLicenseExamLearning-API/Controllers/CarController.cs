@@ -42,7 +42,7 @@ namespace DriverLicenseExamLearning_API.Controllers
         public async Task<ActionResult> Delete(int CarID)
         {
             bool checkTrue = await _carService.DeleteCar(CarID);
-            if (checkTrue)
+            if (!checkTrue)
             {
                 return BadRequest(new
                 {
@@ -91,12 +91,9 @@ namespace DriverLicenseExamLearning_API.Controllers
                 return UnprocessableEntity(ModelState);
             }
             var rs = await _carService.CreateCar(carRequest);
-            return rs == true ? Ok(new
+            return Ok(new
             {
                 message = "Create Sucessfully"
-            }) : BadRequest(new
-            {
-                msg = "Create fail!"
             });
         }
     }

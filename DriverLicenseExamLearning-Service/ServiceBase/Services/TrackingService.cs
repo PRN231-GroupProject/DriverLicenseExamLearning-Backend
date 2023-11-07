@@ -75,7 +75,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                         UserId = mentorId,
                         Total = salaryOfMentor,
                         Status = "Pending",
-                        TransactionType = "Refund"
+                        TransactionType = "Salary"
                     };
                     var newTransaction = _mapper.Map<Transaction>(transaction);
                     await _unitOfWork.Repository<Transaction>().CreateAsync(newTransaction);

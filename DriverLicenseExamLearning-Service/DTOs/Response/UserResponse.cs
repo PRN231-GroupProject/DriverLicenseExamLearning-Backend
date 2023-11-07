@@ -9,6 +9,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Response
 {
     public class UserResponse
     {
+        public int UserId { get; set; }
         public string? UserName { get; set; }
         public int? RoleId { get; set; }
         public string? Name { get; set; }

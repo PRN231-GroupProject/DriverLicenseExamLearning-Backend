@@ -27,10 +27,10 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
             if(await CheckPackageName(request.PackageName))
             {
-            var p = _mapper.Map<Package>(request);
-            await _unitOfWork.Repository<Package>().CreateAsync(p);
-            await _unitOfWork.CommitAsync();
-            return _mapper.Map<Package, PackageResponse>(p);
+                var p = _mapper.Map<Package>(request);
+                await _unitOfWork.Repository<Package>().CreateAsync(p);
+                await _unitOfWork.CommitAsync();
+                return _mapper.Map<Package, PackageResponse>(p);
             }
             return null;
         }

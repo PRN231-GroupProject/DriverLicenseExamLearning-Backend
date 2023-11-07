@@ -167,6 +167,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     {
                         new UserResponse
                         {
+                            UserId = b.Member.UserId,
                             UserName = b.Member.UserName,
                             RoleId = b.Member.RoleId,
                             Name = b.Member.Name,
@@ -180,6 +181,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     {
                         new UserResponse
                         {
+                            UserId = b.Mentor.UserId,
                             UserName = b.Mentor.UserName,
                             RoleId = b.Mentor.RoleId,
                             Name = b.Mentor.Name,
@@ -249,6 +251,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     {
                         new UserResponse
                         {
+                            UserId = b.Member.UserId,
                             UserName = b.Member.UserName,
                             RoleId = b.Member.RoleId,
                             Name = b.Member.Name,
@@ -262,6 +265,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                     {
                         new UserResponse
                         {
+                            UserId = b.Mentor.UserId,
                             UserName = b.Mentor.UserName,
                             RoleId = b.Mentor.RoleId,
                             Name = b.Mentor.Name,
