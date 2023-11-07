@@ -224,7 +224,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         public async Task<IEnumerable<ExamResultResponse>> GetExamHistory(int licenseTypeID)
         {
             int userID = _claimService.GetCurrentUserId;
-            IEnumerable<ExamResultResponse> result =await _unitOfWork.Repository<ExamResult>().Include(x => x.Exam).GroupBy(x => x.ExamId).Select(group => new ExamResultResponse
+            IEnumerable<ExamResultResponse> result =await _unitOfWork.Repository<ExamResult>().Include(x => x.Exam).Where(x => x.UserId == userID && x.Exam.LicenseId == licenseTypeID).GroupBy(x => x.ExamId).Select(group => new ExamResultResponse
             {
                 ExamId = group.First().Exam.ExamId,
                 ExamName = group.First().Exam.ExamName,
