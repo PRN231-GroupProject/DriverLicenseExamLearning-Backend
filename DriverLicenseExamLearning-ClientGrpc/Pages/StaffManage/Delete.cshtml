@@ -1,0 +1,110 @@
+﻿@page
+@model             DeleteModel
+@{
+    ViewData["Title"] = "Delete";
+    string JWTToken = HttpContext.Session.GetString("JWToken");
+    var api = Constants.Api + "Customer";
+}
+
+<div class="container-fluid">
+    <div class="d-flex align-items-center justify-content-between">
+        <h2>
+            Are you sure to delete this Customer?
+        </h2>
+        <a href="./Index" class="btn btn-dark">Back</a>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group mt-2">
+                <input type="text" class="form-control" id="CustomerId" hidden />
+            </div>
+            <div class="form-group mt-2">
+                <label for="CustomerName">Name</label>
+                <input type="text" class="form-control" id="CustomerName" readonly />
+            </div>
+            <div class="form-group mt-2">
+                <label for="Telephone">Telephone</label>
+                <input type="text" class="form-control" id="Telephone" readonly />
+            </div>
+            <div class="form-group mt-2">
+                <label for="Email">Email</label>
+                <input type="email" class="form-control" id="Email" readonly />
+            </div>
+            <div class="form-group mt-2">
+                <label for="CustomerBirthday">Customer Birthday</label>
+                <input type="date" id="CustomerBirthday" class="form-control" readonly />
+            </div>
+            <div class="form-group mt-2">
+                <label for="CustomerStatus">customer Status</label>
+                <input type="number" class="form-control" id="CustomerStatus" readonly />
+            </div>
+            <div class="form-group mt-2">
+                <label for="Password">Password</label>
+                <input type="password" class="form-control" id="Password" readonly />
+            </div>
+            <div class="form-group mt-4">
+                <button id="DeleteButton" class="btn btn-danger w-100">Yes. Delete!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            const params = (new URL(document.location)).searchParams;
+            const id = params.get("id");
+
+
+      
+
+            GetCustomer();
+
+            function GetCustomer() {
+                $.ajax({
+                    url: "@api" + "/" + id,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (result) {
+                        $("#CustomerName").val(result.customerName);
+                        $("#CustomerId").val(result.customerId);
+                        $("#Telephone").val(result.telephone);
+                        $("#Email").val(result.email);
+                        var customerBirthday = new Date(result.customerBirthday);
+                        var customerBirthdayFormatted = customerBirthday.toISOString().split('T')[0];
+                        $("#CustomerBirthday").val(customerBirthdayFormatted);
+                        $("#Password").val(result.password);
+                        $("#CustomerStatus").val(result.customerStatus);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                })
+            }
+
+            $("#DeleteButton").click(function () {
+                $.ajax({
+                    url: "@api" + "/" + id,
+                    type: "Delete",
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + "@JWTToken");
+                    },
+                    success: function (result, status, xhr) {
+                        alert("Delete successfully");
+                        // Redirect to home
+                        window.location.href = "./Index";
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr)
+                        alert("Delete failed");
+                    }
+                })
+            })
+
+        })
+    </script>
+}

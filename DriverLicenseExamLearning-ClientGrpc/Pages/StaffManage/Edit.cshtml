@@ -1,0 +1,182 @@
+﻿@page
+@using CarRenting.Client;
+@model EditModel
+@{
+    ViewData["Title"] = "Edit";
+    string JWTToken = HttpContext.Session.GetString("JWToken");
+    var api = Constants.Api + "Customer";
+}
+
+<h1>Edit</h1>
+
+<h4>Customer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group mt-2">
+            <input type="text" class="form-control" id="CustomerId" hidden/>
+        </div>
+        <div class="form-group mt-2">
+            <label for="CustomerName">Name</label>
+            <input type="text" class="form-control" id="CustomerName"  required/>
+            <span id="CustomerName-error" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-2">
+            <label for="Telephone">Telephone</label>
+            <input type="text" class="form-control" id="Telephone" required />
+            <span id="Telephone-error" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-2">
+            <label for="Email">Email</label>
+            <input type="email" class="form-control" id="Email" required />
+            <span id="Email" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-2">
+            <label for="CustomerBirthday">Customer Birthday</label>
+            <input type="date" id="CustomerBirthday" class="form-control" required />
+            <span id="CustomerBirthday-error" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-2">
+            <label for="CustomerStatus">customer Status</label>
+            <input type="number" class="form-control" id="CustomerStatus" required />
+            <span id="CustomerStatus-error" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-2">
+            <label for="Password">Password</label>
+            <input type="password" class="form-control" id="Password" required />
+            <span id="Password-error" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-4">
+            <button id="EditButton" class="btn btn-primary w-100">Edit</button>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+
+@section scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            const params = (new URL(document.location)).searchParams;
+            const id = params.get("id");
+
+
+            var maxDate = new Date();
+            maxDate.setFullYear(maxDate.getFullYear() - 18);
+            var maxDateFormatted = maxDate.toISOString().split('T')[0];
+            $("#CustomerBirthday").attr("max", maxDateFormatted);
+
+            GetCustomer();
+
+            function GetCustomer() {
+                $.ajax({
+                    url: "@api" + "/" + id, 
+                    type: "GET",
+                    dataType: "json",
+                    success: function (result) {
+                        $("#CustomerName").val(result.customerName);
+                        $("#CustomerId").val(result.customerId);
+                        $("#Telephone").val(result.telephone);
+                        $("#Email").val(result.email);
+                        // Convert the date format to yyyy-MM-dd
+                        var customerBirthday = new Date(result.customerBirthday);
+                        var customerBirthdayFormatted = customerBirthday.toISOString().split('T')[0];
+                        $("#CustomerBirthday").val(customerBirthdayFormatted);
+                        $("#Password").val(result.password);
+                        $("#CustomerStatus").val(result.customerStatus);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        // Redirect to home
+                        // window.location.href = "./Index";
+                    }
+                })
+            }
+
+
+            function formValidation() {
+                var isValid = true;
+                if ($("#CustomerName").val().trim() == "") {
+                    $("#CustomerName-error").html("Name is required");
+                    isValid = false;
+                } else {
+                    $("#CustomerName-error").html("");
+                }
+
+                if ($("#Telephone").val().trim() == "") {
+                    $("#Telephone-error").html("Telephone is required");
+                    isValid = false;
+                } else {
+                    $("#Telephone-error").html("");
+                }
+
+                if ($("#Email").val() <= 0) {
+                    $("#Email-error").html("Email is required");
+                    isValid = false;
+                } else {
+                    $("#Email-error").html("");
+                }
+
+                if ($("#CustomerBirthday").val() == "") {
+                    $("#CustomerBirthday-error").html("Category is required");
+                    isValid = false;
+                } else {
+                    $("#CustomerBirthday-error").html("");
+                }
+
+                if ($("#Password").val() == "") {
+                    $("#Password-error").html("Password is required");
+                    isValid = false;
+                } else {
+                    $("#Password-error").html("");
+                }
+
+                if ($("#CustomerStatus").val() == "") {
+                    $("#CustomerStatus-error").html("CustomerStatus is required");
+                    isValid = false;
+                } else {
+                    $("#CustomerStatus-error").html("");
+                }
+
+                return isValid;
+            }
+
+            $("#EditButton").click(function () {
+                if (!formValidation()) {
+                    return;
+                }
+                $.ajax({
+                    url: "@api" + "/" + id,
+                    type: "PUT",
+                    data: JSON.stringify({
+                        "customerId": $("#CustomerId").val(),
+                        "customerName": $("#CustomerName").val(),
+                        "telephone": $("#Telephone").val(),
+                        "email": $("#Email").val(),
+                        "customerBirthday": $("#CustomerBirthday").val(),
+                        "password": $("#Password").val(),
+                        "customerStatus": $("#CustomerStatus").val(),
+                    }),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + "@JWTToken");
+                    },
+                    success: function (result, status, xhr) {
+                        window.location.href = "./Index";
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr)
+                        if (xhr.status == 400) {
+                            $("#FlowerBouquetName-error").html("Email already exists");
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+}

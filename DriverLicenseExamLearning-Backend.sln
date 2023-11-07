@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DriverLicenseExamLearning-D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DriverLicenseExamLearning-Service", "DriverLicenseExamLearning-Service\DriverLicenseExamLearning-Service.csproj", "{DB5ED367-9E32-47E6-9C5B-724E0AFBB438}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverLicenseExamLearning-gRPC", "DriverLicenseExamLearning-gRPC\DriverLicenseExamLearning-gRPC.csproj", "{EF0C429F-2600-437C-A79C-2B84AF3048D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DriverLicenseExamLearning-gRPC", "DriverLicenseExamLearning-gRPC\DriverLicenseExamLearning-gRPC.csproj", "{EF0C429F-2600-437C-A79C-2B84AF3048D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriverLicenseExamLearning-ClientGrpc", "DriverLicenseExamLearning-ClientGrpc\DriverLicenseExamLearning-ClientGrpc.csproj", "{3EF71E74-5EA8-4952-A438-EEA272F21CE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{EF0C429F-2600-437C-A79C-2B84AF3048D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF0C429F-2600-437C-A79C-2B84AF3048D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF0C429F-2600-437C-A79C-2B84AF3048D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EF71E74-5EA8-4952-A438-EEA272F21CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EF71E74-5EA8-4952-A438-EEA272F21CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EF71E74-5EA8-4952-A438-EEA272F21CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EF71E74-5EA8-4952-A438-EEA272F21CE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
