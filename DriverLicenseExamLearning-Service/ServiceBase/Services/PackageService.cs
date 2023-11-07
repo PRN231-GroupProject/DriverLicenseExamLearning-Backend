@@ -97,7 +97,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         private async Task<bool> CheckPackageName(string PackageName)
         {
-            var package = _unitOfWork.Repository<Package>().Where(x => x.PackageName == PackageName);
+            var package = _unitOfWork.Repository<Package>().Where(x => x.PackageName == PackageName).FirstOrDefault();
             if (package is not null)
             {
                 throw new HttpStatusCodeException(System.Net.HttpStatusCode.BadRequest, "This Package Name have already used in system");

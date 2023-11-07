@@ -39,7 +39,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
             }
             if (PackageTypeId == 2)
             {
-                if (NumberOfKmOrDays > 1 || NumberOfKmOrDays < 30)
+                if (NumberOfKmOrDays < 1 || NumberOfKmOrDays > 30)
                 {
                     yield return new ValidationResult("With Day Type Range be[1,30]");
                 }
