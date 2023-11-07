@@ -136,7 +136,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
         public async Task<bool> UpdateLicenseApplicationByStaff(UpdateApplicationRequest request)
         {
-            LicenseApplication licenseApplication = _unitOfWork.Repository<LicenseApplication>().Where(x => x.LicenseApplicationId == request.LicenseTypeID && x.UserId == request.UserID).FirstOrDefault();
+            LicenseApplication licenseApplication = _unitOfWork.Repository<LicenseApplication>().Where(x => x.LicenseTypeId == request.LicenseTypeID && x.UserId == request.UserID).FirstOrDefault();
             if (licenseApplication != null)
             {
                 licenseApplication.Status = request.Status;

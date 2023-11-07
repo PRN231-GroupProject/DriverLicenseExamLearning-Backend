@@ -14,7 +14,7 @@ namespace DriverLicenseExamLearning_Service.DTOs.Request
         [MinLength(10)]
         public string? PackageName { get; set; }
         [Required]
-        [Range(500000,5000000)]
+        [Range(500000,20000000)]
         public int? Price { get; set; }
         public string? Description { get; set; }
         [Range(1,2)]
