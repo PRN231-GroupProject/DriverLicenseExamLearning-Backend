@@ -108,25 +108,25 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             {
 
                 FireBaseFile file1 = await FirebaseHelper.UploadFileAsync(submit.CurriculumVitae, "license-application");
-                licenseApplicationFind.CurriculumVitae = file1.FileName;
+                licenseApplicationFind.CurriculumVitae = file1.URL;
             }
             if (submit.CitizenIdentificationCard is not null)
             {
 
                 FireBaseFile file2 = await FirebaseHelper.UploadFileAsync(submit.CitizenIdentificationCard, "license-application");
-                licenseApplicationFind.CitizenIdentificationCard = file2.FileName;
+                licenseApplicationFind.CitizenIdentificationCard = file2.URL;
             }
             if (submit.HealthCertification is not null)
             {
 
                 FireBaseFile file3 = await FirebaseHelper.UploadFileAsync(submit.HealthCertification, "license-application");
-                licenseApplicationFind.HealthCertification = file3.FileName;
+                licenseApplicationFind.HealthCertification = file3.URL;
             }
             if (submit.UserImage is not null)
             {
 
                 FireBaseFile file4 = await FirebaseHelper.UploadFileAsync(submit.UserImage, "license-application");
-                licenseApplicationFind.UserImage = file4.FileName;
+                licenseApplicationFind.UserImage = file4.URL;
             }
 
             await _unitOfWork.Repository<LicenseApplication>().Update(licenseApplicationFind, licenseApplicationID);
