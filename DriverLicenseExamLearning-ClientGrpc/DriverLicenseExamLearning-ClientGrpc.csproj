@@ -8,7 +8,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.25.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.58.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.59.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.12">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DriverLicenseExamLearning-Data\DriverLicenseExamLearning-Data.csproj" />
     <ProjectReference Include="..\DriverLicenseExamLearning-Service\DriverLicenseExamLearning-Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Protos\staff.proto">
+      <GrpcServices>Server</GrpcServices>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

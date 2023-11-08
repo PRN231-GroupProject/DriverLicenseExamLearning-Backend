@@ -44,7 +44,7 @@ namespace DriverLicenseExamLearning_ClientGrpc.Pages
                     return Page();
             
                 }
-                return RedirectToPage("/Admin2/Customer/Index");
+                return RedirectToPage("/StaffManage/Index");
             }
             else
             {

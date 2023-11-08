@@ -1,13 +1,17 @@
 ﻿@page
-@using CarRenting.Client;
-@model IndexModel
-@{
-    ViewData["Title"] = "List customer";
-    var jwt = HttpContext.Session.GetString("JWToken");
-    var api = Constants.Api + "Customer";
-}
+@model             IndexModel
 
-<h1>Index</h1>
+@{
+    ViewData["Title"] = "Index";
+}
+<a asp-page="/Admin/Customer/Index">
+   Manage customer
+</a>
+<hr />
+<a asp-page="/Admin/CarInformation/Index">
+    Manage Car
+</a>
+<br />
 
 <p>
     <a asp-page="Create">Create New</a>
@@ -15,67 +19,72 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Name</th>
             <th>
-                Telephone
+                @Html.DisplayNameFor(model => model.Customer[0].CustomerID)
             </th>
             <th>
-                Email
+                @Html.DisplayNameFor(model => model.Customer[0].CustomerName)
             </th>
             <th>
-                CustomerBirthday
+                @Html.DisplayNameFor(model => model.Customer[0].Mobile)
             </th>
             <th>
-                CustomerStatus
+                @Html.DisplayNameFor(model => model.Customer[0].Birthday)
             </th>
             <th>
-                Password
+                @Html.DisplayNameFor(model => model.Customer[0].IdentityCard)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer[0].LicenceNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer[0].LicenceDate)
+            </th>       
+            <th>
+                @Html.DisplayNameFor(model => model.Customer[0].Email)
+            </th>
+               <th>
+                @Html.DisplayNameFor(model => model.Customer[0].Password)
+            </th>
+       
             <th></th>
         </tr>
     </thead>
     <tbody>
+@foreach (var item in Model.Customer) {
+        <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.CustomerID)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.CustomerName)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Birthday)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.IdentityCard)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.LicenceNumber)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LicenceDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+            <td>
+                    <a asp-page="./Edit" asp-route-id="@item.CustomerID">Edit</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.CustomerID">Delete</a>
+            </td>
+        </tr>
+}
     </tbody>
 </table>
-
-
-@section scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            ShowAllFlowerBouquets();
-
-            function ShowAllFlowerBouquets() {
-                $("table tbody").html("");
-                $.ajax({
-                    url: "@api",
-                    type: "GET",
-                    contentType: "application/json",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("Authorization", "Bearer " + "@jwt");
-                    },
-                    success: function (result, status, xhr) {
-                        $.each(result, function (index, value) {
-                            $("tbody").append($("<tr>"));
-                            const appendElement = $("tbody tr").last();
-                            appendElement.append($("<td>").html(value["customerId"]));
-                            appendElement.append($("<td>").html(value["customerName"]));
-                            appendElement.append($("<td>").html(value["telephone"]));
-                            appendElement.append($("<td>").html(value["email"]));
-                            appendElement.append($("<td>").html(value["customerBirthday"]));
-                            appendElement.append($("<td>").html(value["customerStatus"]));
-                            appendElement.append($("<td>").html(value["password"]));
-                            appendElement.append($("<td>").html(
-                                "<a class='btn btn-warning' href='/Admin2/Customer/Edit?id=" + value["customerId"] + "'>Edit</a>" +
-                                "<a class='btn btn-danger ms-2' href='/Admin2/Customer/Delete?id=" + value["customerId"] + "'>Delete</a>"
-                            ));
-                        })
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(xhr);
-                    }
-                })
-            }
-        })
-    </script>
-}

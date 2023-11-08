@@ -1,0 +1,63 @@
+
+
+syntax = "proto3";
+option csharp_namespace = "DriverLicenseExamLearning_gRPC";
+
+package staff;
+
+// The greeting service definition.
+service Staff {
+  // Sends a greeting
+  rpc CreateNewStaff (NewStaffRequest) returns (ReponseModel);
+  rpc GetStaff (StaffLookUpModel)  returns (StaffReponse);
+  rpc GetStaffs (RequestModel) returns (GetStaffsReponse);
+  rpc DeleteStaff (StaffLookUpModel) returns (ReponseModel);
+  rpc UpdateStaff (UpdateStaffRequest) returns (ReponseModel);
+}
+
+message RequestModel {
+}
+message ReponseModel {
+	string message = 1;
+}
+
+message GetStaffsReponse {
+  repeated StaffReponse Staffs= 1;
+}
+
+// The request message containing the user's name.
+message NewStaffRequest {
+	string UserName = 2;
+	string Password = 3;
+	string Name = 4;
+	string Email = 5;
+	string Address = 6;
+	string PhoneNumber = 8;
+}
+
+message StaffLookUpModel {
+	int32 userId = 1;
+}
+// The response message containing the greetings.
+
+message StaffReponse{
+	int32 UserId = 1;
+	string UserName = 2;
+	string Password = 3;
+	string Name = 4;
+	string Email = 5;
+	string Address = 6;
+	string Status = 7;
+	string PhoneNumber = 8;
+}
+message UpdateStaffRequest {
+	int32 UserId = 1;
+	string UserName = 2;
+	string Password = 3;
+	string Name = 4;
+	string Email = 5;
+	string Address = 6;
+	string Status = 7;
+	string PhoneNumber = 8;
+}
+
