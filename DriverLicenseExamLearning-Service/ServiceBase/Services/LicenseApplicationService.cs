@@ -107,30 +107,30 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
             if (submit.CurriculumVitae is not null)
             {
 
-                FireBaseFile file = await FirebaseHelper.UploadFileAsync(submit.CurriculumVitae, "license-application");
-                licenseApplicationFind.CurriculumVitae = file.FileName;
+                FireBaseFile file1 = await FirebaseHelper.UploadFileAsync(submit.CurriculumVitae, "license-application");
+                licenseApplicationFind.CurriculumVitae = file1.FileName;
             }
-            if (submit.CurriculumVitae is not null)
+            if (submit.CitizenIdentificationCard is not null)
             {
 
-                FireBaseFile file = await FirebaseHelper.UploadFileAsync(submit.CitizenIdentificationCard, "license-application");
-                licenseApplicationFind.CitizenIdentificationCard = file.FileName;
+                FireBaseFile file2 = await FirebaseHelper.UploadFileAsync(submit.CitizenIdentificationCard, "license-application");
+                licenseApplicationFind.CitizenIdentificationCard = file2.FileName;
             }
-            if (submit.CurriculumVitae is not null)
+            if (submit.HealthCertification is not null)
             {
 
-                FireBaseFile file = await FirebaseHelper.UploadFileAsync(submit.HealthCertification, "license-application");
-                licenseApplicationFind.HealthCertification = file.FileName;
+                FireBaseFile file3 = await FirebaseHelper.UploadFileAsync(submit.HealthCertification, "license-application");
+                licenseApplicationFind.HealthCertification = file3.FileName;
             }
-            if (submit.CurriculumVitae is not null)
+            if (submit.UserImage is not null)
             {
 
-                FireBaseFile file = await FirebaseHelper.UploadFileAsync(submit.UserImage, "license-application");
-                licenseApplicationFind.UserImage = file.FileName;
+                FireBaseFile file4 = await FirebaseHelper.UploadFileAsync(submit.UserImage, "license-application");
+                licenseApplicationFind.UserImage = file4.FileName;
             }
 
             await _unitOfWork.Repository<LicenseApplication>().Update(licenseApplicationFind, licenseApplicationID);
-            _unitOfWork.Commit();
+          await  _unitOfWork.CommitAsync();
             return true;
         }
 
