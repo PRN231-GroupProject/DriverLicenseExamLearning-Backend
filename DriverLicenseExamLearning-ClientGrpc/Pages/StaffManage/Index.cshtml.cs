@@ -44,11 +44,11 @@ namespace DriverLicenseExamLearning_ClientGrpc.Pages.StaffManage
 
             // Tạo yêu cầu và đặt tiêu đề Metadata cho yêu cầu
             var request = new RequestModel();
-            var response = client.GetStaffs(request);
-            //var response = client.GetStaffs(request, headers: metadata);
+            //var response = client.GetStaffs(request);
+            var response = client.GetStaffs(request, headers: metadata);
 
 
-         
+
             if (response.Staffs != null)
             {
                 List<StaffReponse>? dataResponse = response.Staffs.ToList();

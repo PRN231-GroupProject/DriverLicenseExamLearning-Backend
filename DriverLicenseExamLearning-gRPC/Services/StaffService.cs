@@ -19,6 +19,10 @@ namespace DriverLicenseExamLearning_gRPC.Services
         public override async Task<ReponseModel> CreateNewStaff(NewStaffRequest request, ServerCallContext context)
         {
             var token = context.RequestHeaders.GetValue("authorization");
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Required admin"));
+            }
             var isAdmin = await CheckAdmin(token);
             if (!isAdmin)
             {
@@ -50,6 +54,10 @@ namespace DriverLicenseExamLearning_gRPC.Services
         public override async Task<StaffReponse> GetStaff(StaffLookUpModel request, ServerCallContext context)
         {
             var token = context.RequestHeaders.GetValue("authorization");
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Required admin"));
+            }
             var isAdmin = await CheckAdmin(token);
             if (!isAdmin)
             {
@@ -83,6 +91,10 @@ namespace DriverLicenseExamLearning_gRPC.Services
         public override async Task<GetStaffsReponse> GetStaffs(RequestModel request, ServerCallContext context)
         {
             var token = context.RequestHeaders.GetValue("authorization");
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Required admin"));
+            }
             var isAdmin = await CheckAdmin(token);
             if (!isAdmin)
             {
@@ -100,7 +112,7 @@ namespace DriverLicenseExamLearning_gRPC.Services
                         new StaffReponse
                         {
                             UserId = user.UserId,
-                            UserName = token,
+                            UserName = user.UserName,
                             Address = user.Address,
                             Email = user.Email,
                             Name = user.UserName,
@@ -122,6 +134,10 @@ namespace DriverLicenseExamLearning_gRPC.Services
         public override async Task<ReponseModel> DeleteStaff(StaffLookUpModel request, ServerCallContext context)
         {
             var token = context.RequestHeaders.GetValue("authorization");
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Required admin"));
+            }
             var isAdmin = await CheckAdmin(token);
             if (!isAdmin)
             {
@@ -150,6 +166,10 @@ namespace DriverLicenseExamLearning_gRPC.Services
         public override async Task<ReponseModel> UpdateStaff(UpdateStaffRequest request, ServerCallContext context)
         {
             var token = context.RequestHeaders.GetValue("authorization");
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Required admin"));
+            }
             var isAdmin = await CheckAdmin(token);
             if (!isAdmin)
             {
