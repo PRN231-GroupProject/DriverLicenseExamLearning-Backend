@@ -2,42 +2,62 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CarRenting.Client;
-using DriverLicenseExamLearning_Service.DTOs.Response;
+using Grpc.Net.Client;
+using Grpc.Core;
 
 namespace DriverLicenseExamLearning_ClientGrpc.Pages.StaffManage
 {
     public class EditModel : PageModel
     {
-        private readonly HttpClient _client;
         private string _productApiUrl;
 
         public EditModel()
         {
-            _client = new HttpClient();
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-            _client.DefaultRequestHeaders.Accept.Add(contentType);
             _productApiUrl = Constants.Api;
         }
 
-        [BindProperty] public UserResponse Customer { get; set; } = default!;
+        [BindProperty] public UpdateStaffRequest Customer { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             var userId = HttpContext.Session.GetInt32("User");
             if (userId == null || userId != -1)
             {
-                return RedirectToPage("../../Login");
+                return RedirectToPage("../Login");
             }
+            var jwt = HttpContext.Session.GetString("JWToken");
+            var channel = GrpcChannel.ForAddress(_productApiUrl);
+            var client = new Staff.StaffClient(channel);
 
-            HttpResponseMessage response = await _client.GetAsync(_productApiUrl + "/" + id);
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            // Tạo một đối tượng Metadata để chứa JWT token
+            var metadata = new Metadata
             {
-                var dataResponse = response.Content.ReadFromJsonAsync<UserResponse>().Result;
-                if (dataResponse != null)
+                { "Authorization", "Bearer " + jwt }
+            };
+
+            //var response = client.GetStaffs(request);
+            var response = client.GetStaff(new StaffLookUpModel()
+            {
+                UserId = (int)id
+            }, headers: metadata);
+
+            if (response != null)
+            {
+                var reslut = new UpdateStaffRequest()
                 {
-                    Customer = dataResponse;
-                    return Page();
-                }
+                    UserId = response.UserId,
+                    UserName = response.UserName,
+                    Password = response.Password,
+                    Name = response.Name,
+                    Email = response.Email,
+                    Address = response.Address,
+                    Status = response.Status,
+                    PhoneNumber = response.PhoneNumber,
+                };
+                Customer = reslut;
+                return Page();
+
             }
 
             return NotFound();
@@ -47,11 +67,24 @@ namespace DriverLicenseExamLearning_ClientGrpc.Pages.StaffManage
 
         public async Task<IActionResult> OnPostAsync()
         {
-
-            if (ModelState.IsValid)
+            var userId = HttpContext.Session.GetInt32("User");
+            if (userId == null || userId != -1)
             {
-                HttpResponseMessage response = await _client.PutAsJsonAsync(_productApiUrl, Customer);
+                return RedirectToPage("../Login");
             }
+            var jwt = HttpContext.Session.GetString("JWToken");
+            var channel = GrpcChannel.ForAddress(_productApiUrl);
+            var client = new Staff.StaffClient(channel);
+
+            // Tạo một đối tượng Metadata để chứa JWT token
+            var metadata = new Metadata
+            {
+                { "Authorization", "Bearer " + jwt }
+            };
+
+            //var response = client.GetStaffs(request);
+            var response = client.UpdateStaff(Customer, headers: metadata);
+
             return RedirectToPage("./Index");
         }
 

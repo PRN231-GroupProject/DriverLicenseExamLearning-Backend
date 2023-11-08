@@ -78,6 +78,7 @@ namespace DriverLicenseExamLearning_gRPC.Services
                     Name = user .UserName,
                     Password= user.Password,
                     Status = user.Status,
+                    PhoneNumber = user.PhoneNumber
                 };
 
                 return response;

@@ -1,5 +1,5 @@
-﻿@* @page
-@model             DeleteModel
+﻿@page
+@model DeleteModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -9,64 +9,62 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Customer</h4>
+    <h4>Staff</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer.CustomerID)
+            User ID
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Customer.CustomerID)
+            @Model.Customer.UserId
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer.CustomerName)
+            User Name
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Customer.CustomerName)
+            @Model.Customer.UserName
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer.Mobile)
+            Password
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Customer.Mobile)
+            @Model.Customer.Password
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer.Birthday)
+            Name
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Customer.Birthday)
+            @Model.Customer.Name
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer.IdentityCard)
+            Email
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Customer.IdentityCard)
+            @Model.Customer.Email
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer.LicenceNumber)
+            Address
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Customer.LicenceNumber)
+            @Model.Customer.Address
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer.LicenceDate)
+            Status
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Customer.LicenceDate)
+            @Model.Customer.Status
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer.Email)
+            Phone Number
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Customer.Email)
+            @Model.Customer.PhoneNumber
         </dd>
- 
     </dl>
-    
+
     <form method="post">
-        <input type="hidden" asp-for="Customer.CustomerID" />
+        <input type="hidden" asp-for="Customer.UserId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-page="./Index">Back to List</a>
     </form>
 </div>
- *@
