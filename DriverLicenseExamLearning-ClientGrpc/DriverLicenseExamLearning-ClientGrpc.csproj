@@ -31,9 +31,9 @@
       <GrpcServices>Server</GrpcServices>
     </None>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\StaffManage\" />
-  </ItemGroup>
+	
+	<ItemGroup>
+		<Protobuf Include="Protos\staff.proto" GrpcServices="Client" />
+	</ItemGroup>
 
 </Project>

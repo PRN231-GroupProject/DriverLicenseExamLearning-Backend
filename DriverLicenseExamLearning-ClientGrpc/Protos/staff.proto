@@ -1,9 +1,6 @@
 
-
 syntax = "proto3";
-option csharp_namespace = "DriverLicenseExamLearning_gRPC";
-
-package staff;
+option csharp_namespace = "DriverLicenseExamLearning_ClientGrpc";
 
 // The greeting service definition.
 service Staff {

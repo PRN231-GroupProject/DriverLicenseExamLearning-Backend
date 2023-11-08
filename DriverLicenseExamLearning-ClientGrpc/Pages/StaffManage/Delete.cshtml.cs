@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CarRenting.Client;
-
+using DriverLicenseExamLearning_Service.DTOs.Response;
 
 namespace DriverLicenseExamLearning_ClientGrpc.Pages.StaffManage
 {

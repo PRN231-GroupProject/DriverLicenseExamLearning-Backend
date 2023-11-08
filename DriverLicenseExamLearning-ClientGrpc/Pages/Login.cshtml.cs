@@ -37,7 +37,7 @@ namespace DriverLicenseExamLearning_ClientGrpc.Pages
             {
                 var dataResponse = await response.Content.ReadFromJsonAsync<Logined>();
                 HttpContext.Session.SetString("JWToken", dataResponse.accessToken);
-                HttpContext.Session.SetString("UserName", dataResponse.name);
+                HttpContext.Session.SetInt32("User", -1);
                 if (dataResponse.role.roleName != "Admin")
                 {
                     ViewData["notification"] = "Required admin";

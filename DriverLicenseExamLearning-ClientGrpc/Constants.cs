@@ -2,5 +2,5 @@
 
 public class Constants
 {
-    public static readonly string Api = "https://localhost:7257/api/Customer";
+    public static readonly string Api = "https://localhost:7129";
 }

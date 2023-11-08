@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using CarRenting.Client;
 using DriverLicenseExamLearning_Service.DTOs.Response;
+using Grpc.Net.Client;
+using Grpc.Core;
 
 namespace DriverLicenseExamLearning_ClientGrpc.Pages.StaffManage
 {
@@ -20,23 +22,36 @@ namespace DriverLicenseExamLearning_ClientGrpc.Pages.StaffManage
             _client = new HttpClient();
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
             _client.DefaultRequestHeaders.Accept.Add(contentType);
-            _productApiUrl = "";
+            _productApiUrl = Constants.Api;
         }
 
-        public IList<UserResponse> Customer { get; set; } = default!;
+        public IList<StaffReponse> Customer { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync()
         {
             var userId = HttpContext.Session.GetInt32("User");
             if (userId == null || userId != -1)
             {
-                return RedirectToPage("../../Login");
+                return RedirectToPage("../Login");
             }
+            var jwt = HttpContext.Session.GetString("JWToken");
+            var channel = GrpcChannel.ForAddress(_productApiUrl);
+            var client = new Staff.StaffClient(channel);
 
-            HttpResponseMessage response = await _client.GetAsync(_productApiUrl);
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            // Tạo một đối tượng Metadata để chứa JWT token
+            var metadata = new Metadata();
+            metadata.Add("Authorization", "Bearer " + jwt);
+
+            // Tạo yêu cầu và đặt tiêu đề Metadata cho yêu cầu
+            var request = new RequestModel();
+            var response = client.GetStaffs(request);
+            //var response = client.GetStaffs(request, headers: metadata);
+
+
+         
+            if (response.Staffs != null)
             {
-                List<UserResponse>? dataResponse = response.Content.ReadFromJsonAsync<List<UserResponse>>().Result;
+                List<StaffReponse>? dataResponse = response.Staffs.ToList();
                 if (dataResponse != null)
                 {
                     Customer = dataResponse;
