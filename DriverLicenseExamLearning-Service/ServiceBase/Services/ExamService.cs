@@ -192,7 +192,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
 
             int totalQuestion = _unitOfWork.Repository<ExamQuestion>().Where(x => x.ExamId == exam.ExamId).Count();
-            ExamResult examResultID = await _unitOfWork.Repository<ExamResult>().Where(x => x.ExamId == exam.ExamId && x.AttemptNumber ==exam.AttemptNumber ).FirstOrDefaultAsync();
+            ExamResult examResultID =  _unitOfWork.Repository<ExamResult>().Where(x => x.ExamId == exam.ExamId && x.AttemptNumber == exam.AttemptNumber ).FirstOrDefault();
             List<int> mark = await RightNumberAnswer(answer.answerDetails, examResultID.ExamResultId);
 
 
@@ -200,7 +200,7 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
      
 
             await _unitOfWork.Repository<ExamResult>().Update(examResultID, examResultID.ExamResultId);
-            _unitOfWork.Commit();
+           _unitOfWork.Commit();
             double examStatusCheck = PercentageInLicenseType((int)await _unitOfWork.Repository<Exam>().Where(x => x.ExamId == answer.QuizID).Select(x => x.LicenseId).FirstOrDefaultAsync());
             string? examCheck;
             if (mark.Last() > 0)
