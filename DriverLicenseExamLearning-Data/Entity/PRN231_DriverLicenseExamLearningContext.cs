@@ -152,7 +152,7 @@ namespace DriverLicenseExamLearning_Data.Entity
                 entity.HasKey(e => e.ExamResultDetailsId)
                     .HasName("PK__ExamResu__9F70203F76EE069F");
 
-                entity.Property(e => e.WrongAnswer).HasMaxLength(20);
+                entity.Property(e => e.WrongAnswer).HasMaxLength(2000);
 
                 entity.HasOne(d => d.ExamResult)
                     .WithMany(p => p.ExamResultDetails)
