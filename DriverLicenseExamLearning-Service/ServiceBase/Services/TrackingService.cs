@@ -49,6 +49,9 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
                 {
                     #region Change Status Car
                     var existingBookings = await _unitOfWork.Repository<Booking>().FindAsync(x => x.BookingId == bookingId);
+                    existingBookings.Status = "Done";
+                    await _unitOfWork.Repository<Booking>().Update(existingBookings, bookingId);
+
                     int? carId = existingBookings.CarId;
                     var existingCars = await _unitOfWork.Repository<Car>().FindAsync(x => x.CarId == carId);
                     existingCars.Status = "Active";

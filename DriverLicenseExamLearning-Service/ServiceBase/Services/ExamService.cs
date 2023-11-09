@@ -8,6 +8,7 @@ using DriverLicenseExamLearning_Service.Support.HandleError;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Ocsp;
+using Org.BouncyCastle.Tls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -165,7 +166,6 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
         {
             //? Doing Quiz Process
             int AttemptNumber = 0;
-
 
             //Check The number of time to this quiz or maybe first time 
             AttemptNumber = _unitOfWork.Repository<ExamResult>().Where(x => x.ExamId == answer.QuizID && x.UserId == _claimService.GetCurrentUserId).Max(x => (int?)x.AttemptNumber) ?? 0 ;
