@@ -7,6 +7,7 @@ using DriverLicenseExamLearning_Service.ServiceBase.IServices;
 using DriverLicenseExamLearning_Service.Support.HandleError;
 using DriverLicenseExamLearning_Service.Support.Ultilities;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -192,15 +193,18 @@ namespace DriverLicenseExamLearning_Service.ServiceBase.Services
 
 
             int totalQuestion = _unitOfWork.Repository<ExamQuestion>().Where(x => x.ExamId == exam.ExamId).Count();
-            ExamResult examResultID =  _unitOfWork.Repository<ExamResult>().Where(x => x.ExamId == exam.ExamId && x.AttemptNumber == exam.AttemptNumber ).FirstOrDefault();
-            List<int> mark = await RightNumberAnswer(answer.answerDetails, examResultID.ExamResultId);
+            ExamResult examResult = _unitOfWork.Repository<ExamResult>().Find(x => x.ExamId == exam.ExamId && x.AttemptNumber == exam.AttemptNumber);
+            List<int> mark = await RightNumberAnswer(answer.answerDetails, examResult.ExamResultId);
 
+            examResult.Result = $"{mark.First()}/{totalQuestion}";
 
-            examResultID.Result = $"{mark.First()}/{totalQuestion}";
-     
+            var newExamResult = _mapper.Map<ExamResult>(examResult);
+            newExamResult.Result = examResult.Result;
 
-            await _unitOfWork.Repository<ExamResult>().Update(examResultID, examResultID.ExamResultId);
-           _unitOfWork.Commit();
+            //await _unitOfWork.Repository<ExamResult>().Update(examResultID, examResultID.ExamResultId);
+            await _unitOfWork.Repository<ExamResult>().Update(newExamResult, examResult.ExamResultId);
+            _unitOfWork.Commit();
+
             double examStatusCheck = PercentageInLicenseType((int)await _unitOfWork.Repository<Exam>().Where(x => x.ExamId == answer.QuizID).Select(x => x.LicenseId).FirstOrDefaultAsync());
             string? examCheck;
             if (mark.Last() > 0)
